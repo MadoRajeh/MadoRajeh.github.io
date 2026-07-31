@@ -363,11 +363,13 @@ body:not(.locking) .hero-unlock { opacity: 1; transform: none; filter: blur(0); 
 .stat:nth-child(3) b { color: var(--lavender-ink); }
 .stat:nth-child(4) b { color: var(--link-blue); }
 .stat span { font-size: 11.5px; color: var(--ink-soft); }
-/* The checkmark glyph is much narrower than the number-style stats around it,
-   so left-aligned it sits noticeably off from the centre of its own (wrapped,
-   multi-line) caption below. Centering just this one stat fixes that without
-   touching the left-aligned convention the number stats already use. */
-.stat-center { text-align: center; }
+/* Centre EVERY stat in the row, not just one. The grid columns are already
+   mathematically equal, so the row only looked unevenly spaced because the
+   narrow checkmark was centred in its column while the three wider values sat
+   flush left, putting it visibly out of rhythm. Centring the whole row keeps
+   each value sitting the same way over its own caption, which fixes both the
+   rhythm and the lone checkmark that prompted the original centring. */
+.stats-centred .stat { text-align: center; }
 @media (max-width: 760px) { .stats-grid { grid-template-columns: 1fr 1fr; margin-top: 26px; padding-top: 20px; } }
 
 /* ---------- Section headings (shared) ---------- */
