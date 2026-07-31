@@ -49,9 +49,48 @@ body {
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
-/* Only the slide-deck page (index.html) gets this — creatives.html is a normal
-   scrolling gallery and doesn't carry the .deck class. */
-body.deck, html:has(body.deck) { height: 100%; overflow: hidden; overscroll-behavior: none; }
+/* Only the slide-deck page (index.html) gets this: creatives.html is a normal
+   scrolling gallery and doesn't carry the .deck class.
+   position:fixed on the body is load-bearing, not cosmetic. CSS transforms DO
+   contribute to a page's scrollable overflow area (unlike layout position), so
+   the six slides parked at translateY(100%) were each extending the document a
+   full viewport further down. That produced a real, pannable scroll region
+   behind the deck: the "element scrolling in the background". Pinning the body
+   to the viewport means the absolutely-positioned slides are fully contained
+   and can never add scrollable area, no matter where they're transformed to.
+   The `html:has()` selector is only a belt-and-braces extra for browsers that
+   support it; the body rule alone is what actually fixes it. */
+body.deck, html:has(body.deck) {
+  height: 100%; overflow: hidden; overscroll-behavior: none;
+}
+body.deck {
+  position: fixed; inset: 0; width: 100%;
+  /* `clip` rather than `hidden`: hidden still creates a scroll container (its
+     scrollTop can be set programmatically, so a stray focus/anchor jump could
+     still shift everything), whereas clip creates no scroll container at all.
+     Declared after the `hidden` above so browsers without clip keep hidden. */
+  overflow: clip;
+}
+
+/* ---------- Scene background: the "interactive background changing" layer ----------
+   A single fixed full-viewport layer sitting behind every slide. Most slides
+   have no background of their own (transparent), so this is what actually
+   changes colour as you move through the deck — main.js sets its background
+   on every goTo(), and this element's own transition is what makes that a
+   smooth cross-fade rather than an instant cut. */
+#scene-bg {
+  position: fixed; inset: 0; z-index: -2;
+  background: var(--paper);
+  /* Must land within the slide transition, not after it. At 1.1s the Highlight 03
+     split had already finished cracking apart while this was still mid-fade, so
+     the gap between the departing halves revealed ivory instead of the white the
+     Tools scene is supposed to be showing through. */
+  transition: background .42s cubic-bezier(.4,0,.2,1);
+}
+/* The "locked" starting colour, before the unlock reveal runs — see .hero-unlock
+   below. Removing body.locking (done by JS a beat after load) fades this into
+   whatever main.js has set as slide 0's colour, like a screen powering on. */
+body.locking #scene-bg { background: #211d10; transition: none; }
 ::selection { background: var(--blue); color: var(--ink); }
 h1, h2, h3 { font-family: var(--heading); font-weight: 800; line-height: 1.1; letter-spacing: -0.01em; color: var(--primary); }
 p { color: var(--ink-soft); }
@@ -63,30 +102,140 @@ a { color: var(--link-blue); } /* Wayne's rule: inline text links are always blu
    contained to their own scene instead of one giant shared vanishing point */
 .scene { perspective: 1400px; }
 
-/* ---------- Slides: one full-screen scene at a time, swapped by JS ---------- */
+/* ---------- Slides: one full-screen scene at a time, swapped by JS ----------
+   A connected push, not an independent fade: the incoming slide always sits
+   directly adjacent to the outgoing one (exactly one slide-height away) and
+   both move by the same amount at the same time, so it reads as the new
+   scene shoving the old one off rather than two things separately fading.
+   No opacity animation at all here — a physical push, not a dissolve. */
 .slide {
-  position: absolute; inset: 0; height: 100%; overflow-y: auto;
-  /* Without these two, a nested overflow-y:auto box inside an absolutely
-     positioned ancestor can fail to respond to touch drags at all on some
-     mobile browsers (classic iOS Safari "scroll does nothing" bug) — this is
-     what let a tall slide (the hero, once its content overflows on a phone)
-     swallow every swipe with no visible feedback, so the deck felt frozen
-     until a dot was tapped directly. */
-  -webkit-overflow-scrolling: touch;
-  touch-action: pan-y;
-  display: flex; flex-direction: column;
-  justify-content: center; /* fallback for browsers that don't support `safe` */
-  justify-content: safe center; /* if content is taller than the slide, don't clip the top out of reach */
-  padding: 100px 24px 60px;
-  opacity: 0; pointer-events: none; transform: scale(.97);
-  transition: opacity .7s cubic-bezier(.22,.8,.25,1), transform .7s cubic-bezier(.22,.8,.25,1);
+  /* overflow:hidden, NOT auto: a scrollable slide meant every wheel tick first
+     scrolled the slide's own content to the bottom before advancing, which read
+     as a stray scrollbar racing down the screen on every scroll. Each slide is
+     now strictly one screenful and scrolling only ever shifts slides. Content
+     is compacted at small sizes (see the responsive rules) so nothing needs to
+     scroll to be reachable. */
+  position: absolute; inset: 0; height: 100%; overflow: hidden;
+  touch-action: none;         /* no native scroll/rubber-band; the deck owns the gesture */
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 96px 24px 56px;
+  pointer-events: none;
+  transform: translateY(100%); /* resting position: parked just below the viewport */
+  transition: transform .6s cubic-bezier(.65,0,.35,1);
+  z-index: 1;
 }
-.slide.current { opacity: 1; pointer-events: auto; transform: none; z-index: 2; }
-/* direction classes: applied briefly during a transition, then cleared */
-.slide.enter-down, .slide.exit-down { transform: translateY(56px) scale(.97); }
-.slide.enter-up, .slide.exit-up { transform: translateY(-56px) scale(.97); }
+.slide.current { pointer-events: auto; transform: none; z-index: 2; }
+/* Used only on the incoming slide when moving BACKWARD, to park it above the
+   viewport instead of below (its default) before animating down into place. */
+.slide.stage-above { transform: translateY(-100%); }
+
+/* "Pop" entrance (data-enter="pop"): rather than pushing up from below, the
+   slide is staged dead centre at zero scale and springs open to full size.
+   Declared after .slide.current so the staged zero-scale wins while parked;
+   the three-class rule then wins once it becomes current. */
+.slide.pop-stage { transform: scale(0.001); z-index: 3; }
+.slide.pop-stage.current {
+  transform: none;
+  /* Brisk on purpose: this runs at the same time as the outgoing slide's corner
+     exit, and a slow grow made the two read as separate events rather than the
+     new scene shoving the old one out. */
+  transition: transform .46s cubic-bezier(.34, 1.5, .64, 1); /* springy overshoot */
+}
 @media (max-width: 760px) { .slide { padding: 90px 20px 40px; } }
-@media (prefers-reduced-motion: reduce) { .slide { transition: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .slide { transition: none; transform: none !important; }
+  .slide.pop-stage { transform: none !important; }
+}
+
+/* ---------- Custom per-slide exits (opted in via data-exit on the slide) ----------
+   Two shapes, both moving the slide's OWN content out rather than sliding the
+   whole panel: "corners" throws each half diagonally out through its nearest
+   top corner, "split" cracks the two halves straight apart sideways.
+   Every rule here is prefixed .slide.current and carries an extra class on
+   .deck-item, because the entrance reset rule
+   (.slide.current .deck-item.from-left .deck-media { transform: none })
+   is already five selectors deep: anything less specific silently loses and
+   the element never actually moves. */
+.deck-item.splitting-out .deck-media, .deck-item.splitting-out .deck-copy,
+.deck-item.corner-out .deck-media, .deck-item.corner-out .deck-copy {
+  transition: transform .52s cubic-bezier(.4,0,.2,1), opacity .44s ease;
+}
+
+/* "corners": .from-left puts the media in the LEFT column and the copy in the
+   RIGHT, so each simply continues out through the corner it already sits under.
+   Distances are deliberately past the edge (not just to it) so nothing is still
+   visibly in frame when the panel is retired. */
+.slide.current .deck-item.corner-out.from-left .deck-media {
+  transform: translate(-72vw, -88vh) scale(.62); opacity: 0;
+}
+.slide.current .deck-item.corner-out.from-left .deck-copy {
+  transform: translate(72vw, -88vh) scale(.62); opacity: 0;
+}
+/* Mirrored, for a .from-right slide using the same exit. */
+.slide.current .deck-item.corner-out.from-right .deck-media {
+  transform: translate(72vw, -88vh) scale(.62); opacity: 0;
+}
+.slide.current .deck-item.corner-out.from-right .deck-copy {
+  transform: translate(-72vw, -88vh) scale(.62); opacity: 0;
+}
+
+/* "split": straight apart, no vertical travel. */
+.slide.current .deck-item.splitting-out.from-right .deck-media { transform: translateX(72vw); opacity: 0; }
+.slide.current .deck-item.splitting-out.from-right .deck-copy { transform: translateX(-72vw); opacity: 0; }
+.slide.current .deck-item.splitting-out.from-left .deck-media { transform: translateX(-72vw); opacity: 0; }
+.slide.current .deck-item.splitting-out.from-left .deck-copy { transform: translateX(72vw); opacity: 0; }
+
+/* The "Highlight 0N" kicker sits OUTSIDE .deck-item, so it needs its own rule
+   or it just sits there and fades while everything around it travels. It
+   follows whichever segment it is aligned with: up-and-left on a corners exit,
+   straight left on a split. */
+.slide.exiting-corners .project-kicker,
+.slide.exiting-split .project-kicker {
+  transition: transform .52s cubic-bezier(.4,0,.2,1), opacity .44s ease;
+}
+.slide.exiting-corners .project-kicker { transform: translate(-60vw, -70vh); opacity: 0; }
+.slide.exiting-split .project-kicker { transform: translateX(-72vw); opacity: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .deck-item.splitting-out .deck-media, .deck-item.splitting-out .deck-copy,
+  .deck-item.corner-out .deck-media, .deck-item.corner-out .deck-copy,
+  .slide.exiting-corners .project-kicker, .slide.exiting-split .project-kicker {
+    transition: none;
+  }
+}
+
+/* ---------- Hero unlock: staggered reveal + a scroll cue ---------- */
+.hero-unlock {
+  opacity: 0; transform: translateY(22px) scale(.96); filter: blur(8px);
+  transition: opacity .9s cubic-bezier(.2,.8,.2,1), transform .9s cubic-bezier(.2,.8,.2,1), filter .9s ease;
+}
+body:not(.locking) .hero-unlock { opacity: 1; transform: none; filter: blur(0); }
+.hero-unlock.d1 { transition-delay: .05s; }
+.hero-unlock.d2 { transition-delay: .22s; }
+.hero-unlock.d3 { transition-delay: .38s; }
+.hero-unlock.d4 { transition-delay: .54s; }
+.hero-unlock.d5 { transition-delay: .7s; }
+@media (prefers-reduced-motion: reduce) {
+  .hero-unlock { opacity: 1; transform: none; filter: none; transition: none; }
+}
+.hero-choice {
+  margin-top: 26px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+  font-size: 14px; color: var(--ink-faint);
+}
+.hero-choice a { color: var(--primary); font-weight: 600; text-decoration: none; }
+.hero-choice a:hover { text-decoration: underline; }
+.scroll-cue {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: none; border: none; cursor: pointer;
+  font-family: var(--body); font-size: 14px; font-weight: 600; color: var(--primary);
+  padding: 0;
+}
+.scroll-cue .chevron { display: inline-block; animation: cue-bounce 1.6s ease-in-out infinite; }
+@keyframes cue-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(5px); }
+}
+@media (prefers-reduced-motion: reduce) { .scroll-cue .chevron { animation: none; } }
 
 /* ---------- Side dot navigation ---------- */
 .slide-dots {
@@ -214,6 +363,11 @@ a { color: var(--link-blue); } /* Wayne's rule: inline text links are always blu
 .stat:nth-child(3) b { color: var(--lavender-ink); }
 .stat:nth-child(4) b { color: var(--link-blue); }
 .stat span { font-size: 11.5px; color: var(--ink-soft); }
+/* The checkmark glyph is much narrower than the number-style stats around it,
+   so left-aligned it sits noticeably off from the centre of its own (wrapped,
+   multi-line) caption below. Centering just this one stat fixes that without
+   touching the left-aligned convention the number stats already use. */
+.stat-center { text-align: center; }
 @media (max-width: 760px) { .stats-grid { grid-template-columns: 1fr 1fr; margin-top: 26px; padding-top: 20px; } }
 
 /* ---------- Section headings (shared) ---------- */
@@ -222,15 +376,31 @@ section { padding: 100px 0; }
 .sec-title { font-size: clamp(28px,3.6vw,42px); margin-bottom: 16px; }
 .sec-intro { max-width: 60ch; font-size: 16.5px; }
 
-/* ---------- Work: one project per slide, tilting in from left/right ---------- */
+/* ---------- Work: one project per slide, splitting apart from the centre ---------- */
 .project-kicker { opacity: .7; }
 .deck-item {
   display: grid; grid-template-columns: 1fr 1fr; gap: 44px; align-items: center;
-  opacity: 0; transition: opacity .9s ease, transform .9s cubic-bezier(.2,.8,.2,1);
 }
-.deck-item.from-left  { transform: perspective(1200px) rotateY(22deg) translateX(-40px); }
-.deck-item.from-right { transform: perspective(1200px) rotateY(-22deg) translateX(40px); }
-.slide.current .deck-item { opacity: 1; transform: perspective(1200px) rotateY(0) translateX(0); }
+/* Each half fades and slides in toward its own side, like the pair is pulling
+   apart from a shared centre line, rather than the two halves fading in
+   together as one static block. */
+.deck-item > * {
+  opacity: 0;
+  transition: opacity .7s ease, transform .85s cubic-bezier(.34, 1.56, .64, 1);
+}
+.deck-item.from-left .deck-media { transform: translateX(60px); }
+.deck-item.from-left .deck-copy { transform: translateX(-60px); }
+.deck-item.from-right .deck-media { transform: translateX(-60px); }
+.deck-item.from-right .deck-copy { transform: translateX(60px); }
+/* Higher specificity than the two rules above (four classes vs three) so this
+   reliably wins once the slide is current — it must, or the entrance offset
+   is left stuck permanently, which is what made the copy and photo overlap. */
+.slide.current .deck-item.from-left .deck-media,
+.slide.current .deck-item.from-left .deck-copy,
+.slide.current .deck-item.from-right .deck-media,
+.slide.current .deck-item.from-right .deck-copy {
+  opacity: 1; transform: none;
+}
 .deck-item.reverse { direction: rtl; }
 .deck-item.reverse > * { direction: ltr; }
 .deck-media {
@@ -256,12 +426,17 @@ section { padding: 100px 0; }
 .deck-media .zoom span { padding-left: 0; font-size: 22px; }
 
 /* Northstar KPI cards with no genuine photo asset get a clean stat visual instead of a
-   borrowed/misattributed image — never illustrate a Northstar result with another client's media */
+   borrowed/misattributed image (never illustrate a Northstar result with another client's media) */
 .deck-stat {
   width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;
   gap: 8px; text-align: center; padding: 24px;
   background: linear-gradient(135deg, rgba(219,209,237,.5), rgba(171,190,237,.35));
+  /* The KPI number itself additionally pops from nothing rather than just
+     sliding in with the rest of .deck-media, per the "0 to 100 scale" bounce. */
+  transform: scale(.2);
+  transition: transform .8s cubic-bezier(.34, 1.56, .64, 1);
 }
+.slide.current .deck-stat { transform: none; }
 .deck-stat b { font-family: var(--heading); font-size: clamp(40px,6vw,64px); color: var(--primary); line-height: 1; }
 .deck-stat span { font-size: 13.5px; color: var(--ink-soft); max-width: 22ch; }
 .deck-tag { font-family: var(--mono); font-size: 12px; color: var(--primary); background: rgba(110,99,46,.10); border-radius: 999px; padding: 4px 12px; display: inline-block; margin-bottom: 14px; }
@@ -269,13 +444,25 @@ section { padding: 100px 0; }
 .deck-item p { font-size: 15.5px; }
 .deck-result { margin-top: 16px; font-family: var(--mono); font-size: 13.5px; color: var(--primary); font-weight: 600; }
 @media (max-width: 820px) {
+  /* Single column on phones: left/right no longer means anything, so both
+     halves just settle straight up into place instead of splitting sideways. */
   .deck-item, .deck-item.reverse { grid-template-columns: 1fr; direction: ltr; }
-  .deck-item.from-left, .deck-item.from-right { transform: perspective(1000px) rotateX(14deg) translateY(30px); }
-  .slide.current .deck-item { transform: none; }
+  .deck-item.from-left .deck-media, .deck-item.from-left .deck-copy,
+  .deck-item.from-right .deck-media, .deck-item.from-right .deck-copy {
+    transform: translateY(28px);
+  }
 }
 
-/* ---------- Tools: 3D rotating ring ---------- */
-.ring-sec { background: #FFFFFF; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); overflow: hidden; }
+/* ---------- Tools: 3D rotating ring ----------
+   No background and no borders of its own on purpose. This slide used to paint
+   its own white band with hairline rules top and bottom, which made sense back
+   when it was one section of a normal scrolling page. In the deck it's actively
+   harmful: #scene-bg already paints this slide's white (via its data-bg), so the
+   band was a second white rectangle layered on the first, and the moment the two
+   boxes disagreed by even a pixel the edge showed up as a stray horizontal
+   separator. Letting the single fixed scene layer own the colour means no seam
+   is possible, and it's also what the Highlight 03 split-apart reveals. */
+.ring-sec { overflow: hidden; }
 .ring-stage {
   perspective: 900px; height: 260px; display: flex; align-items: center; justify-content: center; margin-top: 50px;
   opacity: 0; transform: scale(.85); transition: opacity .8s ease, transform .8s cubic-bezier(.2,.8,.2,1);
@@ -300,10 +487,18 @@ section { padding: 100px 0; }
 @media (prefers-reduced-motion: reduce) { .ring { animation: none; } }
 
 /* On phone widths the 3D ring's radius overflows the screen and the perspective reads as
-   broken rather than "spinning" — swap to a plain swipeable row, same fallback already
+   broken rather than "spinning": swap to a plain swipeable row, same fallback already
    proven on the main site's tools section. */
 @media (max-width: 760px) {
-  .ring-stage { perspective: none; height: auto; padding: 6px 0; justify-content: flex-start; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .ring-stage {
+    perspective: none; height: auto; padding: 6px 0; justify-content: flex-start;
+    /* overflow-x only. The bare `overflow-x: auto` here left overflow-y computing
+       as `auto` too, giving this strip a second, vertical scroll axis nobody
+       wanted, and it also swallowed the deck's own swipe gesture. */
+    overflow-x: auto; overflow-y: hidden;
+    touch-action: pan-x;   /* horizontal panning stays; vertical belongs to the deck */
+    -webkit-overflow-scrolling: touch;
+  }
   .ring {
     animation: none; transform: none !important; transform-style: flat;
     width: max-content; height: auto; display: flex; gap: 14px; padding: 0 24px;
@@ -395,6 +590,120 @@ footer a:hover { color: var(--link-blue); }
   width: 52px; height: 52px; border-radius: 50%; background: rgba(0,0,0,.6);
   display: flex; align-items: center; justify-content: center; padding-left: 4px;
   border: 1px solid rgba(255,255,255,.3);
+}
+
+/* ---------- Fit-to-screen compaction (last block so it wins) ----------
+   Slides are overflow:hidden and never scroll internally, so on short and
+   narrow viewports the content itself has to shrink to stay fully visible.
+   These are the three slides measured as overflowing on a phone (hero, about,
+   contact); the numbers below bring each back inside one screenful. */
+@media (max-width: 760px) {
+  .slide { padding: 82px 18px 34px; }
+  /* Hero is the tallest: kicker + headline + paragraph + choice row + stats + photo */
+  .hero h1 { font-size: clamp(26px, 7.4vw, 36px); }
+  .hero-kicker { font-size: 11px; margin-bottom: 10px; padding: 4px 11px; }
+  .hero-sub { font-size: 14px; margin: 12px 0 16px; }
+  .hero-choice { margin-top: 14px; gap: 8px; font-size: 13px; }
+  .hero-card { max-width: 132px; }
+  .hero-card-tag { font-size: 10px; padding: 6px 9px; bottom: 9px; left: 9px; right: 9px; }
+  .hero-grid { gap: 14px; padding: 0; }
+  .stats-grid { margin-top: 14px; padding-top: 12px; gap: 8px; }
+  .stat b { font-size: 19px; }
+  .stat span { font-size: 10.5px; line-height: 1.35; }
+  /* About + contact */
+  .about-grid { gap: 20px; }
+  .about-photo { max-width: 150px; }
+  .about-text p { font-size: 14px; margin-bottom: 10px; }
+  .sec-title { font-size: clamp(22px, 6.4vw, 30px); margin-bottom: 10px; }
+  .sec-intro { font-size: 14px; }
+  .sec-label { font-size: 11px; margin-bottom: 8px; }
+  .contact-box { margin-top: 20px; padding: 22px 18px; }
+  .contact-box h3 { font-size: 20px; margin-bottom: 8px; }
+  .contact-box p { font-size: 13.5px; }
+  .contact-box .ctas { margin-top: 14px; gap: 10px; }
+  .final-cta { margin-top: 18px; }
+  .final-cta p { font-size: 13px; margin-bottom: 10px; }
+  .btn { padding: 11px 20px; font-size: 14px; }
+  footer { padding: 18px 0 0; font-size: 12px; }
+  .deck-item { gap: 20px; }
+  .deck-item h3 { font-size: 20px; }
+  .deck-item p { font-size: 14px; }
+  .deck-result { font-size: 12px; margin-top: 10px; }
+}
+/* Mid-height tier: a very common laptop/window height (roughly 800-950px) is
+   still not quite tall enough for the hero at full size, so it gets a gentle
+   trim well before the aggressive short-screen values below kick in. Ordered
+   tallest-first on purpose: each shorter tier below overrides this one. */
+@media (max-height: 960px) and (min-width: 761px) {
+  .slide { padding: 88px 24px 44px; }
+  .hero h1 { font-size: clamp(30px, 4.2vw, 46px); }
+  .hero-sub { font-size: 16px; margin: 16px 0 20px; }
+  .hero-choice { margin-top: 18px; }
+  .stats-grid { margin-top: 24px; padding-top: 20px; }
+  .hero-card { max-width: 250px; margin-left: auto; }
+  .hero-grid { gap: 34px; padding: 0; }
+  .ring-stage { height: 220px; margin-top: 32px; }
+  .about-photo { max-width: 230px; }
+}
+/* Short viewports at ANY width (landscape phones, small laptops, short
+   windows): here the binding constraint is viewport HEIGHT, not width, so this
+   deliberately isn't gated behind a min-width. It comes after the width block
+   above so on a screen that is both narrow AND short, the tighter of the two
+   values wins per property. */
+@media (max-height: 760px) {
+  .slide { padding: 76px 24px 32px; }
+  .hero h1 { font-size: clamp(26px, 3.2vw, 36px); }
+  .hero-kicker { font-size: 11px; margin-bottom: 10px; }
+  .hero-sub { font-size: 14px; margin: 12px 0 14px; }
+  .hero-choice { margin-top: 14px; font-size: 13px; }
+  .stats-grid { margin-top: 16px; padding-top: 14px; gap: 12px; }
+  .stat b { font-size: 20px; }
+  .stat span { font-size: 10.5px; line-height: 1.35; }
+  .hero-card { max-width: 200px; margin-left: auto; }
+  .hero-grid { gap: 28px; padding: 0; }
+  .sec-title { font-size: clamp(22px, 2.8vw, 30px); margin-bottom: 10px; }
+  .sec-intro { font-size: 14.5px; }
+  .sec-label { font-size: 11.5px; margin-bottom: 8px; }
+  .ring-stage { height: 180px; margin-top: 22px; }
+  .about-grid { gap: 32px; }
+  .about-photo { max-width: 190px; }
+  .about-text p { font-size: 14px; margin-bottom: 10px; }
+  .contact-box { margin-top: 22px; padding: 24px; }
+  .contact-box h3 { font-size: 21px; }
+  .contact-box p { font-size: 14px; }
+  .final-cta { margin-top: 18px; }
+  .final-cta p { font-size: 13px; margin-bottom: 10px; }
+  footer { padding: 20px 0 0; font-size: 12.5px; }
+  .deck-item h3 { font-size: 21px; }
+  .deck-item p { font-size: 14.5px; }
+}
+/* Narrow AND short at once (small phones in a browser with lots of chrome) is
+   the tightest case of all: the hero stacks to one column here, so its photo
+   plus five stacked text blocks have to share very little height. */
+@media (max-width: 760px) and (max-height: 760px) {
+  .slide { padding: 70px 16px 20px; }
+  .hero h1 { font-size: clamp(23px, 6.6vw, 30px); }
+  .hero-sub { font-size: 13px; margin: 10px 0 12px; }
+  .hero-choice { margin-top: 10px; font-size: 12.5px; }
+  .hero-grid { gap: 6px; }
+  .hero-card { max-width: 86px; }
+  .stats-grid { margin-top: 6px; padding-top: 6px; gap: 5px; }
+  .stat b { font-size: 16px; }
+  .stat span { font-size: 9.5px; line-height: 1.3; }
+  .about-photo { max-width: 104px; }
+  .about-grid { gap: 12px; }
+  .about-text p { font-size: 12.5px; margin-bottom: 7px; }
+  /* A 4/3 media panel is the tallest single thing on the Highlight slides once
+     they stack to one column, so cap it by height instead of letting the aspect
+     ratio dictate it. */
+  .deck-media { aspect-ratio: auto; height: 30vh; }
+  .deck-item { gap: 12px; }
+  .deck-item h3 { font-size: 18px; margin-bottom: 6px; }
+  .deck-item p { font-size: 13px; }
+  .deck-tag { font-size: 11px; margin-bottom: 8px; }
+  .deck-result { font-size: 11.5px; margin-top: 8px; }
+  .deck-stat b { font-size: clamp(28px, 8vw, 40px); }
+  .deck-stat span { font-size: 12px; }
 }
 
 /* ---------- Reduced motion: same content, no 3D, no snap, everything just visible ---------- */

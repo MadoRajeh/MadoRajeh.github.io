@@ -3,22 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ahmad Rajeh · Portfolio (3D scroll edition)</title>
-<meta name="description" content="Virtual assistant and marketing specialist — ads, content, SEO, and automation. A slide-by-slide 3D showcase.">
+<title>Ahmad Rajeh · The Interactive Edition</title>
+<meta name="description" content="The short, interactive version of Ahmad Rajeh's portfolio: a scroll-driven showcase with its own animated background, built as a project in itself.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=23">
-<noscript><style>.slide{position:static;opacity:1;transform:none;height:auto;min-height:100vh;pointer-events:auto;}body.deck{overflow:visible;height:auto;}</style></noscript>
+<link rel="stylesheet" href="css/style.css?v=46">
+<noscript><style>.slide{position:static;opacity:1;transform:none;height:auto;min-height:100vh;pointer-events:auto;filter:none;}body.deck{overflow:visible;height:auto;}.hero-unlock{opacity:1 !important;transform:none !important;filter:none !important;}#scene-bg{display:none;}</style></noscript>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='34' cy='52' r='22' fill='%236E632E'/><circle cx='68' cy='36' r='14' fill='%23DBD1ED'/><circle cx='74' cy='70' r='10' fill='%23EDE8D0'/></svg>">
 </head>
-<body class="deck">
+<body class="deck locking">
+
+<div id="scene-bg" aria-hidden="true"></div>
 
 <header class="nav">
   <div class="nav-inner">
     <a class="nav-logo" href="#top">ahmad<span class="dot">.</span>rajeh</a>
     <ul class="nav-links">
-      <li><a href="#work">Work</a></li>
+      <li><a href="#work">Highlights</a></li>
       <li><a href="creatives.html">Creatives</a></li>
       <li><a href="#tools">Tools</a></li>
       <li><a href="#about">About</a></li>
@@ -30,26 +32,27 @@
 
 <nav class="slide-dots" id="slide-dots" aria-label="Slide navigation"></nav>
 
-<!-- ================= HERO ================= -->
-<section class="slide hero scene current" id="top" data-label="Intro">
+<!-- ================= HERO / UNLOCK ================= -->
+<section class="slide hero scene current" id="top" data-label="Intro" data-bg="#EDE8D0">
   <div class="hero-glow" aria-hidden="true"></div>
   <div class="hero-grid">
     <div>
-      <span class="hero-kicker">Ads · Content · SEO · Automation</span>
-      <h1>I turn your busywork into <span class="hl">systems that run themselves.</span></h1>
-      <p class="hero-sub">I'm Ahmad — a Philippines-based virtual assistant and marketing specialist. I run ad campaigns, produce content, build SEO pages, and automate the reporting behind all of it.</p>
-      <div class="hero-ctas">
-        <a class="btn btn-primary" href="#work">See the work</a>
-        <a class="btn btn-ghost" href="#contact">Let's talk</a>
+      <span class="hero-kicker hero-unlock d1">The interactive edition</span>
+      <h1 class="hero-unlock d2">This is the short version. <span class="hl">Scroll to unlock it.</span></h1>
+      <p class="hero-sub hero-unlock d3">A faster, more visual pass through who I am and what I've built: a few highlights, not the whole file. Want the complete case studies and pricing instead? That lives on the main site.</p>
+      <div class="hero-choice hero-unlock d4">
+        <a href="../site/index.html">Visit the main website →</a>
+        <span>or</span>
+        <button type="button" class="scroll-cue" id="scroll-cue">Keep scrolling for the short version <span class="chevron">⌄</span></button>
       </div>
-      <div class="stats-grid">
+      <div class="stats-grid hero-unlock d5">
         <div class="stat"><b>15</b><span>locations marketed end to end</span></div>
         <div class="stat"><b>300+</b><span>SEO pages written</span></div>
         <div class="stat"><b>2,500+</b><span>leads audited</span></div>
         <div class="stat"><b>5+</b><span>years experience</span></div>
       </div>
     </div>
-    <div class="hero-card-wrap">
+    <div class="hero-card-wrap hero-unlock d3">
       <div class="hero-card" id="hero-card">
         <img src="img/headshot-nobg.png" alt="Ahmad Rajeh" width="768" height="1261">
         <div class="hero-card-tag">5+ years · Ads, content &amp; automation</div>
@@ -58,133 +61,60 @@
   </div>
 </section>
 
-<!-- ================= WORK: one project per slide ================= -->
-<section class="slide project-slide scene" id="work" data-label="Meta ads">
+<!-- ================= HIGHLIGHT A: marketing ================= -->
+<section class="slide project-slide scene" id="work" data-label="Marketing" data-bg="#EDE8D0" data-exit="corners">
   <div class="wrap">
-    <span class="sec-label project-kicker">Selected work · Northstar Preschools</span>
+    <span class="sec-label project-kicker">Highlight 01</span>
     <div class="deck-item from-left">
       <div class="deck-media">
         <img src="img/work/ad-social-square.jpg" alt="Instagram enrolment ad for Northstar Preschools">
-        <button type="button" class="zoom" data-img="img/work/ad-social-square.jpg" data-caption="Instagram enrolment ad — Northstar Preschools"><span>⤢</span></button>
+        <button type="button" class="zoom" data-img="img/work/ad-social-square.jpg" data-caption="Instagram enrolment ad · Northstar Preschools"><span>⤢</span></button>
       </div>
-      <div>
-        <span class="deck-tag">Meta ads · Northstar Preschools</span>
-        <h3>Meta ads for 15 locations</h3>
-        <p>Full campaign management across 15 locations with a weekly scorecard judging every dollar by cost per lead.</p>
-        <div class="deck-result">Result: CPL 28% under target ($53.72 vs $75)</div>
+      <div class="deck-copy">
+        <span class="deck-tag">Marketing, run like clockwork</span>
+        <h3>15 locations, one scorecard</h3>
+        <p>Every ad, every post, every location judged by the same honest number: cost per lead. Not vibes, not "engagement." The number that actually pays the bills.</p>
+        <div class="deck-result">28% under CPL target · 14+ branded posts/month</div>
       </div>
     </div>
   </div>
 </section>
 
-<section class="slide project-slide scene" data-label="Content engine">
+<!-- ================= HIGHLIGHT B: automation, condensed ================= -->
+<section class="slide project-slide scene" data-label="Systems" data-bg="#EDE8D0" data-enter="pop">
   <div class="wrap">
-    <span class="sec-label project-kicker">Selected work · Northstar Preschools</span>
+    <span class="sec-label project-kicker">Highlight 02</span>
+    <h2 class="sec-title">Systems, not spreadsheets</h2>
+    <p class="sec-intro">The unglamorous half of the job: leads that go missing, reports assembled by hand, questions that take a day to answer. I build the thing that makes each of those stop being a recurring problem.</p>
+    <div class="stats-grid" style="max-width:820px; margin-top:40px; padding-top:0; border-top:none;">
+      <div class="stat"><b>5+ hrs</b><span>manual CRM exporting, gone every week</span></div>
+      <div class="stat"><b>3hrs→mins</b><span>weekly report time</span></div>
+      <div class="stat stat-center"><b>✓</b><span>accurate CPL, full-funnel visibility</span></div>
+      <div class="stat"><b>Seconds</b><span>to answer any performance question</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= HIGHLIGHT C: this site is a project too ================= -->
+<section class="slide project-slide scene" data-label="This page" data-bg="#EDE8D0" data-exit="split">
+  <div class="wrap">
+    <span class="sec-label project-kicker">Highlight 03</span>
     <div class="deck-item from-right reverse">
       <div class="deck-media">
-        <img src="img/work/ad-flyer-newmonth.jpg" alt="Enrolment flyer for Northstar Preschools">
-        <button type="button" class="zoom" data-img="img/work/ad-flyer-newmonth.jpg" data-caption="Enrolment flyer — Northstar Preschools"><span>⤢</span></button>
+        <div class="deck-stat"><b>100%</b><span>hand-coded, no template or page-builder</span></div>
       </div>
-      <div>
-        <span class="deck-tag">Content &amp; creative · Northstar Preschools</span>
-        <h3>The monthly content engine</h3>
-        <p>A planned, produced, and delivered content calendar, on brand, every week, across 11 locations.</p>
-        <div class="deck-result">Result: 14+ branded posts/month, 11 locations</div>
+      <div class="deck-copy">
+        <span class="deck-tag">Even this page is the portfolio</span>
+        <h3>You're looking at a project right now</h3>
+        <p>This scroll-driven deck (the background that shifts as you move, the unlock you just watched happen) is hand-built, not a template. Same instinct as the client work: sweat the details nobody asked for, because that's the part people actually remember.</p>
+        <div class="deck-result">Built solo · animated with plain CSS &amp; JS, no bloat</div>
       </div>
-    </div>
-  </div>
-</section>
-
-<section class="slide project-slide scene" data-label="Local SEO">
-  <div class="wrap">
-    <span class="sec-label project-kicker">Selected work · Northstar Preschools</span>
-    <div class="deck-item from-left">
-      <div class="deck-media">
-        <div class="deck-stat"><b>17+</b><span>optimised local pages, live</span></div>
-      </div>
-      <div>
-        <span class="deck-tag">SEO &amp; local search · Northstar Preschools</span>
-        <h3>The local SEO push</h3>
-        <p>Keyword-targeted pages built against whatever was already ranking, market by market.</p>
-        <div class="deck-result">Result: 17+ optimised pages live</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="slide project-slide scene" data-label="Lead sync">
-  <div class="wrap">
-    <span class="sec-label project-kicker">Selected work · Northstar Preschools</span>
-    <div class="deck-item from-right reverse">
-      <div class="deck-media">
-        <div class="deck-stat"><b>5+ hrs</b><span>of manual CRM exporting, gone every week</span></div>
-      </div>
-      <div>
-        <span class="deck-tag">Automation &amp; reporting · Northstar Preschools</span>
-        <h3>The 15-location lead sync</h3>
-        <p>An Apps Script system syncing CRM leads into a live master workbook, self-repairing, no manual exports.</p>
-        <div class="deck-result">Result: 5+ hrs/week of manual work, gone</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="slide project-slide scene" data-label="Invisible leads">
-  <div class="wrap">
-    <span class="sec-label project-kicker">Selected work · Northstar Preschools</span>
-    <div class="deck-item from-left">
-      <div class="deck-media">
-        <div class="deck-stat"><b>✓</b><span>accurate CPL, full-funnel visibility</span></div>
-      </div>
-      <div>
-        <span class="deck-tag">Data &amp; attribution · Northstar Preschools</span>
-        <h3>The invisible leads</h3>
-        <p>Leads that came in outside the ad platform's own tracking were going uncounted, skewing cost-per-lead. Built a fix that catches every one.</p>
-        <div class="deck-result">Result: accurate CPL, full-funnel visibility</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="slide project-slide scene" data-label="Weekly report">
-  <div class="wrap">
-    <span class="sec-label project-kicker">Selected work · Northstar Preschools</span>
-    <div class="deck-item from-right reverse">
-      <div class="deck-media">
-        <div class="deck-stat"><b>3hrs→mins</b><span>weekly report time, every week</span></div>
-      </div>
-      <div>
-        <span class="deck-tag">Automation &amp; reporting · Northstar Preschools</span>
-        <h3>The one-click weekly report</h3>
-        <p>A Node.js generator that assembles the polished, branded weekly report leadership used to wait on a person for.</p>
-        <div class="deck-result">Result: ~3 hours → minutes</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="slide project-slide scene" data-label="KPI dashboard">
-  <div class="wrap">
-    <span class="sec-label project-kicker">Selected work · Northstar Preschools</span>
-    <div class="deck-item from-left">
-      <div class="deck-media">
-        <div class="deck-stat"><b>Seconds</b><span>to answer any performance question</span></div>
-      </div>
-      <div>
-        <span class="deck-tag">Dashboards · Northstar Preschools</span>
-        <h3>The KPI dashboard</h3>
-        <p>One live dashboard replacing the ad-hoc data pull, so "how are we doing?" gets answered on the spot.</p>
-        <div class="deck-result">Result: performance questions answered in seconds</div>
-      </div>
-    </div>
-    <div class="wrap" style="margin-top:40px; text-align:center; padding:0;">
-      <a class="btn btn-ghost" href="creatives.html">See my ad creative &amp; video-editing work →</a>
     </div>
   </div>
 </section>
 
 <!-- ================= TOOLS ================= -->
-<section class="slide ring-sec scene" id="tools" data-label="Tools">
+<section class="slide ring-sec scene" id="tools" data-label="Tools" data-bg="#FFFFFF" data-enter="pop">
   <div class="wrap">
     <span class="sec-label">Tools &amp; platforms</span>
     <h2 class="sec-title">The toolkit behind the work</h2>
@@ -196,35 +126,34 @@
 </section>
 
 <!-- ================= ABOUT ================= -->
-<section class="slide" id="about" data-label="About">
+<section class="slide" id="about" data-label="About" data-bg="#EDE8D0">
   <div class="wrap about-grid">
     <div class="about-photo"><img src="img/headshot-nobg.png" alt="Ahmad Rajeh" width="768" height="1261"></div>
     <div class="about-text">
-      <span class="sec-label">About me</span>
-      <h2 class="sec-title">The person behind the work</h2>
-      <p>I'm Ahmad, a Filipino based in the Philippines. I started in data analysis 5+ years ago, and the work kept growing: today I run Meta ad campaigns, write SEO pages, design social graphics, edit video, and build the automated reporting that keeps it all honest.</p>
-      <p>Right now that means managing marketing end to end for a 15-location preschool network, one point of contact instead of four freelancers.</p>
-      <p>I work fast, communicate straight, and measure success in hours you get back.</p>
+      <span class="sec-label">About me, quickly</span>
+      <h2 class="sec-title">Data person who ended up doing everything</h2>
+      <p>Philippines-based. Started in data analysis, kept getting handed the next adjacent problem (ads, content, SEO, automation) until "marketing back office" was the honest job title.</p>
+      <p>Today: one 15-location preschool network, one point of contact, a lot fewer tabs open for the people who used to juggle four freelancers.</p>
       <a class="btn btn-ghost" href="../site/cv/Ahmad-Rajeh-CV.pdf" target="_blank" rel="noopener" style="margin-top: 10px;">View my full CV</a>
     </div>
   </div>
 </section>
 
 <!-- ================= CONTACT ================= -->
-<section class="slide" id="contact" data-label="Contact">
+<section class="slide" id="contact" data-label="Contact" data-bg="#EDE8D0">
   <div class="wrap" style="text-align:center;">
     <span class="sec-label">Contact</span>
-    <h2 class="sec-title">Tell me what's eating your week.</h2>
+    <h2 class="sec-title">That's the short version.</h2>
     <div class="contact-box">
       <h3>Ready when you are.</h3>
-      <p>Free 20-minute call, no pitch — just an honest read on what I'd do with it.</p>
+      <p>Free 20-minute call, no pitch. Just an honest read on what I'd do with it.</p>
       <div class="ctas">
         <a class="btn btn-primary" href="https://calendly.com/ahmadoo-rajeh/client-meeting" target="_blank" rel="noopener">Book a call</a>
         <a class="btn btn-ghost" href="mailto:Ahmadoo.rajeh@gmail.com">Email me</a>
       </div>
     </div>
     <div class="final-cta">
-      <p>That's the highlight reel. Pricing, full case studies, and more live on the main site.</p>
+      <p>Pricing, full case studies, and every project in detail live on the main site.</p>
       <a class="btn btn-primary" href="../site/index.html">Visit the main website →</a>
     </div>
     <footer>
@@ -244,6 +173,6 @@
   </div>
 </div>
 
-<script src="js/main.js?v=10"></script>
+<script src="js/main.js?v=20"></script>
 </body>
 </html>

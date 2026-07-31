@@ -8,13 +8,28 @@
 (function () {
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  // "Unlock" reveal: the page loads with body.locking set (in the HTML, so
+  // there's no flash of the unlocked state before JS runs), #scene-bg pinned
+  // to a dark "powered off" colour, and the hero content pre-faded/blurred.
+  // Removing the class a beat later lets all of that cross-fade in together —
+  // background lightening, hero content staggering in — like the page turning
+  // itself on, rather than everything just being static on arrival.
+  if (reduced) {
+    document.body.classList.remove('locking');
+  } else {
+    requestAnimationFrame(() => {
+      setTimeout(() => document.body.classList.remove('locking'), 220);
+    });
+  }
+
   /* ---------- Slides: discrete scene changes + dot nav + wheel/touch/keyboard ---------- */
   const slides = document.querySelectorAll('.slide');
   const dotsNav = document.getElementById('slide-dots');
+  const sceneBg = document.getElementById('scene-bg');
   if (slides.length) {
     let current = 0;
     let animating = false;
-    const ANIM_MS = 700;
+    const PUSH_MS = 600; // matches .slide's CSS transition duration
 
     const dots = [];
     if (dotsNav) {
@@ -33,12 +48,60 @@
       dots.forEach((d, i) => d.classList.toggle('active', i === index));
     }
 
+    // Move a slide to a parked position with NO animation. Every reposition that
+    // isn't the actual visible push has to go through this, or the base .slide
+    // transition animates the reposition too and a phantom slide sweeps across
+    // the screen.
+    function parkInstantly(el, above) {
+      el.style.transition = 'none';
+      el.classList.toggle('stage-above', above);
+      void el.offsetHeight; // force the parked position to paint before the transition is restored
+      el.style.transition = '';
+    }
+
+    // Park every non-current slide on the side it should enter from next:
+    // earlier slides wait above, later slides wait below (their CSS default).
+    function parkAll() {
+      slides.forEach((el, i) => {
+        if (i === current) return;
+        el.classList.remove('pop-stage');
+        parkInstantly(el, i < current);
+      });
+    }
+
+    // Stage a slide for the "pop" entrance: centred (no translate) at zero
+    // scale, set instantly so the scale-up itself is the only visible motion.
+    function popStage(el) {
+      el.style.transition = 'none';
+      el.classList.remove('stage-above');
+      el.classList.add('pop-stage');
+      void el.offsetHeight;
+      el.style.transition = '';
+    }
+
+    // Retire a slide instantly, with no animated travel. Used by the custom
+    // exits, where the content has already animated itself away, so letting
+    // the empty panel slide to its parked spot would drag a phantom across
+    // the screen.
+    function retireInstantly(el) {
+      el.style.transition = 'none';
+      el.classList.remove('current');
+      el.classList.add('stage-above');
+      void el.offsetHeight;
+      el.style.transition = '';
+    }
+
     function goTo(index) {
       if (index < 0 || index >= slides.length || index === current) return;
       if (animating && !reduced) return;
       const forward = index > current;
       const outgoing = slides[current];
       const incoming = slides[index];
+
+      // The "interactive background changing" effect: each slide declares its
+      // own scene colour via data-bg, and #scene-bg's own CSS transition turns
+      // every slide change into a smooth cross-fade instead of a hard cut.
+      if (sceneBg && incoming.dataset.bg) sceneBg.style.background = incoming.dataset.bg;
 
       incoming.setAttribute('aria-hidden', 'false');
       outgoing.setAttribute('aria-hidden', 'true');
@@ -52,27 +115,84 @@
       }
 
       animating = true;
-      incoming.classList.add(forward ? 'enter-down' : 'enter-up');
-      incoming.style.zIndex = '3';
-      void incoming.offsetHeight; // force layout so the start position paints before animating
 
-      // A short setTimeout instead of requestAnimationFrame here: rAF can be paused
-      // by the browser for a backgrounded/inactive tab (e.g. the user switches apps
-      // mid-transition on their phone), which would leave the swap stuck forever.
-      // setTimeout always fires, so the transition can never get permanently wedged.
-      setTimeout(() => {
-        outgoing.classList.remove('current');
-        outgoing.classList.add(forward ? 'exit-up' : 'exit-down');
-        incoming.classList.remove('enter-down', 'enter-up');
-        incoming.classList.add('current');
-      }, 20);
+      // Per-slide choreography, opted into from the HTML rather than hardcoded
+      // by index: a slide may declare data-exit="corners"|"split" for how its
+      // own content leaves when scrolling forward off it, and data-enter="pop"
+      // for how it arrives. Anything that declares neither uses the plain
+      // connected push in the else-branch below, unchanged.
+      // Only forward moves are choreographed; scrolling back always pushes, so
+      // reversing is predictable rather than replaying a bespoke animation.
+      const exitKind = forward ? outgoing.dataset.exit : null;
+      const popIn = forward && incoming.dataset.enter === 'pop';
 
-      setTimeout(() => {
-        outgoing.classList.remove('exit-up', 'exit-down');
-        outgoing.style.zIndex = '';
-        incoming.style.zIndex = '';
-        animating = false;
-      }, ANIM_MS);
+      if (exitKind || popIn) {
+        const item = outgoing.querySelector('.deck-item');
+        if (exitKind) {
+          outgoing.classList.add('exiting-' + exitKind); // drives the kicker, which sits outside .deck-item
+          if (item) item.classList.add(exitKind === 'split' ? 'splitting-out' : 'corner-out');
+        }
+        // EXIT_MS is only when the (by then empty) outgoing PANEL is retired; it
+        // is not when the incoming slide starts. The incoming pop deliberately
+        // begins almost immediately, overlapping the outgoing content's exit, so
+        // the new scene growing outward reads as the thing shoving the old one
+        // out to the corners. Waiting for the exit to finish first made the two
+        // look like unrelated, sequential events.
+        const EXIT_MS = exitKind ? 520 : 0;
+
+        if (popIn) {
+          popStage(incoming); // centred at zero scale: invisible, so staging it now costs nothing
+          // Deliberately a separate task before going current. In the same task
+          // the browser can coalesce "stage at zero scale" and "become current"
+          // into one style recalculation, so the scale-up either never starts or
+          // starts from the wrong value.
+          setTimeout(() => incoming.classList.add('current'), exitKind ? 100 : 20);
+        }
+
+        setTimeout(() => {
+          // The outgoing content has already animated itself away, so the panel
+          // is visually empty: retire it instantly rather than letting it travel.
+          retireInstantly(outgoing);
+          if (!popIn) incoming.classList.add('current');
+        }, EXIT_MS);
+
+        setTimeout(() => {
+          if (exitKind) {
+            outgoing.classList.remove('exiting-' + exitKind);
+            if (item) item.classList.remove('splitting-out', 'corner-out');
+          }
+          parkAll(); // also clears pop-stage
+          animating = false;
+        }, EXIT_MS + 380);
+      } else {
+        // Connected push: the incoming slide always starts exactly one
+        // slide-height away from resting (below when moving forward, above
+        // when moving back), and both slides move by that same distance at
+        // the same time, so the incoming scene visibly shoves the outgoing
+        // one off instead of the two fading independently.
+        if (!forward) parkInstantly(incoming, true); // park above, instead of its default "below"
+
+        // A short setTimeout instead of requestAnimationFrame here: rAF can be paused
+        // by the browser for a backgrounded/inactive tab (e.g. the user switches apps
+        // mid-transition on their phone), which would leave the swap stuck forever.
+        // setTimeout always fires, so the transition can never get permanently wedged.
+        setTimeout(() => {
+          incoming.classList.remove('stage-above');
+          incoming.classList.add('current');
+          outgoing.classList.remove('current');
+          if (forward) outgoing.classList.add('stage-above'); // push it up and off, not down
+        }, 20);
+        setTimeout(() => {
+          // Re-park every off-screen slide for whichever direction comes next,
+          // ALWAYS with the transition suppressed. Doing this with the
+          // transition live is what produced the ghost: the slide that had just
+          // been pushed up to -100% would animate all the way back down to
+          // +100%, sweeping a full-screen phantom downward through the viewport
+          // after every single scroll.
+          parkAll();
+          animating = false;
+        }, PUSH_MS);
+      }
 
       current = index;
       setDots(index);
@@ -82,28 +202,22 @@
     // assistive tech until it becomes current.
     slides.forEach((el, i) => el.setAttribute('aria-hidden', i === 0 ? 'false' : 'true'));
     setDots(0);
+    if (sceneBg && slides[0].dataset.bg) sceneBg.style.background = slides[0].dataset.bg;
 
     const advance = (delta) => goTo(current + delta);
 
-    // A slide's own content can be taller than the screen (its `overflow-y:auto`
-    // handles that). Before jumping to the next/previous slide, check there's
-    // nothing left to scroll within the CURRENT slide first — otherwise a user
-    // scrolling down a tall slide (e.g. the hero on a small phone) gets bounced
-    // to the next scene before they've even seen the rest of this one.
-    // EPS is intentionally generous (not a couple of px): mobile browsers resize
-    // the viewport as the address bar collapses/expands, so `clientHeight` can be
-    // a little smaller than its settled value right when a swipe starts. With a
-    // tiny EPS that phantom few-px "overflow" reads as real content still to
-    // scroll, so the guard blocks every swipe forever and the slide feels dead
-    // until a dot is clicked directly. A larger threshold ignores overflow too
-    // small to ever be visually meaningful, so it can't wedge navigation.
-    const EPS = 32;
-    const canScrollWithin = (dir) => {
-      const el = slides[current];
-      return dir > 0
-        ? el.scrollTop + el.clientHeight < el.scrollHeight - EPS
-        : el.scrollTop > EPS;
-    };
+    // Explicit "keep scrolling" cue in the hero — a direct, discoverable way
+    // to move on for anyone who doesn't realise this page responds to
+    // wheel/swipe/keys rather than a normal scrollbar.
+    const scrollCue = document.getElementById('scroll-cue');
+    if (scrollCue) scrollCue.addEventListener('click', () => advance(1));
+
+    // Each slide is now exactly one screenful (overflow:hidden, content
+    // compacted at small sizes), so there is no per-slide inner scrolling to
+    // defer to any more: a scroll gesture ALWAYS shifts slides immediately.
+    // The old "let the slide's own content scroll first" guard is gone — that
+    // deferral was the visible bug, a stray scrollbar racing to the bottom of
+    // the slide before anything advanced.
 
     // Wheel: one tick of real intent = one slide. Trackpads fire many tiny
     // deltaY events per gesture, so `animating` (or the reduced-motion no-op
@@ -112,10 +226,8 @@
       const lightbox = document.getElementById('lightbox');
       if (lightbox && !lightbox.hidden) return;
       if (Math.abs(e.deltaY) < 4) return;
-      const dir = e.deltaY > 0 ? 1 : -1;
-      if (canScrollWithin(dir)) return; // let the slide's own content scroll first
       e.preventDefault();
-      advance(dir);
+      advance(e.deltaY > 0 ? 1 : -1);
     }, { passive: false });
 
     // Touch: swipe up = next (matches Stories/Reels), swipe down = previous.
@@ -128,9 +240,7 @@
       const dy = touchStartY - e.changedTouches[0].clientY;
       touchStartY = null;
       if (Math.abs(dy) <= 44) return;
-      const dir = dy > 0 ? 1 : -1;
-      if (canScrollWithin(dir)) return; // still more of this slide to see
-      advance(dir);
+      advance(dy > 0 ? 1 : -1);
     }, { passive: true });
 
     // Keyboard: arrow/page keys and spacebar, presentation-clicker style.
