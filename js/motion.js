@@ -117,6 +117,17 @@
     return [root];
   }
 
+  /* Card grids whose CHILDREN are themselves atomic. The walker is allowed one
+     level deeper into these so each card arrives with its own spring instead of
+     the grid scaling as a single slab - which is what "the info arriving" means
+     to a reader. Every child type here already appears in ATOMIC, so the descent
+     stops at the card and cannot split it further. */
+  var GRID_SPLIT = [
+    '.stats-grid', '.hook-stats', '.work-mini-list', '.doc-row', '.review-row',
+    '.anatomy', '.timeline', '.pillars-row', '.pipeline', '.tool-grid', '.steps'
+  ].join(',');
+  var GRID_SPLIT_MAX = 6; // above this, staggering one card at a time runs too long
+
   /* Micro units inside one group: descend to leaves, stopping at anything
      atomic or text-level. */
   function collectMicro(group) {
@@ -127,6 +138,15 @@
         if (c.tagName === 'SCRIPT' || c.tagName === 'STYLE' || c.hidden) continue;
         var stop = false;
         try { stop = c.matches(ATOMIC) || c.matches(TEXT_LEVEL); } catch (e) {}
+        // A small card grid is not really one thing: let its cards through.
+        if (stop) {
+          var splittable = false;
+          try {
+            splittable = c.matches(GRID_SPLIT) && c.children.length > 1 &&
+                         c.children.length <= GRID_SPLIT_MAX;
+          } catch (e) {}
+          if (splittable) { walk(c); continue; }
+        }
         if (stop) {
           if ((c.textContent || '').trim() || c.querySelector('img')) out.push(c);
           continue;
@@ -146,8 +166,8 @@
     zoom:  { x: 0, y: 0 }     // scales in place, so it pushes nothing
   };
 
-  var MAX_TRAVEL = 26;
-  var MIN_TRAVEL = 10;
+  var MAX_TRAVEL = 32;
+  var MIN_TRAVEL = 14;
   var IMPULSE = 6;
   var PROX = 30;
   var OVERSHOOT = 0.19;    // must match the 58% keyframe stop in work.css
@@ -283,9 +303,18 @@
 
     var last = null;
     function check() {
+      // During a slide change TWO slides are current at once: the outgoing one
+      // is still finishing its exit while the incoming one has already started
+      // arriving. Taking the first `.current` in DOM order picked whichever sat
+      // earlier in the document, which on a forward move is the slide leaving.
+      // Skip anything mid-exit; the incoming slide is the only real answer.
       var cur = null;
       for (var i = 0; i < slides.length; i++) {
-        if (slides[i].classList.contains('current')) { cur = slides[i]; break; }
+        var c = slides[i].classList;
+        if (!c.contains('current')) continue;
+        if (c.contains('exiting-away') || c.contains('exiting-split') ||
+            c.contains('exiting-corners')) continue;
+        cur = slides[i]; break;
       }
       if (cur && cur !== last) { last = cur; run(cur); }
     }

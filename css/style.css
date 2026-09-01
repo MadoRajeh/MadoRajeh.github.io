@@ -60,7 +60,13 @@ body {
    body, as an earlier version did) is what lets normal scrolling exist below it
    at all. */
 #deck-stage {
-  position: relative; height: 100vh; overflow: hidden;
+  position: relative; overflow: hidden;
+  /* 100vh on a phone is the height with the URL bar HIDDEN, so the bottom
+     of every slide sat behind the browser chrome and was clipped away by
+     overflow:hidden. dvh tracks what is actually visible. The vh line stays
+     as the fallback for browsers without dvh. */
+  height: 100vh;
+  height: 100dvh;
 }
 
 /* ---------- Scene background: the "interactive background changing" layer ----------
@@ -112,10 +118,23 @@ a { color: var(--link-blue); } /* Wayne's rule: inline text links are always blu
   padding: 96px 24px 56px;
   pointer-events: none;
   transform: translateY(100%); /* resting position: parked just below the viewport */
-  transition: transform .6s cubic-bezier(.65,0,.35,1);
+  transition: transform .34s cubic-bezier(.5,0,.2,1);
   z-index: 1;
 }
 .slide.current { pointer-events: auto; transform: none; z-index: 2; }
+/* Both slides are .current during the overlap window, so DOM order would decide
+   which paints on top - fine going forward, wrong going back. The arriving slide
+   always wins. pointer-events stays off it until it settles so a click during the
+   crossover cannot land on a half-arrived card. */
+.slide.current.entering { z-index: 4; pointer-events: none; }
+/* Belt and braces on top of the parking transform above. Position alone used to
+   be the whole hiding mechanism, which made the deck one stray `transform: none`
+   away from painting all twelve slides at once (it happened - see the
+   reduced-motion note below). Visibility cannot be undone by a transform rule.
+   The hide is delayed by the .6s travel time so an outgoing slide is still seen
+   sliding away; becoming current makes it visible immediately. */
+body.deck .slide { visibility: hidden; transition: transform .34s cubic-bezier(.5,0,.2,1), visibility 0s linear .34s; }
+body.deck .slide.current { visibility: visible; transition: transform .34s cubic-bezier(.5,0,.2,1), visibility 0s linear 0s; }
 /* Used only on the incoming slide when moving BACKWARD, to park it above the
    viewport instead of below (its default) before animating down into place. */
 .slide.stage-above { transform: translateY(-100%); }
@@ -134,8 +153,12 @@ a { color: var(--link-blue); } /* Wayne's rule: inline text links are always blu
 }
 @media (max-width: 760px) { .slide { padding: 90px 20px 40px; } }
 @media (prefers-reduced-motion: reduce) {
-  .slide { transition: none; transform: none !important; }
-  .slide.pop-stage { transform: none !important; }
+  /* Kill the MOTION, never the parking transform. translateY(100%) is the only
+     thing holding the other eleven slides off screen, so `transform: none` here
+     stacked all twelve on top of each other on any phone with Reduce Motion or
+     Low Power Mode enabled. Slides now cut instantly instead of sliding, which
+     is what reduced motion should mean. */
+  .slide, .slide.pop-stage.current { transition: none; }
 }
 
 /* ---------- Custom per-slide exits (opted in via data-exit on the slide) ----------

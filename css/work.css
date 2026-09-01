@@ -636,6 +636,33 @@ body { background: transparent; }
 /* Landing-deck components at short viewports. style.css compacts the ones it
    owns (.stat, .hero-*) for the old 4-slide deck; these are the ones the
    longer landing deck adds. Numbers came from the overflow probe. */
+/* NARROW screens need the same compaction as SHORT ones, and for a different
+   reason: a 375px column wraps the same sentence into far more lines. Keying
+   this only on max-height meant a 375x812 phone - the common iPhone Pro Max
+   size - got full desktop type and clipped 83px of the ATK slide clean off,
+   with no scrollbar and no warning, because .slide is overflow:hidden.
+   Sizes use vh so they keep tightening as the screen gets shorter rather than
+   stepping between fixed breakpoints. */
+@media (max-width: 760px) {
+  .slide { padding: clamp(64px, 8.6dvh, 82px) 18px clamp(22px, 3.6dvh, 34px); }
+  .slide .sec-title { font-size: clamp(19px, 2.6dvh, 23px); line-height: 1.14; margin-bottom: 8px; }
+  .slide .tl-org { font-size: clamp(12px, 1.7dvh, 14.5px); line-height: 1.35; margin-bottom: 6px; }
+  .slide .role-points { margin-top: clamp(8px, 1.4dvh, 14px); }
+  .slide .role-points li {
+    font-size: clamp(12.5px, 1.75dvh, 14.5px);
+    line-height: 1.4;
+    margin-bottom: clamp(4px, 0.75dvh, 7px);
+  }
+  .role-grid { gap: clamp(10px, 1.8dvh, 20px); }
+  .role-side { padding: clamp(11px, 1.6dvh, 16px); }
+  .role-side-label { font-size: 10px; margin-bottom: 8px; }
+  .role-tools { gap: 5px 12px; }
+  .role-tool { font-size: 12.5px; gap: 7px; }
+  .role-tool img { width: 18px; height: 18px; flex-basis: 18px; }
+  .role-badge { margin-top: clamp(6px, 1dvh, 12px); padding-top: clamp(6px, 1dvh, 10px); }
+  .role-badge strong { font-size: 17px; }
+  .role-badge span { font-size: 11px; }
+}
 @media (max-height: 780px) {
   .slide .role-points { margin-top: 12px; }
   .slide .role-points li { font-size: 13.5px; line-height: 1.5; margin-bottom: 7px; }
@@ -748,26 +775,26 @@ body { background: transparent; }
 .work-grid .work-card.reveal:nth-child(2),
 .doc-row .doc-card.reveal:nth-child(2),
 .anatomy .anat-card.reveal:nth-child(2),
-.review-row .review-card.reveal:nth-child(2) { transition-delay: .05s; }
+.review-row .review-card.reveal:nth-child(2) { transition-delay: .033s; }
 .work-grid .work-card.reveal:nth-child(3),
 .doc-row .doc-card.reveal:nth-child(3),
 .anatomy .anat-card.reveal:nth-child(3),
-.review-row .review-card.reveal:nth-child(3) { transition-delay: .099s; }
+.review-row .review-card.reveal:nth-child(3) { transition-delay: .064s; }
 .work-grid .work-card.reveal:nth-child(4),
 .doc-row .doc-card.reveal:nth-child(4),
-.anatomy .anat-card.reveal:nth-child(4) { transition-delay: .149s; }
-.work-grid .work-card.reveal:nth-child(n+5) { transition-delay: .187s; }
+.anatomy .anat-card.reveal:nth-child(4) { transition-delay: .097s; }
+.work-grid .work-card.reveal:nth-child(n+5) { transition-delay: .122s; }
 
 /* The numbered engineering steps walk down the page one at a time. */
-.steps .step.reveal:nth-child(2) { transition-delay: .044s; }
-.steps .step.reveal:nth-child(3) { transition-delay: .088s; }
-.steps .step.reveal:nth-child(4) { transition-delay: .132s; }
-.steps .step.reveal:nth-child(n+5) { transition-delay: .165s; }
+.steps .step.reveal:nth-child(2) { transition-delay: .029s; }
+.steps .step.reveal:nth-child(3) { transition-delay: .057s; }
+.steps .step.reveal:nth-child(4) { transition-delay: .086s; }
+.steps .step.reveal:nth-child(n+5) { transition-delay: .107s; }
 
 /* Timeline entries arrive in sequence, and the connecting rail draws itself. */
-.timeline .tl-item.reveal:nth-child(2) { transition-delay: .055s; }
-.timeline .tl-item.reveal:nth-child(3) { transition-delay: .11s; }
-.timeline .tl-item.reveal:nth-child(n+4) { transition-delay: .154s; }
+.timeline .tl-item.reveal:nth-child(2) { transition-delay: .036s; }
+.timeline .tl-item.reveal:nth-child(3) { transition-delay: .072s; }
+.timeline .tl-item.reveal:nth-child(n+4) { transition-delay: .1s; }
 .timeline.reveal::before { transform-origin: top; transform: scaleY(0); transition: transform .6s cubic-bezier(.4,0,.2,1) .06s; }
 .timeline.reveal.in::before { transform: scaleY(1); }
 
@@ -818,8 +845,26 @@ body { background: transparent; }
   .role-tools { flex-direction: row; flex-wrap: wrap; gap: 8px 18px; }
   .role-badge { margin-top: 14px; padding-top: 12px; }
 }
-/* On a short viewport the bullets need the room more than the panel does. */
-@media (max-height: 700px) {
+/* On a short viewport the panel goes horizontal and loses its card chrome rather
+   than disappearing. It used to be display:none below 700px, which quietly cost
+   the whole tools list on every phone once dvh sizing made 700px the normal
+   height rather than an edge case. */
+@media (max-height: 760px) {
+  .role-grid { grid-template-columns: 1fr; }
+  .role-side {
+    background: none; border: 0; padding: 0;
+    margin-top: clamp(6px, 1.2dvh, 12px);
+  }
+  .role-side-label { font-size: 9.5px; letter-spacing: .09em; margin-bottom: 5px; }
+  .role-tools { flex-direction: row; flex-wrap: wrap; gap: 4px 12px; }
+  .role-tool { font-size: 11.5px; gap: 5px; }
+  .role-tool img { width: 15px; height: 15px; flex-basis: 15px; }
+  /* The year badge repeats the date already in the header line above, so it is
+     the one thing here that can go without losing anything. */
+  .role-badge { display: none; }
+}
+/* Genuinely tiny screens: the bullets matter more than the tool list. */
+@media (max-height: 560px) {
   .role-side { display: none; }
   .role-grid { grid-template-columns: 1fr; }
 }
@@ -854,27 +899,27 @@ body.deck .slide .wrap, body.deck .slide .role-grid, body.deck .slide .about-gri
 
 /* ---------- ENTRANCES ---------- */
 body.deck .slide:not(.exiting-away).current [data-fx="swipe"] {
-  animation: fx-swipe-in .46s cubic-bezier(.16,1,.3,1) calc(.02s + var(--i,0) * .045s) both; }
+  animation: fx-swipe-in 0.54s linear calc(.015s + var(--i,0) * .03s) both; }
 body.deck .slide:not(.exiting-away).current [data-fx="rise"] {
-  animation: fx-rise-in .48s cubic-bezier(.16,1,.3,1) calc(.02s + var(--i,0) * .045s) both; }
+  animation: fx-rise-in 0.54s linear calc(.015s + var(--i,0) * .03s) both; }
 body.deck .slide:not(.exiting-away).current [data-fx="zoom"] {
-  animation: fx-zoom-in .48s cubic-bezier(.16,1,.3,1) calc(.02s + var(--i,0) * .045s) both; }
+  animation: fx-zoom-in 0.54s linear calc(.015s + var(--i,0) * .03s) both; }
 body.deck .slide:not(.exiting-away).current [data-fx="fan"] {
-  animation: fx-fan-in .48s cubic-bezier(.16,1,.3,1) calc(.02s + var(--i,0) * .045s) both; }
+  animation: fx-fan-in 0.54s linear calc(.015s + var(--i,0) * .03s) both; }
 body.deck .slide:not(.exiting-away).current [data-fx="tilt"] {
-  animation: fx-tilt-in .52s cubic-bezier(.16,1,.3,1) calc(.02s + var(--i,0) * .045s) both; }
+  animation: fx-tilt-in 0.54s linear calc(.015s + var(--i,0) * .03s) both; }
 
 /* ---------- EXITS: tighter, no bounce, near-simultaneous ---------- */
 body.deck .slide.exiting-away [data-fx="swipe"] {
-  animation: fx-swipe-out .18s cubic-bezier(.4,0,.2,1) calc(var(--i,0) * .01s) both; }
+  animation: fx-swipe-out .11s cubic-bezier(.4,0,.2,1) calc(var(--i,0) * .006s) both; }
 body.deck .slide.exiting-away [data-fx="rise"] {
-  animation: fx-rise-out .18s cubic-bezier(.4,0,.2,1) calc(var(--i,0) * .01s) both; }
+  animation: fx-rise-out .11s cubic-bezier(.4,0,.2,1) calc(var(--i,0) * .006s) both; }
 body.deck .slide.exiting-away [data-fx="zoom"] {
-  animation: fx-zoom-out .18s cubic-bezier(.4,0,.2,1) calc(var(--i,0) * .01s) both; }
+  animation: fx-zoom-out .11s cubic-bezier(.4,0,.2,1) calc(var(--i,0) * .006s) both; }
 body.deck .slide.exiting-away [data-fx="fan"] {
-  animation: fx-fan-out .18s cubic-bezier(.4,0,.2,1) calc(var(--i,0) * .01s) both; }
+  animation: fx-fan-out .11s cubic-bezier(.4,0,.2,1) calc(var(--i,0) * .006s) both; }
 body.deck .slide.exiting-away [data-fx="tilt"] {
-  animation: fx-tilt-out .18s cubic-bezier(.4,0,.2,1) calc(var(--i,0) * .01s) both; }
+  animation: fx-tilt-out .11s cubic-bezier(.4,0,.2,1) calc(var(--i,0) * .006s) both; }
 
 /* ---------- the five flavours, travel read from --travel ----------
    Shape: 0% launch hard, 28% opacity already at full (so text is readable
@@ -883,42 +928,107 @@ body.deck .slide.exiting-away [data-fx="tilt"] {
    shorthand's ease-out also governs the spring-back and the last few pixels
    crawl, which is what made this feel slow. */
 @keyframes fx-swipe-in {
-  0%    { opacity: 0; transform: translate3d(calc(var(--travel,26px) * -1), 0, 0); animation-timing-function: cubic-bezier(.16,.9,.24,1); }
-  28%   { opacity: 1; transform: translate3d(calc(var(--travel,26px) * -.22), 0, 0); animation-timing-function: cubic-bezier(.3,.4,.4,1); }
-  62%   { opacity: 1; transform: translate3d(calc(var(--travel,26px) * .15), 0, 0); animation-timing-function: cubic-bezier(.42,0,.3,1); }
-  100%  { opacity: 1; transform: none; }
+  0%      { opacity: 0; transform: translate3d(calc(var(--travel,32px) * -1), 0, 0) scale(0.94); }
+  6.25%   { opacity: 0.284; transform: translate3d(calc(var(--travel,32px) * -0.8931), 0, 0) scale(0.9464); }
+  12.5%   { opacity: 0.568; transform: translate3d(calc(var(--travel,32px) * -0.6506), 0, 0) scale(0.961); }
+  18.75%  { opacity: 0.852; transform: translate3d(calc(var(--travel,32px) * -0.3726), 0, 0) scale(0.9776); }
+  25%     { opacity: 1; transform: translate3d(calc(var(--travel,32px) * -0.1277), 0, 0) scale(0.9923); }
+  31.25%  { opacity: 1; transform: translate3d(calc(var(--travel,32px) * 0.0484), 0, 0) scale(1.0029); }
+  37.5%   { opacity: 1; transform: translate3d(calc(var(--travel,32px) * 0.1473), 0, 0) scale(1.0088); }
+  43.75%  { opacity: 1; transform: translate3d(calc(var(--travel,32px) * 0.1791), 0, 0) scale(1.0107); }
+  50%     { opacity: 1; transform: translate3d(calc(var(--travel,32px) * 0.1632), 0, 0) scale(1.0098); }
+  56.25%  { opacity: 1; transform: translate3d(calc(var(--travel,32px) * 0.1212), 0, 0) scale(1.0073); }
+  62.5%   { opacity: 1; transform: translate3d(calc(var(--travel,32px) * 0.0713), 0, 0) scale(1.0043); }
+  68.75%  { opacity: 1; transform: translate3d(calc(var(--travel,32px) * 0.0265), 0, 0) scale(1.0016); }
+  75%     { opacity: 1; transform: translate3d(calc(var(--travel,32px) * -0.0063), 0, 0) scale(0.9996); }
+  81.25%  { opacity: 1; transform: translate3d(calc(var(--travel,32px) * -0.0253), 0, 0) scale(0.9985); }
+  87.5%   { opacity: 1; transform: translate3d(calc(var(--travel,32px) * -0.032), 0, 0) scale(0.9981); }
+  93.75%  { opacity: 1; transform: translate3d(calc(var(--travel,32px) * -0.0298), 0, 0) scale(0.9982); }
+  100%    { opacity: 1; transform: translate3d(calc(var(--travel,32px) * 0), 0, 0) scale(1); }
 }
 @keyframes fx-swipe-out { from { opacity:1; transform:none; } to { opacity:0; transform: translate3d(-30px,0,0); } }
 
 @keyframes fx-rise-in {
-  0%    { opacity: 0; transform: translate3d(0, var(--travel,26px), 0) scale(.985); animation-timing-function: cubic-bezier(.16,.9,.24,1); }
-  28%   { opacity: 1; transform: translate3d(0, calc(var(--travel,26px) * .22), 0) scale(.997); animation-timing-function: cubic-bezier(.3,.4,.4,1); }
-  62%   { opacity: 1; transform: translate3d(0, calc(var(--travel,26px) * -.15), 0) scale(1.004); animation-timing-function: cubic-bezier(.42,0,.3,1); }
-  100%  { opacity: 1; transform: none; }
+  0%      { opacity: 0; transform: translate3d(0, calc(var(--travel,32px) * 1), 0) scale(0.94); }
+  6.25%   { opacity: 0.284; transform: translate3d(0, calc(var(--travel,32px) * 0.8931), 0) scale(0.9464); }
+  12.5%   { opacity: 0.568; transform: translate3d(0, calc(var(--travel,32px) * 0.6506), 0) scale(0.961); }
+  18.75%  { opacity: 0.852; transform: translate3d(0, calc(var(--travel,32px) * 0.3726), 0) scale(0.9776); }
+  25%     { opacity: 1; transform: translate3d(0, calc(var(--travel,32px) * 0.1277), 0) scale(0.9923); }
+  31.25%  { opacity: 1; transform: translate3d(0, calc(var(--travel,32px) * -0.0484), 0) scale(1.0029); }
+  37.5%   { opacity: 1; transform: translate3d(0, calc(var(--travel,32px) * -0.1473), 0) scale(1.0088); }
+  43.75%  { opacity: 1; transform: translate3d(0, calc(var(--travel,32px) * -0.1791), 0) scale(1.0107); }
+  50%     { opacity: 1; transform: translate3d(0, calc(var(--travel,32px) * -0.1632), 0) scale(1.0098); }
+  56.25%  { opacity: 1; transform: translate3d(0, calc(var(--travel,32px) * -0.1212), 0) scale(1.0073); }
+  62.5%   { opacity: 1; transform: translate3d(0, calc(var(--travel,32px) * -0.0713), 0) scale(1.0043); }
+  68.75%  { opacity: 1; transform: translate3d(0, calc(var(--travel,32px) * -0.0265), 0) scale(1.0016); }
+  75%     { opacity: 1; transform: translate3d(0, calc(var(--travel,32px) * 0.0063), 0) scale(0.9996); }
+  81.25%  { opacity: 1; transform: translate3d(0, calc(var(--travel,32px) * 0.0253), 0) scale(0.9985); }
+  87.5%   { opacity: 1; transform: translate3d(0, calc(var(--travel,32px) * 0.032), 0) scale(0.9981); }
+  93.75%  { opacity: 1; transform: translate3d(0, calc(var(--travel,32px) * 0.0298), 0) scale(0.9982); }
+  100%    { opacity: 1; transform: translate3d(0, calc(var(--travel,32px) * 0), 0) scale(1); }
 }
 @keyframes fx-rise-out { from { opacity:1; transform:none; } to { opacity:0; transform: translate3d(0,-26px,0); } }
 
 @keyframes fx-zoom-in {
-  0%    { opacity: 0; transform: scale(.945); animation-timing-function: cubic-bezier(.16,.9,.24,1); }
-  28%   { opacity: 1; transform: scale(.988); animation-timing-function: cubic-bezier(.3,.4,.4,1); }
-  62%   { opacity: 1; transform: scale(1.012); animation-timing-function: cubic-bezier(.42,0,.3,1); }
-  100%  { opacity: 1; transform: none; }
+  0%      { opacity: 0; transform: scale(0.9); }
+  6.25%   { opacity: 0.284; transform: scale(0.9107); }
+  12.5%   { opacity: 0.568; transform: scale(0.9349); }
+  18.75%  { opacity: 0.852; transform: scale(0.9627); }
+  25%     { opacity: 1; transform: scale(0.9872); }
+  31.25%  { opacity: 1; transform: scale(1.0048); }
+  37.5%   { opacity: 1; transform: scale(1.0147); }
+  43.75%  { opacity: 1; transform: scale(1.0179); }
+  50%     { opacity: 1; transform: scale(1.0163); }
+  56.25%  { opacity: 1; transform: scale(1.0121); }
+  62.5%   { opacity: 1; transform: scale(1.0071); }
+  68.75%  { opacity: 1; transform: scale(1.0026); }
+  75%     { opacity: 1; transform: scale(0.9994); }
+  81.25%  { opacity: 1; transform: scale(0.9975); }
+  87.5%   { opacity: 1; transform: scale(0.9968); }
+  93.75%  { opacity: 1; transform: scale(0.997); }
+  100%    { opacity: 1; transform: scale(1); }
 }
 @keyframes fx-zoom-out { from { opacity:1; transform:none; } to { opacity:0; transform: scale(1.03); } }
 
 @keyframes fx-fan-in {
-  0%    { opacity: 0; transform: translate3d(0, var(--travel,26px), 0) rotate(-1.5deg); animation-timing-function: cubic-bezier(.16,.9,.24,1); }
-  28%   { opacity: 1; transform: translate3d(0, calc(var(--travel,26px) * .22), 0) rotate(-.33deg); animation-timing-function: cubic-bezier(.3,.4,.4,1); }
-  62%   { opacity: 1; transform: translate3d(0, calc(var(--travel,26px) * -.13), 0) rotate(.4deg); animation-timing-function: cubic-bezier(.42,0,.3,1); }
-  100%  { opacity: 1; transform: none; }
+  0%      { opacity: 0; transform: translate3d(0, calc(var(--travel,32px) * 1), 0) rotate(-2.4deg) scale(0.94); }
+  6.25%   { opacity: 0.284; transform: translate3d(0, calc(var(--travel,32px) * 0.8931), 0) rotate(-2.1434deg) scale(0.9464); }
+  12.5%   { opacity: 0.568; transform: translate3d(0, calc(var(--travel,32px) * 0.6506), 0) rotate(-1.5614deg) scale(0.961); }
+  18.75%  { opacity: 0.852; transform: translate3d(0, calc(var(--travel,32px) * 0.3726), 0) rotate(-0.8942deg) scale(0.9776); }
+  25%     { opacity: 1; transform: translate3d(0, calc(var(--travel,32px) * 0.1277), 0) rotate(-0.3064deg) scale(0.9923); }
+  31.25%  { opacity: 1; transform: translate3d(0, calc(var(--travel,32px) * -0.0484), 0) rotate(0.1162deg) scale(1.0029); }
+  37.5%   { opacity: 1; transform: translate3d(0, calc(var(--travel,32px) * -0.1473), 0) rotate(0.3535deg) scale(1.0088); }
+  43.75%  { opacity: 1; transform: translate3d(0, calc(var(--travel,32px) * -0.1791), 0) rotate(0.4297deg) scale(1.0107); }
+  50%     { opacity: 1; transform: translate3d(0, calc(var(--travel,32px) * -0.1632), 0) rotate(0.3917deg) scale(1.0098); }
+  56.25%  { opacity: 1; transform: translate3d(0, calc(var(--travel,32px) * -0.1212), 0) rotate(0.2908deg) scale(1.0073); }
+  62.5%   { opacity: 1; transform: translate3d(0, calc(var(--travel,32px) * -0.0713), 0) rotate(0.1711deg) scale(1.0043); }
+  68.75%  { opacity: 1; transform: translate3d(0, calc(var(--travel,32px) * -0.0265), 0) rotate(0.0636deg) scale(1.0016); }
+  75%     { opacity: 1; transform: translate3d(0, calc(var(--travel,32px) * 0.0063), 0) rotate(-0.0152deg) scale(0.9996); }
+  81.25%  { opacity: 1; transform: translate3d(0, calc(var(--travel,32px) * 0.0253), 0) rotate(-0.0607deg) scale(0.9985); }
+  87.5%   { opacity: 1; transform: translate3d(0, calc(var(--travel,32px) * 0.032), 0) rotate(-0.0768deg) scale(0.9981); }
+  93.75%  { opacity: 1; transform: translate3d(0, calc(var(--travel,32px) * 0.0298), 0) rotate(-0.0715deg) scale(0.9982); }
+  100%    { opacity: 1; transform: translate3d(0, calc(var(--travel,32px) * 0), 0) rotate(0deg) scale(1); }
 }
 @keyframes fx-fan-out { from { opacity:1; transform:none; } to { opacity:0; transform: translate3d(0,-20px,0) rotate(1.2deg); } }
 
 @keyframes fx-tilt-in {
-  0%    { opacity: 0; transform: rotateX(9deg) translate3d(0, var(--travel,26px), 0) scale(.985); animation-timing-function: cubic-bezier(.16,.9,.24,1); }
-  28%   { opacity: 1; transform: rotateX(2deg) translate3d(0, calc(var(--travel,26px) * .22), 0) scale(.997); animation-timing-function: cubic-bezier(.3,.4,.4,1); }
-  62%   { opacity: 1; transform: rotateX(-1.8deg) translate3d(0, calc(var(--travel,26px) * -.15), 0) scale(1.004); animation-timing-function: cubic-bezier(.42,0,.3,1); }
-  100%  { opacity: 1; transform: none; }
+  0%      { opacity: 0; transform: rotateX(12deg) translate3d(0, calc(var(--travel,32px) * 1), 0) scale(0.94); }
+  6.25%   { opacity: 0.284; transform: rotateX(10.717deg) translate3d(0, calc(var(--travel,32px) * 0.8931), 0) scale(0.9464); }
+  12.5%   { opacity: 0.568; transform: rotateX(7.8072deg) translate3d(0, calc(var(--travel,32px) * 0.6506), 0) scale(0.961); }
+  18.75%  { opacity: 0.852; transform: rotateX(4.4709deg) translate3d(0, calc(var(--travel,32px) * 0.3726), 0) scale(0.9776); }
+  25%     { opacity: 1; transform: rotateX(1.5319deg) translate3d(0, calc(var(--travel,32px) * 0.1277), 0) scale(0.9923); }
+  31.25%  { opacity: 1; transform: rotateX(-0.5811deg) translate3d(0, calc(var(--travel,32px) * -0.0484), 0) scale(1.0029); }
+  37.5%   { opacity: 1; transform: rotateX(-1.7676deg) translate3d(0, calc(var(--travel,32px) * -0.1473), 0) scale(1.0088); }
+  43.75%  { opacity: 1; transform: rotateX(-2.1487deg) translate3d(0, calc(var(--travel,32px) * -0.1791), 0) scale(1.0107); }
+  50%     { opacity: 1; transform: rotateX(-1.9584deg) translate3d(0, calc(var(--travel,32px) * -0.1632), 0) scale(1.0098); }
+  56.25%  { opacity: 1; transform: rotateX(-1.4539deg) translate3d(0, calc(var(--travel,32px) * -0.1212), 0) scale(1.0073); }
+  62.5%   { opacity: 1; transform: rotateX(-0.8556deg) translate3d(0, calc(var(--travel,32px) * -0.0713), 0) scale(1.0043); }
+  68.75%  { opacity: 1; transform: rotateX(-0.3179deg) translate3d(0, calc(var(--travel,32px) * -0.0265), 0) scale(1.0016); }
+  75%     { opacity: 1; transform: rotateX(0.0761deg) translate3d(0, calc(var(--travel,32px) * 0.0063), 0) scale(0.9996); }
+  81.25%  { opacity: 1; transform: rotateX(0.3037deg) translate3d(0, calc(var(--travel,32px) * 0.0253), 0) scale(0.9985); }
+  87.5%   { opacity: 1; transform: rotateX(0.3839deg) translate3d(0, calc(var(--travel,32px) * 0.032), 0) scale(0.9981); }
+  93.75%  { opacity: 1; transform: rotateX(0.3573deg) translate3d(0, calc(var(--travel,32px) * 0.0298), 0) scale(0.9982); }
+  100%    { opacity: 1; transform: rotateX(0deg) translate3d(0, calc(var(--travel,32px) * 0), 0) scale(1); }
 }
 @keyframes fx-tilt-out { from { opacity:1; transform:none; } to { opacity:0; transform: rotateX(-8deg) translate3d(0,-22px,0); } }
 
@@ -940,16 +1050,16 @@ body.deck .slide.exiting-away [data-fx="tilt"] {
    ===================================================================== */
 .reveal {
   transition:
-    opacity   .3s cubic-bezier(.16, 1, .3, 1),
-    transform .5s cubic-bezier(.32, 1.62, .38, 1);
+    opacity   .24s cubic-bezier(.16, 1, .3, 1),
+    transform .4s cubic-bezier(.32, 1.62, .38, 1);
 }
 /* The hero's load choreography gets the same spring, so the very first thing a
    visitor sees already has the house feel. */
 .hero-unlock {
   transition:
-    opacity   .36s cubic-bezier(.16, 1, .3, 1),
-    transform .56s cubic-bezier(.32, 1.5, .4, 1),
-    filter    .36s cubic-bezier(.16, 1, .3, 1);
+    opacity   .3s cubic-bezier(.16, 1, .3, 1),
+    transform .46s cubic-bezier(.32, 1.5, .4, 1),
+    filter    .3s cubic-bezier(.16, 1, .3, 1);
 }
 /* Interactive elements: a short, springy response to hover. Apple's other
    signature — things acknowledge you before they act. */
@@ -992,13 +1102,17 @@ body.deck .slide.current .hero-card { transform: rotateY(-5deg) rotateX(2deg) tr
    --i is set on the group and inherits down, so a child's delay can be
    expressed relative to its own group's start.
    ===================================================================== */
-body.deck .slide [data-micro] { --micro: 7px; }
+body.deck .slide [data-micro] { --micro: 19px; }
+/* Narrow screens sit the blocks closer together, so the same travel would let
+   two of them collide mid-flight. */
+@media (max-width: 760px) { body.deck .slide [data-micro] { --micro: 13px; } }
 
 body.deck .slide:not(.exiting-away).current [data-micro] {
-  animation-duration: .42s;
-  animation-timing-function: cubic-bezier(.16,1,.3,1);
+  animation-duration: 0.46s;
+  animation-timing-function: linear;
   animation-fill-mode: both;
-  animation-delay: calc(.06s + var(--i,0) * .045s + var(--mi,0) * .032s);
+  animation-delay: calc(.03s + var(--i,0) * .03s + var(--mi,0) * .016s);  /* .016 not .022: card grids now stagger card-by-card, so a slide with
+     seven micro units was landing its last item at 494ms. */
 }
 body.deck .slide:not(.exiting-away).current [data-micro="swipe"] { animation-name: mi-swipe; }
 body.deck .slide:not(.exiting-away).current [data-micro="rise"]  { animation-name: mi-rise; }
@@ -1009,31 +1123,165 @@ body.deck .slide:not(.exiting-away).current [data-micro="tilt"]  { animation-nam
 /* Each ends at `none`, so a settled child adds no transform of its own and
    cannot interfere with its group's. */
 @keyframes mi-swipe {
-  0%    { transform: translate3d(calc(var(--micro) * -1), 0, 0); animation-timing-function: cubic-bezier(.16,.9,.24,1); }
-  58%   { transform: translate3d(calc(var(--micro) * .14), 0, 0); animation-timing-function: cubic-bezier(.42,0,.3,1); }
-  100%  { transform: none; }
+  0%      { transform: translate3d(calc(var(--micro) * -1), 0, 0) scale(0.955); }
+  6.25%   { transform: translate3d(calc(var(--micro) * -0.8854), 0, 0) scale(0.9602); }
+  12.5%   { transform: translate3d(calc(var(--micro) * -0.6366), 0, 0) scale(0.9714); }
+  18.75%  { transform: translate3d(calc(var(--micro) * -0.365), 0, 0) scale(0.9836); }
+  25%     { transform: translate3d(calc(var(--micro) * -0.1374), 0, 0) scale(0.9938); }
+  31.25%  { transform: translate3d(calc(var(--micro) * 0.0182), 0, 0) scale(1.0008); }
+  37.5%   { transform: translate3d(calc(var(--micro) * 0.1011), 0, 0) scale(1.0045); }
+  43.75%  { transform: translate3d(calc(var(--micro) * 0.1262), 0, 0) scale(1.0057); }
+  50%     { transform: translate3d(calc(var(--micro) * 0.1139), 0, 0) scale(1.0051); }
+  56.25%  { transform: translate3d(calc(var(--micro) * 0.0832), 0, 0) scale(1.0037); }
+  62.5%   { transform: translate3d(calc(var(--micro) * 0.0487), 0, 0) scale(1.0022); }
+  68.75%  { transform: translate3d(calc(var(--micro) * 0.0193), 0, 0) scale(1.0009); }
+  75%     { transform: translate3d(calc(var(--micro) * -0.0011), 0, 0) scale(1); }
+  81.25%  { transform: translate3d(calc(var(--micro) * -0.0122), 0, 0) scale(0.9994); }
+  87.5%   { transform: translate3d(calc(var(--micro) * -0.0159), 0, 0) scale(0.9993); }
+  93.75%  { transform: translate3d(calc(var(--micro) * -0.0146), 0, 0) scale(0.9993); }
+  100%    { transform: translate3d(calc(var(--micro) * 0), 0, 0) scale(1); }
 }
 @keyframes mi-rise {
-  0%    { transform: translate3d(0, var(--micro), 0); animation-timing-function: cubic-bezier(.16,.9,.24,1); }
-  58%   { transform: translate3d(0, calc(var(--micro) * -.14), 0); animation-timing-function: cubic-bezier(.42,0,.3,1); }
-  100%  { transform: none; }
+  0%      { transform: translate3d(0, calc(var(--micro) * 1), 0) scale(0.955); }
+  6.25%   { transform: translate3d(0, calc(var(--micro) * 0.8854), 0) scale(0.9602); }
+  12.5%   { transform: translate3d(0, calc(var(--micro) * 0.6366), 0) scale(0.9714); }
+  18.75%  { transform: translate3d(0, calc(var(--micro) * 0.365), 0) scale(0.9836); }
+  25%     { transform: translate3d(0, calc(var(--micro) * 0.1374), 0) scale(0.9938); }
+  31.25%  { transform: translate3d(0, calc(var(--micro) * -0.0182), 0) scale(1.0008); }
+  37.5%   { transform: translate3d(0, calc(var(--micro) * -0.1011), 0) scale(1.0045); }
+  43.75%  { transform: translate3d(0, calc(var(--micro) * -0.1262), 0) scale(1.0057); }
+  50%     { transform: translate3d(0, calc(var(--micro) * -0.1139), 0) scale(1.0051); }
+  56.25%  { transform: translate3d(0, calc(var(--micro) * -0.0832), 0) scale(1.0037); }
+  62.5%   { transform: translate3d(0, calc(var(--micro) * -0.0487), 0) scale(1.0022); }
+  68.75%  { transform: translate3d(0, calc(var(--micro) * -0.0193), 0) scale(1.0009); }
+  75%     { transform: translate3d(0, calc(var(--micro) * 0.0011), 0) scale(1); }
+  81.25%  { transform: translate3d(0, calc(var(--micro) * 0.0122), 0) scale(0.9994); }
+  87.5%   { transform: translate3d(0, calc(var(--micro) * 0.0159), 0) scale(0.9993); }
+  93.75%  { transform: translate3d(0, calc(var(--micro) * 0.0146), 0) scale(0.9993); }
+  100%    { transform: translate3d(0, calc(var(--micro) * 0), 0) scale(1); }
 }
 @keyframes mi-zoom {
-  0%    { transform: scale(.988); animation-timing-function: cubic-bezier(.16,.9,.24,1); }
-  58%   { transform: scale(1.004); animation-timing-function: cubic-bezier(.42,0,.3,1); }
-  100%  { transform: none; }
+  0%      { transform: scale(0.94); }
+  6.25%   { transform: scale(0.9469); }
+  12.5%   { transform: scale(0.9618); }
+  18.75%  { transform: scale(0.9781); }
+  25%     { transform: scale(0.9918); }
+  31.25%  { transform: scale(1.0011); }
+  37.5%   { transform: scale(1.0061); }
+  43.75%  { transform: scale(1.0076); }
+  50%     { transform: scale(1.0068); }
+  56.25%  { transform: scale(1.005); }
+  62.5%   { transform: scale(1.0029); }
+  68.75%  { transform: scale(1.0012); }
+  75%     { transform: scale(0.9999); }
+  81.25%  { transform: scale(0.9993); }
+  87.5%   { transform: scale(0.999); }
+  93.75%  { transform: scale(0.9991); }
+  100%    { transform: scale(1); }
 }
 @keyframes mi-fan {
-  0%    { transform: translate3d(0, calc(var(--micro) * .8), 0) rotate(-.7deg); animation-timing-function: cubic-bezier(.16,.9,.24,1); }
-  58%   { transform: translate3d(0, calc(var(--micro) * -.11), 0) rotate(.2deg); animation-timing-function: cubic-bezier(.42,0,.3,1); }
-  100%  { transform: none; }
+  0%      { transform: translate3d(0, calc(var(--micro) * 0.8), 0) rotate(-1.3deg) scale(0.955); }
+  6.25%   { transform: translate3d(0, calc(var(--micro) * 0.7083), 0) rotate(-1.151deg) scale(0.9602); }
+  12.5%   { transform: translate3d(0, calc(var(--micro) * 0.5093), 0) rotate(-0.8276deg) scale(0.9714); }
+  18.75%  { transform: translate3d(0, calc(var(--micro) * 0.292), 0) rotate(-0.4745deg) scale(0.9836); }
+  25%     { transform: translate3d(0, calc(var(--micro) * 0.1099), 0) rotate(-0.1786deg) scale(0.9938); }
+  31.25%  { transform: translate3d(0, calc(var(--micro) * -0.0145), 0) rotate(0.0236deg) scale(1.0008); }
+  37.5%   { transform: translate3d(0, calc(var(--micro) * -0.0809), 0) rotate(0.1314deg) scale(1.0045); }
+  43.75%  { transform: translate3d(0, calc(var(--micro) * -0.101), 0) rotate(0.1641deg) scale(1.0057); }
+  50%     { transform: translate3d(0, calc(var(--micro) * -0.0911), 0) rotate(0.148deg) scale(1.0051); }
+  56.25%  { transform: translate3d(0, calc(var(--micro) * -0.0666), 0) rotate(0.1082deg) scale(1.0037); }
+  62.5%   { transform: translate3d(0, calc(var(--micro) * -0.039), 0) rotate(0.0634deg) scale(1.0022); }
+  68.75%  { transform: translate3d(0, calc(var(--micro) * -0.0155), 0) rotate(0.0251deg) scale(1.0009); }
+  75%     { transform: translate3d(0, calc(var(--micro) * 0.0009), 0) rotate(-0.0014deg) scale(1); }
+  81.25%  { transform: translate3d(0, calc(var(--micro) * 0.0098), 0) rotate(-0.0159deg) scale(0.9994); }
+  87.5%   { transform: translate3d(0, calc(var(--micro) * 0.0127), 0) rotate(-0.0207deg) scale(0.9993); }
+  93.75%  { transform: translate3d(0, calc(var(--micro) * 0.0117), 0) rotate(-0.019deg) scale(0.9993); }
+  100%    { transform: translate3d(0, calc(var(--micro) * 0), 0) rotate(0deg) scale(1); }
 }
 @keyframes mi-tilt {
-  0%    { transform: rotateX(4deg) translate3d(0, calc(var(--micro) * .7), 0); animation-timing-function: cubic-bezier(.16,.9,.24,1); }
-  58%   { transform: rotateX(-1deg) translate3d(0, calc(var(--micro) * -.11), 0); animation-timing-function: cubic-bezier(.42,0,.3,1); }
-  100%  { transform: none; }
+  0%      { transform: rotateX(6deg) translate3d(0, calc(var(--micro) * 0.75), 0) scale(0.955); }
+  6.25%   { transform: rotateX(5.3123deg) translate3d(0, calc(var(--micro) * 0.664), 0) scale(0.9602); }
+  12.5%   { transform: rotateX(3.8197deg) translate3d(0, calc(var(--micro) * 0.4775), 0) scale(0.9714); }
+  18.75%  { transform: rotateX(2.1901deg) translate3d(0, calc(var(--micro) * 0.2738), 0) scale(0.9836); }
+  25%     { transform: rotateX(0.8244deg) translate3d(0, calc(var(--micro) * 0.1031), 0) scale(0.9938); }
+  31.25%  { transform: rotateX(-0.109deg) translate3d(0, calc(var(--micro) * -0.0136), 0) scale(1.0008); }
+  37.5%   { transform: rotateX(-0.6066deg) translate3d(0, calc(var(--micro) * -0.0758), 0) scale(1.0045); }
+  43.75%  { transform: rotateX(-0.7572deg) translate3d(0, calc(var(--micro) * -0.0947), 0) scale(1.0057); }
+  50%     { transform: rotateX(-0.6831deg) translate3d(0, calc(var(--micro) * -0.0854), 0) scale(1.0051); }
+  56.25%  { transform: rotateX(-0.4992deg) translate3d(0, calc(var(--micro) * -0.0624), 0) scale(1.0037); }
+  62.5%   { transform: rotateX(-0.2924deg) translate3d(0, calc(var(--micro) * -0.0365), 0) scale(1.0022); }
+  68.75%  { transform: rotateX(-0.1161deg) translate3d(0, calc(var(--micro) * -0.0145), 0) scale(1.0009); }
+  75%     { transform: rotateX(0.0064deg) translate3d(0, calc(var(--micro) * 0.0008), 0) scale(1); }
+  81.25%  { transform: rotateX(0.0734deg) translate3d(0, calc(var(--micro) * 0.0092), 0) scale(0.9994); }
+  87.5%   { transform: rotateX(0.0954deg) translate3d(0, calc(var(--micro) * 0.0119), 0) scale(0.9993); }
+  93.75%  { transform: rotateX(0.0877deg) translate3d(0, calc(var(--micro) * 0.011), 0) scale(0.9993); }
+  100%    { transform: rotateX(0deg) translate3d(0, calc(var(--micro) * 0), 0) scale(1); }
 }
 
 @media (prefers-reduced-motion: reduce) {
   body.deck .slide [data-micro] { animation: none !important; transform: none !important; }
 }
+
+/* =====================================================================
+   PUSH EXIT — the incoming slide shoves this one off the top
+   =====================================================================
+   Used by slides carrying data-exit="push". The PANEL travel is a CSS
+   transition on .slide (style.css); this is only what the CONTENT does while
+   that travel is happening, so the slide does not leave as one rigid slab.
+
+   The fan angle is driven by --mi, the child index motion.js already sets on
+   every micro unit: each box tilts a little further and drifts a little wider
+   than the one before it. That progression is what reads as a fan rather than
+   a group of boxes all doing the same thing.
+
+   CASCADE NOTE: the .current variants are not redundant. The entrance rule
+   `.slide:not(.exiting-away).current [data-micro]` is (0,5,1) because :not()
+   counts its argument, and the outgoing slide still carries .current when a
+   push begins. Without matching .current here this block loses and no fan
+   runs at all. It also has to sit LAST in the file to win the tie.
+
+   Deliberately quicker than the panel (.26s vs .4s) so the content has cleared
+   before the panel finishes leaving — content still arriving as it exits the
+   top of the screen looks like a bug.
+   ===================================================================== */
+body.deck .slide.exiting-push.current [data-micro],
+body.deck .slide.exiting-push [data-micro] {
+  animation: fx-push-fan .26s cubic-bezier(.4, 0, .25, 1) calc(var(--mi, 0) * .022s) both;
+}
+body.deck .slide.exiting-push.current [data-fx],
+body.deck .slide.exiting-push [data-fx] {
+  animation: fx-push-lift .3s cubic-bezier(.4, 0, .25, 1) both;
+}
+
+@keyframes fx-push-fan {
+  0% { opacity: 1; transform: none; }
+  100% {
+    opacity: 0;
+    /* --mi counts up from 0, so subtracting 1.2 puts the pivot near the middle
+       of a typical group: the first boxes tilt one way, the later ones the
+       other, and the whole set opens out like a hand of cards. */
+    transform:
+      translate3d(calc((var(--mi, 0) - 1.2) * 13px), -30px, 0)
+      rotate(calc((var(--mi, 0) - 1.2) * 3.4deg))
+      scale(.93);
+  }
+}
+/* The group itself only lifts and fades — the character comes from the children
+   above. Both animating hard would double up and read as chaos. */
+@keyframes fx-push-lift {
+  0% { opacity: 1; transform: none; }
+  100% { opacity: 0; transform: translate3d(0, -22px, 0) scale(.97); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.deck .slide.exiting-push [data-micro],
+  body.deck .slide.exiting-push.current [data-fx],
+body.deck .slide.exiting-push [data-fx] { animation: none !important; opacity: 1 !important; }
+}
+
+/* The last slide's route into the full site. Deliberately outside .contact-box
+   and lighter than the buttons inside it: the box exists to get a call booked,
+   and a third equal-weight button next to "Book a call" would compete with it. */
+.final-site-link { margin: 18px 0 4px; }
+.final-site-link .btn { font-size: 14px; padding: 10px 20px; }
+@media (max-height: 700px) { .final-site-link { margin: 12px 0 2px; } }

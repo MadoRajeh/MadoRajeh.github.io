@@ -34,7 +34,7 @@
   if (slides.length) {
     let current = 0;
     let animating = false;
-    const PUSH_MS = 600; // matches .slide's CSS transition duration
+    const PUSH_MS = 340; // matches .slide's CSS transition duration
 
     // The deck is only the first 100vh of the page now; everything below it is
     // an ordinary scrolling case study. "Docked" means the deck still fills the
@@ -138,7 +138,12 @@
       // connected push in the else-branch below, unchanged.
       // Only forward moves are choreographed; scrolling back always pushes, so
       // reversing is predictable rather than replaying a bespoke animation.
-      const exitKind = forward ? outgoing.dataset.exit : null;
+      const rawExit = forward ? outgoing.dataset.exit : null;
+      // "push" is not a content-only exit: it takes the connected-push branch
+      // below, where both PANELS travel together, so it must not be treated as
+      // an exitKind here or it would go down the crossfade path instead.
+      const pushOut = rawExit === 'push';
+      const exitKind = pushOut ? null : rawExit;
       const popIn = forward && incoming.dataset.enter === 'pop';
 
       if (exitKind || popIn) {
@@ -153,7 +158,7 @@
         // the new scene growing outward reads as the thing shoving the old one
         // out to the corners. Waiting for the exit to finish first made the two
         // look like unrelated, sequential events.
-        const EXIT_MS = exitKind ? 200 : 0;
+        const EXIT_MS = exitKind ? 120 : 0;
 
         if (popIn) {
           popStage(incoming); // centred at zero scale: invisible, so staging it now costs nothing
@@ -162,6 +167,20 @@
           // into one style recalculation, so the scale-up either never starts or
           // starts from the wrong value.
           setTimeout(() => incoming.classList.add('current'), exitKind ? 100 : 20);
+        }
+
+        // SIMULTANEOUS, not sequential. The incoming slide goes current partway
+        // through the outgoing one's exit, so for the overlap window the old
+        // content is leaving while the new content is already coming in. Both
+        // slides carry .current during that window - motion.js knows to ignore
+        // the one that is mid-exit, and .entering keeps the newcomer painted on
+        // top whichever direction we are moving.
+        const OVERLAP_MS = exitKind ? 25 : 0;   // 25ms into a 110ms exit:
+        // the new card is arriving while the old one is barely a fifth gone.
+        if (!popIn) {
+          setTimeout(() => {
+            incoming.classList.add('current', 'entering');
+          }, OVERLAP_MS);
         }
 
         setTimeout(() => {
@@ -176,15 +195,20 @@
             outgoing.classList.remove('exiting-' + exitKind);
             if (item) item.classList.remove('splitting-out', 'corner-out');
           }
+          incoming.classList.remove('entering');
           parkAll(); // also clears pop-stage
           animating = false;
-        }, EXIT_MS + 300);
+        }, EXIT_MS + 240);
       } else {
         // Connected push: the incoming slide always starts exactly one
         // slide-height away from resting (below when moving forward, above
         // when moving back), and both slides move by that same distance at
         // the same time, so the incoming scene visibly shoves the outgoing
         // one off instead of the two fading independently.
+        // The contents fan out while the panel is being pushed off, so the slide
+        // does not leave as one rigid slab.
+        if (pushOut) outgoing.classList.add('exiting-push');
+
         if (!forward) parkInstantly(incoming, true); // park above, instead of its default "below"
 
         // A short setTimeout instead of requestAnimationFrame here: rAF can be paused
@@ -204,6 +228,7 @@
           // been pushed up to -100% would animate all the way back down to
           // +100%, sweeping a full-screen phantom downward through the viewport
           // after every single scroll.
+          outgoing.classList.remove('exiting-push');
           parkAll();
           animating = false;
         }, PUSH_MS);
