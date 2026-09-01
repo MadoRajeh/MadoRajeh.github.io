@@ -20,6 +20,10 @@
     requestAnimationFrame(() => {
       setTimeout(() => document.body.classList.remove('locking'), 220);
     });
+    // Belt and braces: requestAnimationFrame does not fire in a background or
+    // non-composited tab, and without this the page could sit in its "locked"
+    // state indefinitely. A plain timer always fires.
+    setTimeout(() => document.body.classList.remove('locking'), 900);
   }
 
   /* ---------- Slides: discrete scene changes + dot nav + wheel/touch/keyboard ---------- */
@@ -149,7 +153,7 @@
         // the new scene growing outward reads as the thing shoving the old one
         // out to the corners. Waiting for the exit to finish first made the two
         // look like unrelated, sequential events.
-        const EXIT_MS = exitKind ? 520 : 0;
+        const EXIT_MS = exitKind ? 200 : 0;
 
         if (popIn) {
           popStage(incoming); // centred at zero scale: invisible, so staging it now costs nothing
@@ -174,7 +178,7 @@
           }
           parkAll(); // also clears pop-stage
           animating = false;
-        }, EXIT_MS + 380);
+        }, EXIT_MS + 300);
       } else {
         // Connected push: the incoming slide always starts exactly one
         // slide-height away from resting (below when moving forward, above
@@ -218,7 +222,22 @@
       if (!id) return;
       var idx = -1;
       for (var h = 0; h < slides.length; h++) if (slides[h].id === id) { idx = h; break; }
+      if (idx === -1) return;
+      // Undo the browser's own scroll-to-anchor before switching slides.
+      // The slides live inside #deck-stage, which is overflow:hidden — and an
+      // overflow:hidden box is still SCROLLABLE programmatically, which is
+      // exactly what the browser does to bring an anchor into view. It had
+      // been setting deckStage.scrollTop to a full viewport, so every slide
+      // sat one screen out of position and content from several slides
+      // overlapped in the middle of the page. Affects any index.html#slide
+      // link, including the "Book a call" badge in the nav.
+      resetDeckScroll();
       if (idx > 0) goTo(idx);
+    }
+
+    function resetDeckScroll() {
+      if (deckStage) { deckStage.scrollTop = 0; deckStage.scrollLeft = 0; }
+      if (window.scrollY > 0) window.scrollTo({ top: 0, behavior: 'instant' });
     }
     window.addEventListener('hashchange', jumpToHash);
 
@@ -318,7 +337,7 @@
         // switch slides completely out of view, so nothing looked like it
         // happened. Scrolling back up first is what actually brings it back
         // on screen; goTo() then does its normal job once it's visible again.
-        if (window.scrollY > 0) window.scrollTo({ top: 0, behavior: 'instant' });
+        resetDeckScroll();
         goTo(idx);
       });
     });

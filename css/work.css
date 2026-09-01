@@ -142,6 +142,115 @@ a.work-card:hover { transform: translateY(-4px); border-color: var(--primary); b
   width: 5px; height: 5px; border-radius: 50%; background: var(--lavender-dark);
 }
 
+/* ---------- Full-site page components ----------
+   full.html is the "go to the full site" destination and carries ALL of
+   Wayne's information; the deck is only a quick scroll. These are the pieces
+   the deck did not need. */
+
+/* the hero stats on a document page - the deck version is gated by
+   .slide.current, so it needs the same un-gating as .result-band does */
+body.doc .full-stats {
+  opacity: 1; max-width: none; margin-top: 30px;
+  border-top: 1px solid var(--line); padding-top: 22px;
+}
+
+/* ---------- Toolkit: the infinite two-row conveyor ----------
+   PORTED BACK from the original site at Wayne's request ("the initial design
+   where it's just scrolling unlimitedly, we had it perfect"). A static grid
+   replaced it for a while; this is the real thing.
+
+   How the seamless loop works: each track contains the FULL toolkit TWICE
+   (the second copy is aria-hidden so screen readers do not read it out), and
+   the animation travels exactly -50% — i.e. precisely one full copy. The
+   moment it finishes, the second copy is sitting exactly where the first
+   started, so the reset is invisible. Animating to -100% with a single copy
+   is the classic mistake: it visibly snaps.
+
+   Row B is row A REVERSED, running the opposite way at the SAME duration.
+   Equal durations are load-bearing: they keep the two rows phase-locked, so a
+   badge leaving the top row's left edge re-enters along the bottom row. */
+.tools-rows { margin-top: 26px; }
+.tools-row {
+  overflow: hidden; display: flex;
+  padding-top: 8px;           /* clearance: the accent dot pokes above the badge */
+  /* fade both edges so badges enter and leave instead of being chopped off */
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+          mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+}
+.tools-row + .tools-row { margin-top: 12px; }
+.tools-track { display: flex; flex: 0 0 auto; gap: 14px; padding: 0 7px; width: max-content; }
+.tools-row-a .tools-track { animation: tools-left  72s linear infinite; }
+.tools-row-b .tools-track { animation: tools-right 72s linear infinite; }
+.tools-row:hover .tools-track,
+.tools-row:focus-within .tools-track { animation-play-state: paused; }
+@keyframes tools-left  { from { transform: translateX(0);    } to { transform: translateX(-50%); } }
+@keyframes tools-right { from { transform: translateX(-50%); } to { transform: translateX(0);    } }
+
+.tool-badge {
+  display: flex; align-items: center; gap: 11px; flex: 0 0 auto; position: relative;
+  background: var(--paper-soft); border: 1px solid var(--surface-border);
+  border-radius: 999px; padding: 9px 20px 9px 9px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.06);
+}
+.tool-badge.no-logo { padding-left: 20px; }
+.tool-badge img { width: 34px; height: 34px; object-fit: contain; border-radius: 9px; background: #fff; padding: 4px; box-sizing: border-box; }
+.tool-name { font-weight: 600; font-size: 14px; color: var(--ink); white-space: nowrap; }
+.tool-dot {
+  position: absolute; top: -3px; right: -3px; width: 11px; height: 11px;
+  border-radius: 50%; border: 2px solid var(--paper-soft);
+}
+.tool-badge:nth-child(3n+1) .tool-dot { background: var(--primary); }
+.tool-badge:nth-child(3n+2) .tool-dot { background: var(--lavender-dark); }
+.tool-badge:nth-child(3n)   .tool-dot { background: var(--blue-ink); }
+
+@media (max-width: 640px) {
+  .tool-badge { padding: 7px 15px 7px 7px; gap: 8px; }
+  .tool-badge.no-logo { padding-left: 15px; }
+  .tool-badge img { width: 26px; height: 26px; }
+  .tool-name { font-size: 12.5px; }
+}
+/* Reduced motion: stop the conveyor and let people scroll the row by hand.
+   The duplicate copy and the second row are pointless once nothing moves. */
+@media (prefers-reduced-motion: reduce) {
+  .tools-track { animation: none; }
+  .tools-track [aria-hidden="true"] { display: none; }
+  .tools-row {
+    overflow-x: auto; overflow-y: hidden;
+    -webkit-mask-image: none; mask-image: none;
+    padding-bottom: 10px;
+  }
+  .tools-row-b { display: none; }
+}
+
+.review-row {
+  display: grid; gap: 20px; margin-top: 26px;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+}
+.review-card {
+  background: var(--paper-soft); border: 1px solid var(--surface-border);
+  border-radius: 16px; padding: 24px; margin: 0;
+  display: flex; flex-direction: column;
+}
+.review-stars { color: var(--amber, #CA952B); font-size: 15px; letter-spacing: 2px; margin-bottom: 12px; }
+.review-card p {
+  font-size: 14.5px; line-height: 1.65; color: var(--ink-soft); flex: 1; margin: 0;
+}
+.review-card cite {
+  margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--line);
+  font-style: normal; display: block;
+}
+.review-card cite b { display: block; font-size: 13.5px; color: var(--ink); font-weight: 600; }
+.review-card cite span {
+  display: block; font-family: var(--mono); font-size: 11.5px;
+  color: var(--ink-faint); margin-top: 3px;
+}
+
+@media (max-width: 700px) {
+  .tool-grid { grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); gap: 10px; }
+  .tool-tile { padding: 14px 8px; }
+  .review-row { grid-template-columns: 1fr; }
+}
+
 /* ---------- Document previews ---------- */
 .doc-row {
   display: grid; gap: 22px; margin-top: 26px;
@@ -611,4 +720,320 @@ body { background: transparent; }
   .work-grid { grid-template-columns: 1fr; }
   .timeline { padding-left: 24px; }
   .tl-item::before { left: -24px; width: 13px; height: 13px; }
+}
+
+/* ---------- Document pages: reveal flavours ----------
+   style.css ships ONE reveal (fade + 26px rise) and every section on every
+   scrolling page used it, so the whole site scrolled with a single note.
+   These variants override only the starting transform, so they inherit the
+   same duration and easing and cannot drift out of step with the original.
+
+   Deliberately still ONE-WAY (main.js unobserves after firing): re-animating
+   every time you scroll back past something reads as cheap and gets in the
+   way of re-reading. Scrolling back up simply shows content already in place,
+   which is why nothing can break in that direction. */
+.reveal.rv-left  { transform: translate3d(-38px, 0, 0); }
+.reveal.rv-right { transform: translate3d(38px, 0, 0); }
+.reveal.rv-scale { transform: scale(.955); }
+.reveal.rv-tilt  { transform: perspective(900px) rotateX(10deg) translate3d(0, 22px, 0); }
+.reveal.rv-left.in, .reveal.rv-right.in,
+.reveal.rv-scale.in, .reveal.rv-tilt.in { transform: none; }
+
+/* Cards inside a revealed grid stagger instead of arriving as one slab.
+   Pure CSS transition-delay, so it costs nothing and needs no JS. */
+.work-grid .work-card.reveal,
+.doc-row .doc-card.reveal,
+.anatomy .anat-card.reveal,
+.review-row .review-card.reveal { transition-delay: 0s; }
+.work-grid .work-card.reveal:nth-child(2),
+.doc-row .doc-card.reveal:nth-child(2),
+.anatomy .anat-card.reveal:nth-child(2),
+.review-row .review-card.reveal:nth-child(2) { transition-delay: .05s; }
+.work-grid .work-card.reveal:nth-child(3),
+.doc-row .doc-card.reveal:nth-child(3),
+.anatomy .anat-card.reveal:nth-child(3),
+.review-row .review-card.reveal:nth-child(3) { transition-delay: .099s; }
+.work-grid .work-card.reveal:nth-child(4),
+.doc-row .doc-card.reveal:nth-child(4),
+.anatomy .anat-card.reveal:nth-child(4) { transition-delay: .149s; }
+.work-grid .work-card.reveal:nth-child(n+5) { transition-delay: .187s; }
+
+/* The numbered engineering steps walk down the page one at a time. */
+.steps .step.reveal:nth-child(2) { transition-delay: .044s; }
+.steps .step.reveal:nth-child(3) { transition-delay: .088s; }
+.steps .step.reveal:nth-child(4) { transition-delay: .132s; }
+.steps .step.reveal:nth-child(n+5) { transition-delay: .165s; }
+
+/* Timeline entries arrive in sequence, and the connecting rail draws itself. */
+.timeline .tl-item.reveal:nth-child(2) { transition-delay: .055s; }
+.timeline .tl-item.reveal:nth-child(3) { transition-delay: .11s; }
+.timeline .tl-item.reveal:nth-child(n+4) { transition-delay: .154s; }
+.timeline.reveal::before { transform-origin: top; transform: scaleY(0); transition: transform .6s cubic-bezier(.4,0,.2,1) .06s; }
+.timeline.reveal.in::before { transform: scaleY(1); }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal.rv-left, .reveal.rv-right, .reveal.rv-scale, .reveal.rv-tilt { transform: none; }
+  .work-grid .work-card.reveal, .doc-row .doc-card.reveal,
+  .anatomy .anat-card.reveal, .review-row .review-card.reveal,
+  .steps .step.reveal, .timeline .tl-item.reveal { transition-delay: 0s !important; }
+  .timeline.reveal::before, .timeline.reveal.in::before { transform: none; transition: none; }
+}
+
+/* ---------- Experience slides: two columns ----------
+   The right-hand half of these slides was EMPTY — Wayne flagged it. It now
+   carries the role's actual toolchain plus a period/org marker. Collapses to
+   one column below 880px, and the side panel is dropped entirely on short
+   viewports where the bullets need every pixel. */
+/* align-items:center, NOT start. Top-aligning a short panel against a taller,
+   vertically-centred text column left it floating high with a gap underneath. */
+.role-grid { display: grid; grid-template-columns: 1.35fr .65fr; gap: 44px; align-items: center; width: 100%; }
+.role-side {
+  background: var(--paper-soft); border: 1px solid var(--surface-border);
+  border-radius: 18px; padding: 22px 20px;
+  box-shadow: 0 14px 34px -22px rgba(0,0,0,.3);
+}
+.role-side-label {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--ink-faint); display: block; margin-bottom: 14px;
+}
+.role-tools { display: flex; flex-direction: column; gap: 9px; }
+.role-tool {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 13.5px; font-weight: 600; color: var(--ink);
+}
+.role-tool img { width: 26px; height: 26px; object-fit: contain; flex: 0 0 26px; }
+.role-tool span { min-width: 0; }
+.role-badge {
+  margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--line);
+}
+.role-badge b {
+  display: block; font-family: var(--heading); font-weight: 800;
+  font-size: 20px; color: var(--primary); line-height: 1.1;
+}
+.role-badge span { display: block; font-size: 12px; color: var(--ink-faint); margin-top: 4px; }
+
+@media (max-width: 880px) {
+  .role-grid { grid-template-columns: 1fr; gap: 20px; }
+  .role-side { padding: 16px; }
+  .role-tools { flex-direction: row; flex-wrap: wrap; gap: 8px 18px; }
+  .role-badge { margin-top: 14px; padding-top: 12px; }
+}
+/* On a short viewport the bullets need the room more than the panel does. */
+@media (max-height: 700px) {
+  .role-side { display: none; }
+  .role-grid { grid-template-columns: 1fr; }
+}
+
+/* The timeline is a reveal target ONLY so its connecting rail can draw itself.
+   It contains .tl-item, which is also a reveal target — so if the container
+   also moved, the two offsets would compound and the items would arrive from
+   the wrong place. Container stays put; children own the motion. */
+.timeline.reveal { transform: none !important; opacity: 1 !important; }
+
+/* =====================================================================
+   MOTION SYSTEM — driven by js/motion.js
+   =====================================================================
+   motion.js walks each slide, picks out the real content blocks
+   STRUCTURALLY (so nothing can be missed the way a class allowlist missed
+   the About slide's photo, paragraphs and CV button), and sets three things
+   on every block:
+
+     data-fx    which flavour it gets, chosen by what the block IS
+     --i        its position in the stagger
+     --travel   how far it may move, capped to the MEASURED gap to its
+                neighbour so a moving block can never overlap a settled one
+
+   The keyframes below read --travel rather than hardcoding a distance,
+   which is what makes "nothing overlaps" a guarantee instead of a hope.
+
+   Entrances overshoot and settle (Apple spring). Exits do not bounce.
+   ===================================================================== */
+
+body.deck .slide [data-fx] { opacity: 0; }
+body.deck .slide .wrap, body.deck .slide .role-grid, body.deck .slide .about-grid { perspective: 1000px; }
+
+/* ---------- ENTRANCES ---------- */
+body.deck .slide:not(.exiting-away).current [data-fx="swipe"] {
+  animation: fx-swipe-in .46s cubic-bezier(.16,1,.3,1) calc(.02s + var(--i,0) * .045s) both; }
+body.deck .slide:not(.exiting-away).current [data-fx="rise"] {
+  animation: fx-rise-in .48s cubic-bezier(.16,1,.3,1) calc(.02s + var(--i,0) * .045s) both; }
+body.deck .slide:not(.exiting-away).current [data-fx="zoom"] {
+  animation: fx-zoom-in .48s cubic-bezier(.16,1,.3,1) calc(.02s + var(--i,0) * .045s) both; }
+body.deck .slide:not(.exiting-away).current [data-fx="fan"] {
+  animation: fx-fan-in .48s cubic-bezier(.16,1,.3,1) calc(.02s + var(--i,0) * .045s) both; }
+body.deck .slide:not(.exiting-away).current [data-fx="tilt"] {
+  animation: fx-tilt-in .52s cubic-bezier(.16,1,.3,1) calc(.02s + var(--i,0) * .045s) both; }
+
+/* ---------- EXITS: tighter, no bounce, near-simultaneous ---------- */
+body.deck .slide.exiting-away [data-fx="swipe"] {
+  animation: fx-swipe-out .18s cubic-bezier(.4,0,.2,1) calc(var(--i,0) * .01s) both; }
+body.deck .slide.exiting-away [data-fx="rise"] {
+  animation: fx-rise-out .18s cubic-bezier(.4,0,.2,1) calc(var(--i,0) * .01s) both; }
+body.deck .slide.exiting-away [data-fx="zoom"] {
+  animation: fx-zoom-out .18s cubic-bezier(.4,0,.2,1) calc(var(--i,0) * .01s) both; }
+body.deck .slide.exiting-away [data-fx="fan"] {
+  animation: fx-fan-out .18s cubic-bezier(.4,0,.2,1) calc(var(--i,0) * .01s) both; }
+body.deck .slide.exiting-away [data-fx="tilt"] {
+  animation: fx-tilt-out .18s cubic-bezier(.4,0,.2,1) calc(var(--i,0) * .01s) both; }
+
+/* ---------- the five flavours, travel read from --travel ----------
+   Shape: 0% launch hard, 28% opacity already at full (so text is readable
+   while the movement finishes), 62% overshoot past the resting point, 100%
+   settled. Each segment carries its OWN timing function - without that, the
+   shorthand's ease-out also governs the spring-back and the last few pixels
+   crawl, which is what made this feel slow. */
+@keyframes fx-swipe-in {
+  0%    { opacity: 0; transform: translate3d(calc(var(--travel,26px) * -1), 0, 0); animation-timing-function: cubic-bezier(.16,.9,.24,1); }
+  28%   { opacity: 1; transform: translate3d(calc(var(--travel,26px) * -.22), 0, 0); animation-timing-function: cubic-bezier(.3,.4,.4,1); }
+  62%   { opacity: 1; transform: translate3d(calc(var(--travel,26px) * .15), 0, 0); animation-timing-function: cubic-bezier(.42,0,.3,1); }
+  100%  { opacity: 1; transform: none; }
+}
+@keyframes fx-swipe-out { from { opacity:1; transform:none; } to { opacity:0; transform: translate3d(-30px,0,0); } }
+
+@keyframes fx-rise-in {
+  0%    { opacity: 0; transform: translate3d(0, var(--travel,26px), 0) scale(.985); animation-timing-function: cubic-bezier(.16,.9,.24,1); }
+  28%   { opacity: 1; transform: translate3d(0, calc(var(--travel,26px) * .22), 0) scale(.997); animation-timing-function: cubic-bezier(.3,.4,.4,1); }
+  62%   { opacity: 1; transform: translate3d(0, calc(var(--travel,26px) * -.15), 0) scale(1.004); animation-timing-function: cubic-bezier(.42,0,.3,1); }
+  100%  { opacity: 1; transform: none; }
+}
+@keyframes fx-rise-out { from { opacity:1; transform:none; } to { opacity:0; transform: translate3d(0,-26px,0); } }
+
+@keyframes fx-zoom-in {
+  0%    { opacity: 0; transform: scale(.945); animation-timing-function: cubic-bezier(.16,.9,.24,1); }
+  28%   { opacity: 1; transform: scale(.988); animation-timing-function: cubic-bezier(.3,.4,.4,1); }
+  62%   { opacity: 1; transform: scale(1.012); animation-timing-function: cubic-bezier(.42,0,.3,1); }
+  100%  { opacity: 1; transform: none; }
+}
+@keyframes fx-zoom-out { from { opacity:1; transform:none; } to { opacity:0; transform: scale(1.03); } }
+
+@keyframes fx-fan-in {
+  0%    { opacity: 0; transform: translate3d(0, var(--travel,26px), 0) rotate(-1.5deg); animation-timing-function: cubic-bezier(.16,.9,.24,1); }
+  28%   { opacity: 1; transform: translate3d(0, calc(var(--travel,26px) * .22), 0) rotate(-.33deg); animation-timing-function: cubic-bezier(.3,.4,.4,1); }
+  62%   { opacity: 1; transform: translate3d(0, calc(var(--travel,26px) * -.13), 0) rotate(.4deg); animation-timing-function: cubic-bezier(.42,0,.3,1); }
+  100%  { opacity: 1; transform: none; }
+}
+@keyframes fx-fan-out { from { opacity:1; transform:none; } to { opacity:0; transform: translate3d(0,-20px,0) rotate(1.2deg); } }
+
+@keyframes fx-tilt-in {
+  0%    { opacity: 0; transform: rotateX(9deg) translate3d(0, var(--travel,26px), 0) scale(.985); animation-timing-function: cubic-bezier(.16,.9,.24,1); }
+  28%   { opacity: 1; transform: rotateX(2deg) translate3d(0, calc(var(--travel,26px) * .22), 0) scale(.997); animation-timing-function: cubic-bezier(.3,.4,.4,1); }
+  62%   { opacity: 1; transform: rotateX(-1.8deg) translate3d(0, calc(var(--travel,26px) * -.15), 0) scale(1.004); animation-timing-function: cubic-bezier(.42,0,.3,1); }
+  100%  { opacity: 1; transform: none; }
+}
+@keyframes fx-tilt-out { from { opacity:1; transform:none; } to { opacity:0; transform: rotateX(-8deg) translate3d(0,-22px,0); } }
+
+@media (prefers-reduced-motion: reduce) {
+  body.deck .slide [data-fx] { animation: none !important; opacity: 1 !important; transform: none !important; translate: none !important; }
+}
+
+/* =====================================================================
+   APPLE-STYLE SPRING, everywhere else too  (fast: Apple sits at 300-500ms)
+   =====================================================================
+   The deck gets its bounce from explicit keyframe overshoot. Document pages
+   and the hero use CSS TRANSITIONS, which cannot have intermediate stops — so
+   there the spring comes from an overshooting bezier instead (a control point
+   with y > 1 carries the value past its target and back).
+
+   Opacity deliberately does NOT get the springy curve. Overshooting opacity
+   just clamps at 1 and wastes the motion; worse, it can read as a flicker.
+   Transform springs, opacity glides. That split is the whole trick.
+   ===================================================================== */
+.reveal {
+  transition:
+    opacity   .3s cubic-bezier(.16, 1, .3, 1),
+    transform .5s cubic-bezier(.32, 1.62, .38, 1);
+}
+/* The hero's load choreography gets the same spring, so the very first thing a
+   visitor sees already has the house feel. */
+.hero-unlock {
+  transition:
+    opacity   .36s cubic-bezier(.16, 1, .3, 1),
+    transform .56s cubic-bezier(.32, 1.5, .4, 1),
+    filter    .36s cubic-bezier(.16, 1, .3, 1);
+}
+/* Interactive elements: a short, springy response to hover. Apple's other
+   signature — things acknowledge you before they act. */
+.work-card, .work-mini, .doc-card, .tool-tile, .review-card, .btn, .social-btn {
+  transition:
+    transform   .28s cubic-bezier(.34, 1.5, .44, 1),
+    box-shadow  .28s cubic-bezier(.16, 1, .3, 1),
+    border-color .3s ease,
+    background  .3s ease,
+    color       .3s ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal, .hero-unlock,
+  .work-card, .work-mini, .doc-card, .tool-tile, .review-card, .btn, .social-btn {
+    transition: none !important;
+  }
+}
+
+/* The hero portrait's 3D tilt, softened. style.css sets rotateY(-10deg) on the
+   current slide, which visibly skews a face — depth is still legible at half
+   the angle and the photo stops looking warped. */
+body.deck .slide.current .hero-card { transform: rotateY(-5deg) rotateX(2deg) translateZ(0); }
+@media (max-width: 760px) { body.deck .slide.current .hero-card { transform: none; } }
+
+/* =====================================================================
+   TIER 2 — MICRO: the internal life of a block
+   =====================================================================
+   A block travels as one unit (tier 1 above). These are the small distinct
+   movements of its children INSIDE that unit, so it has texture without
+   coming apart.
+
+   TRANSFORM ONLY — deliberately no opacity. The group already fades, and if
+   a child faded too the two opacities would multiply: children would arrive
+   later and dimmer than their own block, which is precisely the "it comes
+   apart" problem. The group owns the fade; children own the nuance.
+
+   No exit either. Children leave WITH their group — that is what "together"
+   means. Only tier 1 has an exit.
+
+   --i is set on the group and inherits down, so a child's delay can be
+   expressed relative to its own group's start.
+   ===================================================================== */
+body.deck .slide [data-micro] { --micro: 7px; }
+
+body.deck .slide:not(.exiting-away).current [data-micro] {
+  animation-duration: .42s;
+  animation-timing-function: cubic-bezier(.16,1,.3,1);
+  animation-fill-mode: both;
+  animation-delay: calc(.06s + var(--i,0) * .045s + var(--mi,0) * .032s);
+}
+body.deck .slide:not(.exiting-away).current [data-micro="swipe"] { animation-name: mi-swipe; }
+body.deck .slide:not(.exiting-away).current [data-micro="rise"]  { animation-name: mi-rise; }
+body.deck .slide:not(.exiting-away).current [data-micro="zoom"]  { animation-name: mi-zoom; }
+body.deck .slide:not(.exiting-away).current [data-micro="fan"]   { animation-name: mi-fan; }
+body.deck .slide:not(.exiting-away).current [data-micro="tilt"]  { animation-name: mi-tilt; }
+
+/* Each ends at `none`, so a settled child adds no transform of its own and
+   cannot interfere with its group's. */
+@keyframes mi-swipe {
+  0%    { transform: translate3d(calc(var(--micro) * -1), 0, 0); animation-timing-function: cubic-bezier(.16,.9,.24,1); }
+  58%   { transform: translate3d(calc(var(--micro) * .14), 0, 0); animation-timing-function: cubic-bezier(.42,0,.3,1); }
+  100%  { transform: none; }
+}
+@keyframes mi-rise {
+  0%    { transform: translate3d(0, var(--micro), 0); animation-timing-function: cubic-bezier(.16,.9,.24,1); }
+  58%   { transform: translate3d(0, calc(var(--micro) * -.14), 0); animation-timing-function: cubic-bezier(.42,0,.3,1); }
+  100%  { transform: none; }
+}
+@keyframes mi-zoom {
+  0%    { transform: scale(.988); animation-timing-function: cubic-bezier(.16,.9,.24,1); }
+  58%   { transform: scale(1.004); animation-timing-function: cubic-bezier(.42,0,.3,1); }
+  100%  { transform: none; }
+}
+@keyframes mi-fan {
+  0%    { transform: translate3d(0, calc(var(--micro) * .8), 0) rotate(-.7deg); animation-timing-function: cubic-bezier(.16,.9,.24,1); }
+  58%   { transform: translate3d(0, calc(var(--micro) * -.11), 0) rotate(.2deg); animation-timing-function: cubic-bezier(.42,0,.3,1); }
+  100%  { transform: none; }
+}
+@keyframes mi-tilt {
+  0%    { transform: rotateX(4deg) translate3d(0, calc(var(--micro) * .7), 0); animation-timing-function: cubic-bezier(.16,.9,.24,1); }
+  58%   { transform: rotateX(-1deg) translate3d(0, calc(var(--micro) * -.11), 0); animation-timing-function: cubic-bezier(.42,0,.3,1); }
+  100%  { transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.deck .slide [data-micro] { animation: none !important; transform: none !important; }
 }

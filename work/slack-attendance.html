@@ -8,8 +8,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../css/style.css?v=55">
-<link rel="stylesheet" href="../css/work.css?v=16">
+<link rel="stylesheet" href="../css/style.css?v=56">
+<link rel="stylesheet" href="../css/work.css?v=40">
 <noscript><style>.reveal{opacity:1 !important;transform:none !important;}</style></noscript>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='34' cy='52' r='22' fill='%236E632E'/><circle cx='68' cy='36' r='14' fill='%23DBD1ED'/><circle cx='74' cy='70' r='10' fill='%23EDE8D0'/></svg>">
 </head>
@@ -27,7 +27,7 @@
 <header class="nav">
   <div class="nav-inner">
     <a class="nav-logo" href="../index.html">ahmad<span class="dot">.</span>rajeh</a>
-    <ul class="nav-links"><li><a href="../work.html" aria-current="page">Work</a></li><li><a href="../case-study.html">Case study</a></li><li><a href="../process.html">Process</a></li><li><a href="../creatives.html">Creatives</a></li><li><a href="../index.html#about">About</a></li><li><a href="../index.html#contact">Contact</a></li></ul>
+    <ul class="nav-links"><li><a href="../full.html">Overview</a></li><li><a href="../work.html" aria-current="page">Work</a></li><li><a href="../case-study.html">Case study</a></li><li><a href="../process.html">Process</a></li><li><a href="../creatives.html">Creatives</a></li><li><a href="../full.html#contact">Contact</a></li></ul>
     <a class="badge-legacy" href="../index.html#contact">Book a call &rarr;</a>
   </div>
 </header>
@@ -56,13 +56,13 @@
   <div class="wrap">
     <span class="sec-label reveal">What goes in, what comes out</span>
     <h2 class="sec-title reveal">The data, end to end</h2>
-    <div class="io-wrap reveal">
+    <div class="io-wrap reveal rv-scale">
       <table class="io-table">
         <thead><tr><th>Source</th><th>What comes in</th><th>What it becomes</th></tr></thead>
         <tbody><tr><td>Slack workspace</td><td>Connected once by an admin</td><td>The company's own tenant</td></tr><tr><td>Staff messages</td><td>Clock in and out from a channel</td><td>Timestamped shift records</td></tr><tr><td>Manager</td><td>Opens the web dashboard</td><td>Hours, cost and exceptions</td></tr><tr><td>Pay period</td><td>A date range</td><td>A payroll-ready export</td></tr></tbody>
       </table>
     </div>
-    <div class="pipeline reveal">
+    <div class="pipeline reveal rv-scale">
       <div class="pipe-step"><div class="pipe-icon" aria-hidden="true">◈</div><b>Admin connects Slack</b><span>OAuth, one time</span></div>
       <div class="pipe-arrow" aria-hidden="true">&rarr;</div>
       <div class="pipe-step"><div class="pipe-icon" aria-hidden="true">⟲</div><b>Staff clock in</b><span>From the channel they already use</span></div>
@@ -78,7 +78,7 @@
   <div class="wrap">
     <span class="sec-label reveal">The engineering</span>
     <h2 class="sec-title reveal">The decisions that actually mattered</h2>
-    <div class="steps"><div class="step reveal"><h4>Meet people where they already are</h4><p>Adoption is the whole problem with attendance software. Clocking in has to cost less effort than not clocking in, and a message in a channel someone already has open beats any app.</p></div><div class="step reveal"><h4>Only known staff are ever tracked</h4><p>A person must be registered before anything they type is logged. Anyone else in the channel is ignored entirely — no accidental records, and no logging of people who never agreed to be logged.</p></div><div class="step reveal"><h4>The edge cases are the product</h4><p>Shifts crossing midnight, missed clock-outs, breaks that never ended, someone clocking in twice. A tracker that only handles the clean case produces payroll a human has to check line by line, which is the job it was supposed to remove.</p></div><div class="step reveal"><h4>Wrong pay is the unforgivable bug</h4><p>Rounding, overtime and period boundaries are covered by tests specifically, because this is the one system where a quiet arithmetic error reaches somebody's bank account.</p></div></div>
+    <div class="steps"><div class="step reveal rv-left"><h4>Meet people where they already are</h4><p>Adoption is the whole problem with attendance software. Clocking in has to cost less effort than not clocking in, and a message in a channel someone already has open beats any app.</p></div><div class="step reveal rv-left"><h4>Only known staff are ever tracked</h4><p>A person must be registered before anything they type is logged. Anyone else in the channel is ignored entirely — no accidental records, and no logging of people who never agreed to be logged.</p></div><div class="step reveal rv-left"><h4>The edge cases are the product</h4><p>Shifts crossing midnight, missed clock-outs, breaks that never ended, someone clocking in twice. A tracker that only handles the clean case produces payroll a human has to check line by line, which is the job it was supposed to remove.</p></div><div class="step reveal rv-left"><h4>Wrong pay is the unforgivable bug</h4><p>Rounding, overtime and period boundaries are covered by tests specifically, because this is the one system where a quiet arithmetic error reaches somebody's bank account.</p></div></div>
   </div>
 </section>
 
@@ -88,7 +88,7 @@
   <div class="wrap">
     <span class="sec-label reveal">Where it landed</span>
     <h2 class="sec-title reveal">The outcome</h2>
-    <div class="result-band reveal">
+    <div class="result-band reveal rv-tilt">
       <div class="stats-grid"><div class="stat"><b>110</b><span>automated tests</span></div><div class="stat"><b>Slack</b><span>the only interface staff need</span></div><div class="stat"><b>Multi-tenant</b><span>one workspace per company</span></div><div class="stat"><b>Payroll</b><span>export per period</span></div></div>
     </div>
     <p class="doc-note reveal" style="margin-top:24px;"><strong>Being straight about it:</strong> Built and tested against a live Slack app; not yet running a real company's payroll. Until it has, I would not describe it as proven — a test suite is evidence, not a track record.</p>
@@ -126,8 +126,9 @@
   </div>
 </div>
 
-<script src="../js/main.js?v=23"></script>
-<script src="../js/work.js?v=16"></script>
+<script src="../js/main.js?v=26"></script>
+<script src="../js/work.js?v=38"></script>
 <script src="../js/scene.js?v=6"></script>
+<script src="../js/motion.js?v=8"></script>
 </body>
 </html>

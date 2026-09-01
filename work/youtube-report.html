@@ -8,8 +8,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../css/style.css?v=55">
-<link rel="stylesheet" href="../css/work.css?v=16">
+<link rel="stylesheet" href="../css/style.css?v=56">
+<link rel="stylesheet" href="../css/work.css?v=40">
 <noscript><style>.reveal{opacity:1 !important;transform:none !important;}</style></noscript>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='34' cy='52' r='22' fill='%236E632E'/><circle cx='68' cy='36' r='14' fill='%23DBD1ED'/><circle cx='74' cy='70' r='10' fill='%23EDE8D0'/></svg>">
 </head>
@@ -27,7 +27,7 @@
 <header class="nav">
   <div class="nav-inner">
     <a class="nav-logo" href="../index.html">ahmad<span class="dot">.</span>rajeh</a>
-    <ul class="nav-links"><li><a href="../work.html" aria-current="page">Work</a></li><li><a href="../case-study.html">Case study</a></li><li><a href="../process.html">Process</a></li><li><a href="../creatives.html">Creatives</a></li><li><a href="../index.html#about">About</a></li><li><a href="../index.html#contact">Contact</a></li></ul>
+    <ul class="nav-links"><li><a href="../full.html">Overview</a></li><li><a href="../work.html" aria-current="page">Work</a></li><li><a href="../case-study.html">Case study</a></li><li><a href="../process.html">Process</a></li><li><a href="../creatives.html">Creatives</a></li><li><a href="../full.html#contact">Contact</a></li></ul>
     <a class="badge-legacy" href="../index.html#contact">Book a call &rarr;</a>
   </div>
 </header>
@@ -56,13 +56,13 @@
   <div class="wrap">
     <span class="sec-label reveal">What goes in, what comes out</span>
     <h2 class="sec-title reveal">The data, end to end</h2>
-    <div class="io-wrap reveal">
+    <div class="io-wrap reveal rv-scale">
       <table class="io-table">
         <thead><tr><th>Source</th><th>What comes in</th><th>What it becomes</th></tr></thead>
         <tbody><tr><td>YouTube Data API</td><td>Views, watch time, subscribers, per video</td><td>The channel figures</td></tr><tr><td>Affiliate and analytics</td><td>Clicks through to site, conversions</td><td>The commercial half</td></tr><tr><td>The existing workbook</td><td>Its own formula structure, kept intact</td><td>Familiar output</td></tr><tr><td>Monday to Sunday</td><td>A fixed reporting window</td><td>Tuesday's report, already done</td></tr></tbody>
       </table>
     </div>
-    <div class="pipeline reveal">
+    <div class="pipeline reveal rv-scale">
       <div class="pipe-step"><div class="pipe-icon" aria-hidden="true">⟲</div><b>Scheduled pull</b><span>Straight from the platform APIs</span></div>
       <div class="pipe-arrow" aria-hidden="true">&rarr;</div>
       <div class="pipe-step"><div class="pipe-icon" aria-hidden="true">▣</div><b>Land in the workbook</b><span>Into the ranges the formulas already read</span></div>
@@ -78,7 +78,7 @@
   <div class="wrap">
     <span class="sec-label reveal">The engineering</span>
     <h2 class="sec-title reveal">The decisions that actually mattered</h2>
-    <div class="steps"><div class="step reveal"><h4>Study the workbook before replacing anything</h4><p>The sheet turned out to be almost entirely formula-driven already — the charts pulled everything through offset ranges. The correct job was therefore to feed those ranges fresh data, not to rebuild the reporting. Reading first turned a rewrite into a data-delivery problem.</p></div><div class="step reveal"><h4>The access problem was the real blocker</h4><p>Channel-level API access needs the right kind of account with the right kind of rights. Delegated manager access grants nothing to the API, and a script can never authenticate as a channel it merely manages. Establishing that early saved weeks of building against an approach that could not have worked.</p></div><div class="step reveal"><h4>Never break the shape people already read</h4><p>The team knows this report's layout. Changing it to suit the automation would trade three hours of assembly for weeks of everyone relearning where the number they care about lives. The output is identical; only the labour disappeared.</p></div><div class="step reveal"><h4>Validate against the hand-built version first</h4><p>The automated figures were checked against the manual report before anyone relied on them. An automated number that is confidently wrong is worse than the manual one it replaced, because nobody re-checks it.</p></div></div>
+    <div class="steps"><div class="step reveal rv-left"><h4>Study the workbook before replacing anything</h4><p>The sheet turned out to be almost entirely formula-driven already — the charts pulled everything through offset ranges. The correct job was therefore to feed those ranges fresh data, not to rebuild the reporting. Reading first turned a rewrite into a data-delivery problem.</p></div><div class="step reveal rv-left"><h4>The access problem was the real blocker</h4><p>Channel-level API access needs the right kind of account with the right kind of rights. Delegated manager access grants nothing to the API, and a script can never authenticate as a channel it merely manages. Establishing that early saved weeks of building against an approach that could not have worked.</p></div><div class="step reveal rv-left"><h4>Never break the shape people already read</h4><p>The team knows this report's layout. Changing it to suit the automation would trade three hours of assembly for weeks of everyone relearning where the number they care about lives. The output is identical; only the labour disappeared.</p></div><div class="step reveal rv-left"><h4>Validate against the hand-built version first</h4><p>The automated figures were checked against the manual report before anyone relied on them. An automated number that is confidently wrong is worse than the manual one it replaced, because nobody re-checks it.</p></div></div>
   </div>
 </section>
 
@@ -88,7 +88,7 @@
   <div class="wrap">
     <span class="sec-label reveal">Where it landed</span>
     <h2 class="sec-title reveal">The outcome</h2>
-    <div class="result-band reveal">
+    <div class="result-band reveal rv-tilt">
       <div class="stats-grid"><div class="stat"><b>3 hrs</b><span>→ minutes, weekly</span></div><div class="stat"><b>2</b><span>channels covered</span></div><div class="stat"><b>Same</b><span>layout the team already reads</span></div><div class="stat"><b>Tuesday</b><span>ready before the day starts</span></div></div>
     </div>
     <p class="doc-note reveal" style="margin-top:24px;"><strong>Being straight about it:</strong> Partly blocked on third-party API access outside my control, and honest about that: the channel data automates cleanly, some affiliate figures still depend on access another team owns. Half-automated and clearly labelled beats fully automated and quietly guessing.</p>
@@ -126,8 +126,9 @@
   </div>
 </div>
 
-<script src="../js/main.js?v=23"></script>
-<script src="../js/work.js?v=16"></script>
+<script src="../js/main.js?v=26"></script>
+<script src="../js/work.js?v=38"></script>
 <script src="../js/scene.js?v=6"></script>
+<script src="../js/motion.js?v=8"></script>
 </body>
 </html>

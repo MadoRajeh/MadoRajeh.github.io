@@ -8,8 +8,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../css/style.css?v=55">
-<link rel="stylesheet" href="../css/work.css?v=16">
+<link rel="stylesheet" href="../css/style.css?v=56">
+<link rel="stylesheet" href="../css/work.css?v=40">
 <noscript><style>.reveal{opacity:1 !important;transform:none !important;}</style></noscript>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='34' cy='52' r='22' fill='%236E632E'/><circle cx='68' cy='36' r='14' fill='%23DBD1ED'/><circle cx='74' cy='70' r='10' fill='%23EDE8D0'/></svg>">
 </head>
@@ -27,7 +27,7 @@
 <header class="nav">
   <div class="nav-inner">
     <a class="nav-logo" href="../index.html">ahmad<span class="dot">.</span>rajeh</a>
-    <ul class="nav-links"><li><a href="../work.html" aria-current="page">Work</a></li><li><a href="../case-study.html">Case study</a></li><li><a href="../process.html">Process</a></li><li><a href="../creatives.html">Creatives</a></li><li><a href="../index.html#about">About</a></li><li><a href="../index.html#contact">Contact</a></li></ul>
+    <ul class="nav-links"><li><a href="../full.html">Overview</a></li><li><a href="../work.html" aria-current="page">Work</a></li><li><a href="../case-study.html">Case study</a></li><li><a href="../process.html">Process</a></li><li><a href="../creatives.html">Creatives</a></li><li><a href="../full.html#contact">Contact</a></li></ul>
     <a class="badge-legacy" href="../index.html#contact">Book a call &rarr;</a>
   </div>
 </header>
@@ -56,13 +56,13 @@
   <div class="wrap">
     <span class="sec-label reveal">What goes in, what comes out</span>
     <h2 class="sec-title reveal">The data, end to end</h2>
-    <div class="io-wrap reveal">
+    <div class="io-wrap reveal rv-scale">
       <table class="io-table">
         <thead><tr><th>Source</th><th>What comes in</th><th>What it becomes</th></tr></thead>
         <tbody><tr><td>The live sheet</td><td>Fed by the CRM sync</td><td>Always-current figures</td></tr><tr><td>Spend data</td><td>Per location, per channel</td><td>Cost per lead</td></tr><tr><td>Filters</td><td>Date range, location, channel</td><td>A scoped view in a click</td></tr><tr><td>Anyone with the link</td><td>No spreadsheet knowledge needed</td><td>The answer, directly</td></tr></tbody>
       </table>
     </div>
-    <div class="pipeline reveal">
+    <div class="pipeline reveal rv-scale">
       <div class="pipe-step"><div class="pipe-icon" aria-hidden="true">▣</div><b>Sits on the live sheet</b><span>Same data, no second copy</span></div>
       <div class="pipe-arrow" aria-hidden="true">&rarr;</div>
       <div class="pipe-step"><div class="pipe-icon" aria-hidden="true">⟲</div><b>Filters apply</b><span>Date, location, channel</span></div>
@@ -78,7 +78,7 @@
   <div class="wrap">
     <span class="sec-label reveal">The engineering</span>
     <h2 class="sec-title reveal">The decisions that actually mattered</h2>
-    <div class="steps"><div class="step reveal"><h4>One number decides everything</h4><p>The dashboard leads on cost per lead, not a wall of engagement metrics. Ten numbers nobody acts on is a worse dashboard than one number everybody argues about — and cost per lead is the one that actually pays the bills.</p></div><div class="step reveal"><h4>No second copy of the data</h4><p>It reads the live sheet directly. A dashboard with its own database is a dashboard that will eventually disagree with the source, and then nobody trusts either.</p></div><div class="step reveal"><h4>Built for someone who won't open a spreadsheet</h4><p>Filters instead of formulas, sortable columns instead of pivot tables. The measure of success is a director getting their own answer without messaging anyone.</p></div><div class="step reveal"><h4>Slow and honest beats fast and stale</h4><p>Where a choice existed between caching for speed and reading fresh, it reads fresh. A dashboard showing yesterday's number confidently is the failure mode that costs trust.</p></div></div>
+    <div class="steps"><div class="step reveal rv-left"><h4>One number decides everything</h4><p>The dashboard leads on cost per lead, not a wall of engagement metrics. Ten numbers nobody acts on is a worse dashboard than one number everybody argues about — and cost per lead is the one that actually pays the bills.</p></div><div class="step reveal rv-left"><h4>No second copy of the data</h4><p>It reads the live sheet directly. A dashboard with its own database is a dashboard that will eventually disagree with the source, and then nobody trusts either.</p></div><div class="step reveal rv-left"><h4>Built for someone who won't open a spreadsheet</h4><p>Filters instead of formulas, sortable columns instead of pivot tables. The measure of success is a director getting their own answer without messaging anyone.</p></div><div class="step reveal rv-left"><h4>Slow and honest beats fast and stale</h4><p>Where a choice existed between caching for speed and reading fresh, it reads fresh. A dashboard showing yesterday's number confidently is the failure mode that costs trust.</p></div></div>
   </div>
 </section>
 
@@ -88,7 +88,7 @@
   <div class="wrap">
     <span class="sec-label reveal">Where it landed</span>
     <h2 class="sec-title reveal">The outcome</h2>
-    <div class="result-band reveal">
+    <div class="result-band reveal rv-tilt">
       <div class="stats-grid"><div class="stat"><b>Seconds</b><span>to answer a question</span></div><div class="stat"><b>15</b><span>locations, one view</span></div><div class="stat"><b>Live</b><span>reads the source, no copy</span></div><div class="stat"><b>No formulas</b><span>for the reader</span></div></div>
     </div>
     <p class="doc-note reveal" style="margin-top:24px;"><strong>Being straight about it:</strong> It is an internal tool built on Google's platform, not a product. That is the right trade — it lives where the data already lives, cost nothing to host, and needed no IT approval to roll out.</p>
@@ -126,8 +126,9 @@
   </div>
 </div>
 
-<script src="../js/main.js?v=23"></script>
-<script src="../js/work.js?v=16"></script>
+<script src="../js/main.js?v=26"></script>
+<script src="../js/work.js?v=38"></script>
 <script src="../js/scene.js?v=6"></script>
+<script src="../js/motion.js?v=8"></script>
 </body>
 </html>
