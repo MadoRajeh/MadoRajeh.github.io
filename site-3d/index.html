@@ -8,8 +8,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=47">
-<noscript><style>.slide{position:static;opacity:1;transform:none;height:auto;min-height:100vh;pointer-events:auto;filter:none;}body.deck{overflow:visible;height:auto;}.hero-unlock{opacity:1 !important;transform:none !important;filter:none !important;}#scene-bg{display:none;}</style></noscript>
+<link rel="stylesheet" href="css/style.css?v=55">
+<link rel="stylesheet" href="css/work.css?v=4">
+<noscript><style>.slide{position:static;opacity:1;transform:none;height:auto;min-height:100vh;pointer-events:auto;filter:none;}#deck-stage{height:auto;overflow:visible;}.reveal{opacity:1 !important;transform:none !important;}.hero-unlock{opacity:1 !important;transform:none !important;filter:none !important;}#scene-bg{display:none;}</style></noscript>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='34' cy='52' r='22' fill='%236E632E'/><circle cx='68' cy='36' r='14' fill='%23DBD1ED'/><circle cx='74' cy='70' r='10' fill='%23EDE8D0'/></svg>">
 </head>
 <body class="deck locking">
@@ -20,16 +21,18 @@
   <div class="nav-inner">
     <a class="nav-logo" href="#top">ahmad<span class="dot">.</span>rajeh</a>
     <ul class="nav-links">
-      <li><a href="#work">Highlights</a></li>
+      <li><a href="work.html">Work</a></li>
+      <li><a href="process.html">Process</a></li>
       <li><a href="creatives.html">Creatives</a></li>
-      <li><a href="#tools">Tools</a></li>
-      <li><a href="#about">About</a></li>
-      <li><a href="#contact">Contact</a></li>
+      <li><a href="index.html#experience">Experience</a></li>
+      <li><a href="index.html#about">About</a></li>
+      <li><a href="index.html#contact">Contact</a></li>
     </ul>
-    <a class="badge-legacy" href="../site/index.html">Main website →</a>
+    <a class="badge-legacy" href="#contact">Book a call →</a>
   </div>
 </header>
 
+<div id="deck-stage">
 <nav class="slide-dots" id="slide-dots" aria-label="Slide navigation"></nav>
 
 <!-- ================= HERO / UNLOCK ================= -->
@@ -37,13 +40,11 @@
   <div class="hero-glow" aria-hidden="true"></div>
   <div class="hero-grid">
     <div>
-      <span class="hero-kicker hero-unlock d1">The interactive edition</span>
-      <h1 class="hero-unlock d2">This is the short version. <span class="hl">Scroll to unlock it.</span></h1>
-      <p class="hero-sub hero-unlock d3">A faster, more visual pass through who I am and what I've built: a few highlights, not the whole file. Want the complete case studies and pricing instead? That lives on the main site.</p>
+      <span class="hero-kicker hero-unlock d1">Marketing systems &amp; automation</span>
+      <h1 class="hero-unlock d2">I build the systems that run marketing operations. <span class="hl">Scroll to see one.</span></h1>
+      <p class="hero-sub hero-unlock d3">So leads don't get lost, reports don't take an afternoon, and nobody's guessing what's actually working. A few highlights first, then the full case study.</p>
       <div class="hero-choice hero-unlock d4">
-        <a href="../site/index.html">Visit the main website →</a>
-        <span>or</span>
-        <button type="button" class="scroll-cue" id="scroll-cue">Keep scrolling for the short version <span class="chevron">⌄</span></button>
+        <button type="button" class="scroll-cue" id="scroll-cue">Keep scrolling <span class="chevron">⌄</span></button>
       </div>
       <div class="stats-grid hero-unlock d5">
         <div class="stat"><b>15</b><span>locations marketed end to end</span></div>
@@ -55,7 +56,7 @@
     <div class="hero-card-wrap hero-unlock d3">
       <div class="hero-card" id="hero-card">
         <img src="img/headshot-nobg.png" alt="Ahmad Rajeh" width="768" height="1261">
-        <div class="hero-card-tag">5+ years · Ads, content &amp; automation</div>
+        <div class="hero-card-tag">5+ years experience</div>
       </div>
     </div>
   </div>
@@ -96,7 +97,7 @@
 </section>
 
 <!-- ================= HIGHLIGHT C: this site is a project too ================= -->
-<section class="slide project-slide scene" data-label="This page" data-bg="#EDE8D0" data-exit="split">
+<section class="slide project-slide scene" data-label="This page" data-bg="#EDE8D0">
   <div class="wrap">
     <span class="sec-label project-kicker">Highlight 03</span>
     <div class="deck-item from-right reverse">
@@ -112,57 +113,342 @@
     </div>
   </div>
 </section>
+</div><!-- /#deck-stage -->
 
-<!-- ================= TOOLS ================= -->
-<section class="slide ring-sec scene" id="tools" data-label="Tools" data-bg="#FFFFFF" data-enter="pop">
-  <div class="wrap">
-    <span class="sec-label">Tools &amp; platforms</span>
-    <h2 class="sec-title">The toolkit behind the work</h2>
-    <p class="sec-intro">Editing, design, and automation software I already know my way around.</p>
+<!-- ================================================================
+     THE CASE STUDY — normal document flow from here on. The deck above
+     is contained to one 100vh block; scrolling past it hands off to
+     ordinary page scroll through everything below.
+     ================================================================ -->
+<main id="story">
+
+<!-- ================= INTRODUCTION ================= -->
+<section class="story-sec intro-sec" id="story-start">
+  <div class="wrap intro-wrap">
+    <span class="sec-label reveal">Who I am</span>
+    <h2 class="sec-title intro-headline reveal">I build the systems that run marketing operations.</h2>
+    <p class="intro-sub reveal">So leads don't get lost, reports don't take an afternoon, and nobody's guessing what's actually working.</p>
+    <div class="pillars-row reveal">
+      <div class="pillar-chip">
+        <span class="pillar-icon" aria-hidden="true">◆</span>
+        <span class="pillar-name">Lead Systems &amp; CRM</span>
+      </div>
+      <div class="pillar-chip">
+        <span class="pillar-icon" aria-hidden="true">◆</span>
+        <span class="pillar-name">Reporting &amp; Dashboards</span>
+      </div>
+      <div class="pillar-chip">
+        <span class="pillar-icon" aria-hidden="true">◆</span>
+        <span class="pillar-name">Marketing Automation</span>
+      </div>
+      <div class="pillar-chip">
+        <span class="pillar-icon" aria-hidden="true">◆</span>
+        <span class="pillar-name">Campaign Operations</span>
+      </div>
+    </div>
   </div>
-  <div class="ring-stage">
-    <div class="ring" id="ring"></div>
+</section>
+
+<!-- ================= FEATURED PROJECT HOOK ================= -->
+<section class="story-sec hook-sec" id="case-study">
+  <div class="wrap">
+    <span class="sec-label reveal">Featured case study</span>
+    <h2 class="sec-title hook-title reveal">Northstar Preschools: one marketing operation, 15 locations, zero guesswork.</h2>
+    <div class="hook-stats reveal">
+      <div class="stat"><b>28%</b><span>under CPL target</span></div>
+      <div class="stat"><b>5+ hrs</b><span>reclaimed every week</span></div>
+      <div class="stat"><b>17+</b><span>SEO pages live</span></div>
+      <div class="stat"><b>15</b><span>locations, one system</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= THE SITUATION ================= -->
+<section class="story-sec narrative-sec" id="situation">
+  <div class="wrap narrative-wrap">
+    <span class="chapter-num reveal">01</span>
+    <div class="reveal">
+      <span class="sec-label">The situation</span>
+      <h3 class="narrative-title">Four freelancers. No shared source of truth.</h3>
+      <p class="narrative-body">A 15-location preschool network was running marketing through four different freelancers and no shared source of truth. Nobody could say, with confidence, which location was actually working, or where the budget was quietly being wasted.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= THE DIAGNOSIS ================= -->
+<section class="story-sec narrative-sec alt-bg" id="diagnosis">
+  <div class="wrap narrative-wrap reverse">
+    <span class="chapter-num reveal">02</span>
+    <div class="reveal">
+      <span class="sec-label">What was actually going wrong</span>
+      <h3 class="narrative-title">The reports were lying, just a little.</h3>
+      <p class="narrative-body">Leads were coming in that the ad platform's own tracking never counted, which meant cost-per-lead looked worse than it actually was, and budget decisions were being made on bad numbers. Meanwhile, the weekly report ate half a workday, every week, by hand.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= WHAT I BUILT (+ visual proof) ================= -->
+<section class="story-sec build-sec" id="what-i-built">
+  <div class="wrap">
+    <span class="chapter-num reveal">03</span>
+    <span class="sec-label reveal">What I built</span>
+    <h3 class="narrative-title reveal">One coordinated system, not four disconnected habits.</h3>
+    <p class="narrative-body reveal build-intro">A CRM sync that self-repairs instead of needing a person to babysit it. A weekly scorecard that judges every location by one honest number. A dashboard that answers "how are we doing?" on the spot.</p>
+
+    <!-- Dashboard mockup -->
+    <div class="mock-card dash-mock reveal">
+      <div class="mock-card-head">
+        <span class="mock-dot"></span><span class="mock-dot"></span><span class="mock-dot"></span>
+        <span class="mock-card-title">Live KPI Dashboard: Cost per Lead by Location</span>
+      </div>
+      <table class="dash-table">
+        <thead>
+          <tr><th>Location</th><th>Spend</th><th>Leads</th><th>CPL</th><th>vs Target</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>North County</td><td>$2,450</td><td>52</td><td>$47.12</td><td class="good">-37%</td></tr>
+          <tr><td>Downtown</td><td>$2,140</td><td>41</td><td>$52.20</td><td class="good">-30%</td></tr>
+          <tr><td>Riverside</td><td>$2,010</td><td>38</td><td>$52.89</td><td class="good">-29%</td></tr>
+          <tr><td>Southpark</td><td>$1,620</td><td>29</td><td>$55.86</td><td class="good">-26%</td></tr>
+          <tr><td>Westside</td><td>$1,890</td><td>33</td><td>$57.27</td><td class="good">-24%</td></tr>
+          <tr><td>Eastgate</td><td>$1,760</td><td>22</td><td>$80.00</td><td class="bad">+7%</td></tr>
+        </tbody>
+      </table>
+      <div class="dash-foot">+ 9 more locations · avg CPL <b>$53.72</b> vs $75 target</div>
+    </div>
+
+    <!-- Report + flow mockups -->
+    <div class="mock-row">
+      <div class="mock-card report-mock reveal">
+        <div class="mock-card-head">
+          <span class="mock-card-title">Weekly Performance Report</span>
+          <span class="mock-badge">Auto-generated</span>
+        </div>
+        <div class="report-body">
+          <div class="report-chart">
+            <svg viewBox="0 0 220 70" preserveAspectRatio="none" aria-hidden="true">
+              <polyline points="0,55 30,50 60,52 90,38 120,42 150,28 180,20 220,14" />
+            </svg>
+            <span class="report-chart-label">CPL trend, 8 weeks</span>
+          </div>
+          <div class="report-funnel">
+            <div class="funnel-row"><span>Leads</span><i style="width:100%"></i></div>
+            <div class="funnel-row"><span>Scheduled</span><i style="width:64%"></i></div>
+            <div class="funnel-row"><span>Enrolled</span><i style="width:31%"></i></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mock-card flow-mock reveal">
+        <div class="mock-card-head"><span class="mock-card-title">The self-repairing sync</span></div>
+        <div class="flow-row">
+          <div class="flow-step"><span class="flow-icon">◈</span>CRM</div>
+          <span class="flow-arrow">→</span>
+          <div class="flow-step"><span class="flow-icon">⟲</span>Self-repairing sync</div>
+          <span class="flow-arrow">→</span>
+          <div class="flow-step"><span class="flow-icon">▣</span>Live dashboard</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= WHY IT WORKS THIS WAY ================= -->
+<section class="story-sec narrative-sec alt-bg" id="why">
+  <div class="wrap narrative-wrap">
+    <span class="chapter-num reveal">04</span>
+    <div class="reveal">
+      <span class="sec-label">Why it works this way</span>
+      <h3 class="narrative-title">Judged by one number. Fixes itself.</h3>
+      <p class="narrative-body">The scorecard judges every location by one number, cost per lead, not ten vanity metrics nobody acts on. The sync fixes itself when something breaks, because a system that needs a person to babysit it isn't really automation.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= BUSINESS RESULTS ================= -->
+<section class="story-sec results-sec" id="results">
+  <div class="wrap" style="text-align:center;">
+    <span class="sec-label reveal">Business results</span>
+    <h2 class="sec-title reveal">The outcome, in the numbers that matter.</h2>
+    <div class="hook-stats results-stats reveal">
+      <div class="stat"><b>28%</b><span>under CPL target</span></div>
+      <div class="stat"><b>5+ hrs</b><span>reclaimed every week</span></div>
+      <div class="stat"><b>17+</b><span>SEO pages live</span></div>
+      <div class="stat"><b>14+</b><span>branded posts/month</span></div>
+    </div>
+    <blockquote class="results-quote reveal">
+      <p>"Ahmad took our lead reporting from a weekly headache to something that just runs. He found leads our reports were missing, built systems we use every single day, and he's still the first person we hand new problems to."</p>
+      <cite>Marketing leadership, Northstar Preschools</cite>
+    </blockquote>
+
+    <div class="peer-quotes reveal">
+      <div class="peer-quote"><p>"This is perfect. Genuinely something we could use and sell."</p></div>
+      <div class="peer-quote"><p>"Honestly a blessing to the team, everyone's obsessed with it."</p></div>
+      <div class="peer-quote"><p>"On a different level when you lock in. Excited to actually use this."</p></div>
+    </div>
+    <p class="peer-quotes-caption">Unprompted reactions from teammates on internal tools built along the way, kept anonymous on purpose.</p>
+  </div>
+</section>
+
+<!-- BEGIN:experience -->
+<section class="story-sec alt-bg" id="experience">
+  <div class="wrap">
+    <span class="sec-label reveal">Experience</span>
+    <h2 class="sec-title reveal">Three roles, one job description.</h2>
+    <p class="narrative-body reveal" style="max-width:62ch;">Data analysis and the systems around
+      it &mdash; in a media company, an agency, and a fifteen-location education network. Different
+      industries, same work underneath: find where the numbers go wrong, then build the thing that
+      stops it happening again.</p>
+    <div class="timeline reveal">
+      <div class="tl-item is-current">
+        <span class="tl-when">2026 — present</span>
+        <h3 class="tl-role">IT Developer &amp; Data Analyst</h3>
+        <p class="tl-org">America's Test Kitchen <span class="tl-sep">&middot;</span> Remote</p>
+        <ul><li>Automating the weekly performance reporting across two YouTube channels, replacing a report that was rebuilt by hand every Tuesday morning.</li><li>Rebuilding the source workbooks behind the social dashboards so the same metric means the same thing in every tab that shows it.</li><li>Working directly against platform APIs — YouTube Data, analytics and affiliate tracking — rather than exports.</li></ul>
+      </div>
+      <div class="tl-item is-current">
+        <span class="tl-when">2025 — present</span>
+        <h3 class="tl-role">Developer</h3>
+        <p class="tl-org">Qyxera Digital Marketing Services <span class="tl-sep">&middot;</span> Remote</p>
+        <ul><li>Built the Slack-based attendance and payroll tracker the team runs on: staff clock in from a channel, hours and pay calculate themselves, a pay period settles with one tick.</li><li>Handled the unglamorous half properly — overnight shifts, rounding rules, missed clock-outs, absence tagging — over nineteen rounds of fixes against real use.</li><li>Ad creative and campaign execution alongside the build work.</li></ul>
+      </div>
+      <div class="tl-item is-current">
+        <span class="tl-when">2024 — present</span>
+        <h3 class="tl-role">Data Analyst &amp; Marketing Systems</h3>
+        <p class="tl-org">Northstar Preschools <span class="tl-sep">&middot;</span> Remote · 15 locations</p>
+        <ul><li>Own the marketing operation end to end for fifteen locations: paid social, content, SEO, and the reporting underneath all of it.</li><li>Built the CRM sync, the live KPI dashboard, the automated weekly report and the lead funnel reports — the systems that replaced four freelancers and a lot of manual exports.</li><li>Found leads the ad platform's own tracking never counted, which had been making cost per lead look worse than it was and budget decisions worse with it.</li><li>Wrote the training guides that fixed lead data at the point it gets typed in.</li></ul>
+      </div>
+      <div class="tl-item">
+        <span class="tl-when">Earlier</span>
+        <h3 class="tl-role">Design, video and campaign work</h3>
+        <p class="tl-org">Multiple clients <span class="tl-sep">&middot;</span> Freelance</p>
+        <ul><li>Ad creative, video editing and social management across retail, recruitment, home services and insurance clients.</li><li>The craft half of the portfolio — shown separately, on its own page.</li></ul>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- END:experience -->
+
+<!-- BEGIN:featured -->
+<section class="story-sec" id="selected-work">
+  <div class="wrap">
+    <span class="sec-label reveal">Selected work</span>
+    <h2 class="sec-title reveal">Twenty built projects. Here are six.</h2>
+    <p class="narrative-body reveal" style="max-width:62ch;">Three products of my own and the
+      systems that run a marketing operation. Each one has a full write-up: what was going wrong,
+      what data goes in, the engineering decisions that mattered, and what actually came out.</p>
+    <div class="work-grid reveal">
+      <a class="work-card is-product" data-kind="product" href="work/paylist.html">
+      <div class="work-card-top"><span class="work-glyph" aria-hidden="true">◈</span><span class="work-kind">Product &middot; Own product</span></div>
+      <h3>PayList</h3>
+      <p>A small business adds its customers and what they owe. PayList emails the reminders on schedule and gives each customer a page showing exactly how to pay — bank transfer, GCash or a scanned QR code. It never touches the money.</p>
+      <div class="chips"><span class="chip">Next.js</span><span class="chip">TypeScript</span><span class="chip">Postgres</span><span class="chip">Row-level security</span><span class="chip">Resend</span><span class="chip">PayPal</span><span class="chip">Vercel</span></div>
+      <div class="work-meta"><span class="work-stat"><span class="live-dot" aria-hidden="true"></span>Live · paying customers</span><span class="work-go">Read the build &rarr;</span></div>
+    </a>
+      <a class="work-card is-automation" data-kind="automation" href="work/lead-sync.html">
+      <div class="work-card-top"><span class="work-glyph" aria-hidden="true">⟲</span><span class="work-kind">Automation &middot; Early-years network, 15 sites</span></div>
+      <h3>The self-repairing CRM sync</h3>
+      <p>Pulls every lead out of the CRM into a live sheet on a schedule, and repairs itself when the source misbehaves — deleted records, renamed columns, a silent API failure. Nobody babysits it.</p>
+      <div class="chips"><span class="chip">Apps Script</span><span class="chip">REST API</span><span class="chip">Google Sheets</span><span class="chip">Idempotent writes</span><span class="chip">Rollback points</span></div>
+      <div class="work-meta"><span class="work-stat">5+ hrs/week reclaimed</span><span class="work-go">Read the build &rarr;</span></div>
+    </a>
+      <a class="work-card is-report" data-kind="report" href="work/lead-funnel.html">
+      <div class="work-card-top"><span class="work-glyph" aria-hidden="true">▤</span><span class="work-kind">Reporting &middot; Early-years network, 15 sites</span></div>
+      <h3>Lead funnel reports</h3>
+      <p>A branded PDF showing leads flowing from source, to how they were handled, to where they ended up — plus a per-location table and the names of everyone still sitting untouched, so each site can work its own pile.</p>
+      <div class="chips"><span class="chip">Python</span><span class="chip">Sankey layout</span><span class="chip">PDF generation</span><span class="chip">Google Sheets</span></div>
+      <div class="work-meta"><span class="work-stat">Generated, not assembled</span><span class="work-go">Read the build &rarr;</span></div>
+    </a>
+      <a class="work-card is-automation" data-kind="automation" href="work/qyxera-hr.html">
+      <div class="work-card-top"><span class="work-glyph" aria-hidden="true">⟲</span><span class="work-kind">Automation &middot; Digital marketing agency</span></div>
+      <h3>Slack clock-in and payroll tracker</h3>
+      <p>Staff type "in", "out", "break" or "back" in a Slack channel. The system reads it — typos included — logs the shift, works out hours and pay, and settles a fortnight with one tick.</p>
+      <div class="chips"><span class="chip">Apps Script</span><span class="chip">Slack API</span><span class="chip">Fuzzy matching</span><span class="chip">Google Sheets</span><span class="chip">Payroll periods</span></div>
+      <div class="work-meta"><span class="work-stat">Zero manual timesheets</span><span class="work-go">Read the build &rarr;</span></div>
+    </a>
+      <a class="work-card is-automation" data-kind="automation" href="work/youtube-report.html">
+      <div class="work-card-top"><span class="work-glyph" aria-hidden="true">⟲</span><span class="work-kind">Automation &middot; US culinary media publisher</span></div>
+      <h3>Weekly YouTube report automation</h3>
+      <p>Two channels, a formula-driven workbook and a slide deck that used to be rebuilt by hand every Tuesday morning. Now the numbers land before anyone opens the file.</p>
+      <div class="chips"><span class="chip">YouTube Data API</span><span class="chip">Apps Script</span><span class="chip">Python</span><span class="chip">OAuth</span><span class="chip">Named ranges</span></div>
+      <div class="work-meta"><span class="work-stat">3 hrs → minutes</span><span class="work-go">Read the build &rarr;</span></div>
+    </a>
+      <a class="work-card is-report" data-kind="report" href="work/kpi-dashboard.html">
+      <div class="work-card-top"><span class="work-glyph" aria-hidden="true">▤</span><span class="work-kind">Reporting &middot; Early-years network, 15 sites</span></div>
+      <h3>Live KPI dashboard</h3>
+      <p>A web dashboard sitting on top of the marketing sheet: cost per lead by location, trend charts, filters, sortable tables. Built so the answer to a performance question takes seconds, not a day.</p>
+      <div class="chips"><span class="chip">Apps Script Web App</span><span class="chip">HTML/CSS/JS</span><span class="chip">Google Sheets</span><span class="chip">Charts</span></div>
+      <div class="work-meta"><span class="work-stat">Seconds to any answer</span><span class="work-go">Read the build &rarr;</span></div>
+    </a>
+    </div>
+    <p class="reveal" style="margin-top:30px;">
+      <a class="btn btn-primary" href="work.html">See all 20 projects &rarr;</a>
+      <a class="btn btn-ghost" href="process.html" style="margin-left:10px;">How I build &rarr;</a>
+    </p>
+  </div>
+</section>
+<!-- END:featured -->
+
+<!-- ================= CREATIVE & EXECUTION ================= -->
+<section class="story-sec creative-sec" id="creative">
+  <div class="wrap">
+    <span class="sec-label reveal">Creative &amp; execution</span>
+    <h2 class="sec-title reveal">Also built for.</h2>
+    <p class="narrative-body reveal">Ad creative, video editing, and campaign execution across clients outside the flagship system work.</p>
+    <div class="client-tags reveal">
+      <span>Qyxera Marketing</span><span>Anotah Clothing</span><span>Sphere Rocket Jobs</span>
+      <span>Full Service Pros</span><span>Hexis Legacy Group</span><span>Palm Build</span>
+      <span>Tons</span><span>Saud Abdulaziz Al-Rashed Group</span>
+    </div>
+    <a class="btn btn-ghost reveal" href="creatives.html">See the creative reel →</a>
   </div>
 </section>
 
 <!-- ================= ABOUT ================= -->
-<section class="slide" id="about" data-label="About" data-bg="#EDE8D0">
+<section class="story-sec about-sec" id="about">
   <div class="wrap about-grid">
-    <div class="about-photo"><img src="img/headshot-nobg.png" alt="Ahmad Rajeh" width="768" height="1261"></div>
-    <div class="about-text">
-      <span class="sec-label">About me, quickly</span>
+    <div class="about-photo reveal"><img src="img/headshot-nobg.png" alt="Ahmad Rajeh" width="768" height="1261"></div>
+    <div class="about-text reveal">
+      <span class="sec-label">About me</span>
       <h2 class="sec-title">Data person who ended up doing everything</h2>
       <p>Philippines-based. Started in data analysis, kept getting handed the next adjacent problem (ads, content, SEO, automation) until "marketing back office" was the honest job title.</p>
       <p>Today: one 15-location preschool network, one point of contact, a lot fewer tabs open for the people who used to juggle four freelancers.</p>
-      <a class="btn btn-ghost" href="../site/cv/Ahmad-Rajeh-CV.pdf" target="_blank" rel="noopener" style="margin-top: 10px;">View my full CV</a>
+      <a class="btn btn-ghost" href="docs/Ahmad-Rajeh-CV.pdf" target="_blank" rel="noopener" style="margin-top: 10px;">View my full CV</a>
     </div>
   </div>
 </section>
 
 <!-- ================= CONTACT ================= -->
-<section class="slide" id="contact" data-label="Contact" data-bg="#EDE8D0">
+<section class="story-sec contact-sec" id="contact">
   <div class="wrap" style="text-align:center;">
-    <span class="sec-label">Contact</span>
-    <h2 class="sec-title">That's the short version.</h2>
-    <div class="contact-box">
+    <span class="sec-label reveal">Contact</span>
+    <h2 class="sec-title reveal">Let's talk about what's costing you the most.</h2>
+    <div class="contact-box reveal">
       <h3>Ready when you are.</h3>
-      <p>Free 20-minute call, no pitch. Just an honest read on what I'd do with it.</p>
+      <p>Free 20-minute call, no pitch. Just an honest read on what I'd do with it (pricing included).</p>
       <div class="ctas">
         <a class="btn btn-primary" href="https://calendly.com/ahmadoo-rajeh/client-meeting" target="_blank" rel="noopener">Book a call</a>
         <a class="btn btn-ghost" href="mailto:Ahmadoo.rajeh@gmail.com">Email me</a>
       </div>
     </div>
-    <div class="final-cta">
-      <p>Pricing, full case studies, and every project in detail live on the main site.</p>
-      <a class="btn btn-primary" href="../site/index.html">Visit the main website →</a>
-    </div>
+<!-- BEGIN:socials -->
+<div class="social-row">
+<a class="social-btn" href="https://www.linkedin.com/in/ahmad-rajeh-238292358/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.98 3.5C4.98 4.88 3.87 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.22 8h4.56v12H.22V8zm7.4 0h4.37v1.64h.06c.61-1.11 2.1-2.28 4.32-2.28 4.62 0 5.47 2.94 5.47 6.76V20h-4.56v-5.96c0-1.42-.03-3.25-2.02-3.25-2.02 0-2.33 1.55-2.33 3.15V20H7.62V8z"/></svg></a>
+<a class="social-btn is-placeholder" title="Facebook &mdash; link coming soon" aria-label="Facebook, link coming soon" data-social="facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06c0 5.02 3.66 9.18 8.44 9.94v-7.03H7.9v-2.91h2.54V9.85c0-2.52 1.49-3.91 3.77-3.91 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.78-1.63 1.57v1.89h2.78l-.44 2.91h-2.34V22c4.78-.76 8.44-4.92 8.44-9.94z"/></svg></a>
+<a class="social-btn is-placeholder" title="Instagram &mdash; link coming soon" aria-label="Instagram, link coming soon" data-social="instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41-.56-.22-.96-.48-1.38-.9-.42-.42-.68-.82-.9-1.38-.16-.42-.36-1.06-.41-2.23C2.17 15.58 2.16 15.2 2.16 12s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41 1.27-.06 1.65-.07 4.85-.07M12 0C8.74 0 8.33.01 7.05.07 5.78.13 4.9.33 4.14.63c-.79.3-1.46.72-2.12 1.38C1.36 2.67.94 3.34.63 4.14.33 4.9.13 5.78.07 7.05.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.06 1.27.26 2.15.56 2.91.31.8.73 1.47 1.39 2.13.66.66 1.33 1.08 2.12 1.38.76.3 1.64.5 2.91.56C8.33 23.99 8.74 24 12 24s3.67-.01 4.95-.07c1.27-.06 2.15-.26 2.91-.56.79-.3 1.46-.72 2.12-1.38.66-.66 1.08-1.33 1.39-2.13.3-.76.5-1.64.56-2.91.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.06-1.27-.26-2.15-.56-2.91-.31-.8-.73-1.47-1.39-2.13-.66-.66-1.33-1.08-2.12-1.38-.76-.3-1.64-.5-2.91-.56C15.67.01 15.26 0 12 0zm0 5.84a6.16 6.16 0 100 12.32A6.16 6.16 0 0012 5.84zm0 10.16a4 4 0 110-8 4 4 0 010 8zm7.85-10.4a1.44 1.44 0 11-2.88 0 1.44 1.44 0 012.88 0z"/></svg></a>
+<a class="social-btn" href="mailto:Ahmadoo.rajeh@gmail.com" aria-label="Email"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 4h20a1 1 0 011 1v14a1 1 0 01-1 1H2a1 1 0 01-1-1V5a1 1 0 011-1zm10 8.2L3.6 6H20.4L12 12.2zM3 8.3V18h18V8.3l-8.4 6.2a1 1 0 01-1.2 0L3 8.3z"/></svg></a>
+</div>
+<p class="social-hint">Facebook and Instagram links coming soon.</p>
+<!-- END:socials -->
+
     <footer>
       © 2026 Ahmad Rajeh · <a href="mailto:Ahmadoo.rajeh@gmail.com">Email</a> ·
-      <a href="https://www.linkedin.com/in/ahmad-rajeh-238292358/" target="_blank" rel="noopener">LinkedIn</a> ·
-      <a href="../site/index.html">Main website</a>
+      <a href="https://www.linkedin.com/in/ahmad-rajeh-238292358/" target="_blank" rel="noopener">LinkedIn</a>
     </footer>
   </div>
 </section>
+
+</main>
 
 <div class="lightbox" id="lightbox" hidden>
   <div class="lightbox-bg" data-close="1"></div>
@@ -173,6 +459,6 @@
   </div>
 </div>
 
-<script src="js/main.js?v=20"></script>
+<script src="js/main.js?v=22"></script>
 </body>
 </html>

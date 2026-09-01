@@ -49,27 +49,18 @@ body {
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
-/* Only the slide-deck page (index.html) gets this: creatives.html is a normal
-   scrolling gallery and doesn't carry the .deck class.
-   position:fixed on the body is load-bearing, not cosmetic. CSS transforms DO
-   contribute to a page's scrollable overflow area (unlike layout position), so
-   the six slides parked at translateY(100%) were each extending the document a
-   full viewport further down. That produced a real, pannable scroll region
-   behind the deck: the "element scrolling in the background". Pinning the body
-   to the viewport means the absolutely-positioned slides are fully contained
-   and can never add scrollable area, no matter where they're transformed to.
-   The `html:has()` selector is only a belt-and-braces extra for browsers that
-   support it; the body rule alone is what actually fixes it. */
-body.deck, html:has(body.deck) {
-  height: 100%; overflow: hidden; overscroll-behavior: none;
-}
-body.deck {
-  position: fixed; inset: 0; width: 100%;
-  /* `clip` rather than `hidden`: hidden still creates a scroll container (its
-     scrollTop can be set programmatically, so a stray focus/anchor jump could
-     still shift everything), whereas clip creates no scroll container at all.
-     Declared after the `hidden` above so browsers without clip keep hidden. */
-  overflow: clip;
+/* The deck is no longer the whole page: it's the first 100vh block, then the
+   page scrolls normally into the long-form case study underneath. #deck-stage
+   (not body) is what contains it now.
+   position:relative + overflow:hidden here is load-bearing, not cosmetic. CSS
+   transforms DO contribute to a page's scrollable overflow area (unlike layout
+   position), so the slides parked at translateY(100%) would each extend
+   whatever contains them a full viewport further, if that container didn't
+   clip it. Scoping containment to this one block (instead of pinning the whole
+   body, as an earlier version did) is what lets normal scrolling exist below it
+   at all. */
+#deck-stage {
+  position: relative; height: 100vh; overflow: hidden;
 }
 
 /* ---------- Scene background: the "interactive background changing" layer ----------
@@ -239,7 +230,10 @@ body:not(.locking) .hero-unlock { opacity: 1; transform: none; filter: blur(0); 
 
 /* ---------- Side dot navigation ---------- */
 .slide-dots {
-  position: fixed; right: 22px; top: 50%; transform: translateY(-50%); z-index: 60;
+  /* absolute WITHIN #deck-stage, not fixed to the viewport: fixed would keep it
+     permanently overlaid on the case-study content once the page scrolls past
+     the deck, since a fixed element never scrolls away with its container. */
+  position: absolute; right: 22px; top: 50%; transform: translateY(-50%); z-index: 60;
   display: flex; flex-direction: column; gap: 12px;
 }
 .slide-dots .dot {
@@ -338,12 +332,17 @@ body:not(.locking) .hero-unlock { opacity: 1; transform: none; filter: blur(0); 
 .hero-card:hover { transform: rotateY(-4deg) rotateX(1deg) translateZ(20px); }
 .hero-card img { display: block; width: 100%; height: auto; }
 .hero-card-tag {
-  position: absolute; bottom: 16px; left: 16px; right: 16px;
+  /* Anchored to the corner and sized to its own (short) text, not stretched
+     edge-to-edge: a full-width bar was tall enough at small card sizes to wrap
+     onto 2-3 lines and sit over most of the face instead of just a corner. */
+  position: absolute; bottom: 14px; left: 14px;
+  max-width: calc(100% - 28px);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   /* Solidly opaque white regardless of theme — sits over arbitrary photo content,
      needs to stay readable whatever part of the photo is behind it. */
-  background: rgba(255,255,255,.9); backdrop-filter: blur(6px);
-  border: 1px solid var(--surface-border); border-radius: 12px; padding: 10px 14px;
-  font-family: var(--mono); font-size: 12.5px; color: var(--ink);
+  background: rgba(255,255,255,.92); backdrop-filter: blur(6px);
+  border: 1px solid var(--surface-border); border-radius: 999px; padding: 7px 14px;
+  font-family: var(--mono); font-size: 12px; line-height: 1; color: var(--ink);
 }
 @media (max-width: 760px) {
   .hero-grid { grid-template-columns: 1fr; padding-top: 0; }
@@ -517,11 +516,14 @@ section { padding: 100px 0; }
 .about-photo {
   border-radius: 18px; overflow: hidden; border: 1px solid var(--surface-border);
   background: radial-gradient(circle at 50% 32%, rgba(219,209,237,.5), var(--paper-soft) 72%);
-  opacity: 0; transform: perspective(1200px) rotateY(18deg) translateX(-30px);
-  transition: opacity .9s ease, transform .9s cubic-bezier(.2,.8,.2,1);
 }
+/* Scoped to .slide: the deck's About slide (now removed) used to fade this in
+   on becoming current. Outside a slide (the long-form About section) it must
+   render normally visible by default — the .reveal class handles fading it
+   in on scroll instead, see the reveal-on-scroll rules further down. */
+.slide .about-photo { opacity: 0; transform: perspective(1200px) rotateY(18deg) translateX(-30px); transition: opacity .9s ease, transform .9s cubic-bezier(.2,.8,.2,1); }
 .slide.current .about-photo { opacity: 1; transform: perspective(1200px) rotateY(0) translateX(0); }
-.about-text { opacity: 0; transform: translateY(24px); transition: opacity .9s ease .15s, transform .9s cubic-bezier(.2,.8,.2,1) .15s; }
+.slide .about-text { opacity: 0; transform: translateY(24px); transition: opacity .9s ease .15s, transform .9s cubic-bezier(.2,.8,.2,1) .15s; }
 .slide.current .about-text { opacity: 1; transform: none; }
 .about-photo img { width: 100%; height: auto; display: block; }
 .about-text p { margin-bottom: 16px; font-size: 16px; }
@@ -607,7 +609,7 @@ footer a:hover { color: var(--link-blue); }
   .hero-sub { font-size: 14px; margin: 12px 0 16px; }
   .hero-choice { margin-top: 14px; gap: 8px; font-size: 13px; }
   .hero-card { max-width: 132px; }
-  .hero-card-tag { font-size: 10px; padding: 6px 9px; bottom: 9px; left: 9px; right: 9px; }
+  .hero-card-tag { font-size: 9px; padding: 5px 10px; bottom: 8px; left: 8px; max-width: calc(100% - 16px); }
   .hero-grid { gap: 14px; padding: 0; }
   .stats-grid { margin-top: 14px; padding-top: 12px; gap: 8px; }
   .stat b { font-size: 19px; }
@@ -616,9 +618,15 @@ footer a:hover { color: var(--link-blue); }
   .about-grid { gap: 20px; }
   .about-photo { max-width: 150px; }
   .about-text p { font-size: 14px; margin-bottom: 10px; }
-  .sec-title { font-size: clamp(22px, 6.4vw, 30px); margin-bottom: 10px; }
-  .sec-intro { font-size: 14px; }
-  .sec-label { font-size: 11px; margin-bottom: 8px; }
+  /* Scoped to .slide: these three classes are shared with the long-form case
+     study below the deck, which has all the vertical room it wants and was
+     never meant to be squeezed by rules written for the deck's fixed one-
+     screen slides. Without this scoping, "WHO I AM" (and every other section
+     label past the deck) was rendering at the deck's cramped compaction size
+     for no reason. */
+  .slide .sec-title { font-size: clamp(22px, 6.4vw, 30px); margin-bottom: 10px; }
+  .slide .sec-intro { font-size: 14px; }
+  .slide .sec-label { font-size: 11px; margin-bottom: 8px; }
   .contact-box { margin-top: 20px; padding: 22px 18px; }
   .contact-box h3 { font-size: 20px; margin-bottom: 8px; }
   .contact-box p { font-size: 13.5px; }
@@ -663,9 +671,12 @@ footer a:hover { color: var(--link-blue); }
   .stat span { font-size: 10.5px; line-height: 1.35; }
   .hero-card { max-width: 200px; margin-left: auto; }
   .hero-grid { gap: 28px; padding: 0; }
-  .sec-title { font-size: clamp(22px, 2.8vw, 30px); margin-bottom: 10px; }
-  .sec-intro { font-size: 14.5px; }
-  .sec-label { font-size: 11.5px; margin-bottom: 8px; }
+  /* Scoped to .slide, same reason as the width-based tier above: this is a
+     short-VIEWPORT compaction for the fixed-height deck, not for the
+     freely-scrolling case study underneath it. */
+  .slide .sec-title { font-size: clamp(22px, 2.8vw, 30px); margin-bottom: 10px; }
+  .slide .sec-intro { font-size: 14.5px; }
+  .slide .sec-label { font-size: 11.5px; margin-bottom: 8px; }
   .ring-stage { height: 180px; margin-top: 22px; }
   .about-grid { gap: 32px; }
   .about-photo { max-width: 190px; }
@@ -706,6 +717,196 @@ footer a:hover { color: var(--link-blue); }
   .deck-result { font-size: 11.5px; margin-top: 8px; }
   .deck-stat b { font-size: clamp(28px, 8vw, 40px); }
   .deck-stat span { font-size: 12px; }
+}
+
+/* =====================================================================
+   THE CASE STUDY — normal document flow, below the 3D deck.
+   A different animation model on purpose: the deck's slides fade/pop/split
+   because JS decides exactly when one slide replaces another. Ordinary page
+   scroll has no such single moment, so everything here uses the standard
+   scroll-reveal pattern instead: .reveal starts faded down slightly, JS adds
+   .in via IntersectionObserver the first time each element crosses into view.
+   ===================================================================== */
+.reveal { opacity: 0; transform: translateY(26px); transition: opacity .7s ease, transform .7s cubic-bezier(.2,.8,.2,1); }
+.reveal.in { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
+
+.story-sec { padding: 100px 0; position: relative; }
+.story-sec.alt-bg { background: #FFFFFF; }
+@media (max-width: 760px) { .story-sec { padding: 64px 0; } }
+
+/* ---------- Introduction ---------- */
+/* This is the very first section after the deck hands off, arriving right
+   under the fixed nav with nothing above it to create natural separation —
+   it gets extra top air specifically so "Who I am" doesn't read as cramped
+   against the nav bar. */
+.intro-sec { padding-top: 140px; }
+@media (max-width: 760px) { .intro-sec { padding-top: 96px; } }
+.intro-wrap { text-align: center; max-width: 760px; }
+.intro-wrap .sec-label { font-size: 15px; margin-bottom: 18px; }
+.intro-headline { font-size: clamp(28px, 4.4vw, 46px); margin: 10px 0 18px; }
+.intro-sub { font-size: 18px; color: var(--ink-soft); margin-bottom: 34px; }
+.pillars-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+.pillar-chip {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: #FFFFFF; border: 1px solid var(--surface-border); border-radius: 999px;
+  padding: 10px 18px; font-weight: 600; font-size: 14px; color: var(--ink);
+}
+.pillar-icon { color: var(--primary); font-size: 11px; }
+@media (max-width: 640px) { .pillar-chip { font-size: 13px; padding: 8px 14px; } }
+
+/* ---------- Featured project hook ---------- */
+.hook-sec { text-align: center; }
+.hook-title { font-size: clamp(26px, 3.6vw, 40px); max-width: 20ch; margin: 10px auto 36px; }
+.hook-stats, .results-stats {
+  max-width: 720px; margin: 0 auto; display: grid; grid-template-columns: repeat(4,1fr); gap: 18px;
+}
+.hook-stats .stat, .results-stats .stat { text-align: center; }
+@media (max-width: 640px) { .hook-stats, .results-stats { grid-template-columns: 1fr 1fr; gap: 22px 12px; } }
+
+/* ---------- Narrative beats (Situation / Diagnosis / Why) ---------- */
+.narrative-wrap { display: grid; grid-template-columns: 110px 1fr; gap: 32px; align-items: start; max-width: 820px; }
+.narrative-wrap.reverse { direction: rtl; }
+.narrative-wrap.reverse > * { direction: ltr; }
+.chapter-num {
+  font-family: var(--heading); font-weight: 800; font-size: 56px; line-height: 1;
+  color: var(--primary); opacity: .18;
+}
+.narrative-title { font-size: clamp(21px, 2.6vw, 28px); margin-bottom: 12px; color: var(--primary); }
+.narrative-body { font-size: 16.5px; color: var(--ink-soft); max-width: 58ch; }
+@media (max-width: 640px) {
+  .narrative-wrap, .narrative-wrap.reverse { grid-template-columns: 56px 1fr; direction: ltr; gap: 16px; }
+  .narrative-wrap.reverse > * { direction: ltr; }
+  .chapter-num { font-size: 34px; }
+}
+
+/* ---------- What I built: dashboard / report / flow mockups ----------
+   Built from the real data structure of the case study (locations, spend,
+   leads, CPL, target), not invented UI: illustrative numbers, real shape. */
+.build-intro { max-width: 62ch; margin-bottom: 40px; }
+.mock-card {
+  background: #FFFFFF; border: 1px solid var(--surface-border); border-radius: 16px;
+  box-shadow: 0 12px 34px rgba(0,0,0,.07); overflow: hidden;
+}
+.mock-card-head {
+  display: flex; align-items: center; gap: 8px;
+  padding: 14px 18px; border-bottom: 1px solid var(--surface-border);
+  background: rgba(110,99,46,.04);
+}
+.mock-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--surface-border); }
+.mock-dot:nth-child(1) { background: #E3A15A; }
+.mock-dot:nth-child(2) { background: #DBD1ED; }
+.mock-dot:nth-child(3) { background: #ABBEED; }
+.mock-card-title { margin-left: 6px; font-family: var(--mono); font-size: 12.5px; color: var(--ink-soft); font-weight: 600; }
+.mock-badge {
+  margin-left: auto; font-family: var(--mono); font-size: 10.5px; font-weight: 700;
+  color: var(--primary); background: rgba(110,99,46,.10); border-radius: 999px; padding: 3px 10px;
+  text-transform: uppercase; letter-spacing: .04em;
+}
+.dash-mock { margin-bottom: 24px; }
+.dash-table { width: 100%; border-collapse: collapse; font-size: 14.5px; }
+.dash-table th, .dash-table td { padding: 12px 18px; text-align: left; }
+.dash-table th { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-faint); font-weight: 700; }
+.dash-table tbody tr:nth-child(odd) { background: rgba(110,99,46,.03); }
+.dash-table td:nth-child(n+2) { font-family: var(--mono); }
+.dash-table td.good { color: #3F7D4F; font-weight: 700; }
+.dash-table td.bad { color: #B23B3B; font-weight: 700; }
+.dash-foot {
+  padding: 12px 18px; font-size: 12.5px; color: var(--ink-faint);
+  border-top: 1px solid var(--surface-border); background: rgba(110,99,46,.03);
+}
+.dash-foot b { color: var(--primary); }
+.mock-row { display: grid; grid-template-columns: 1.2fr 1fr; gap: 24px; }
+/* Grid items stretch to match the row's height by default, so .flow-mock
+   ends up as tall as the (taller) .report-mock beside it — but .flow-row is
+   only ever as tall as its own content, so the extra height just left it
+   stuck at the top with empty space below. Centering it vertically as its
+   own block (margin: auto top/bottom in a column flex parent) fixes that
+   without touching how the icons/arrows line up with EACH OTHER inside it. */
+.flow-mock { display: flex; flex-direction: column; }
+.flow-mock .flow-row { margin-top: auto; margin-bottom: auto; }
+.report-body { padding: 22px 18px; }
+.report-chart svg { width: 100%; height: 64px; display: block; }
+.report-chart polyline { fill: none; stroke: var(--primary); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.report-chart-label { display: block; font-family: var(--mono); font-size: 11px; color: var(--ink-faint); margin-top: 6px; }
+.report-funnel { margin-top: 18px; }
+.funnel-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 12.5px; color: var(--ink-soft); }
+.funnel-row span { width: 76px; flex-shrink: 0; }
+.funnel-row i { height: 8px; border-radius: 999px; background: var(--blue); display: block; }
+/* align-items:flex-start, not center: a .flow-step is icon-then-label (tall),
+   while .flow-arrow is just one short line. Centering mismatched-height items
+   aligns them by their MIDDLE, which put the arrow's centre level with the
+   icon+label block's overall centre, not with the icon row itself, so the
+   arrows sat visibly lower than the icons instead of level with them. Both
+   now start at the same top edge instead, and .flow-arrow gets its own
+   icon-height box so its content centres against the icon row specifically. */
+.flow-row { display: flex; align-items: flex-start; gap: 10px; padding: 28px 18px; justify-content: center; }
+.flow-step {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  font-size: 12.5px; font-weight: 600; color: var(--ink); text-align: center; width: 96px;
+}
+.flow-icon {
+  width: 44px; height: 44px; border-radius: 12px; background: var(--primary); color: #fff;
+  display: flex; align-items: center; justify-content: center; font-size: 18px;
+}
+.flow-arrow {
+  display: flex; align-items: center; justify-content: center;
+  height: 44px; /* matches .flow-icon, so the arrow centres on the icon row, not the icon+label block */
+  color: var(--ink-faint); font-size: 18px; flex-shrink: 0;
+}
+@media (max-width: 820px) { .mock-row { grid-template-columns: 1fr; } }
+@media (max-width: 640px) {
+  .dash-table { font-size: 12.5px; }
+  .dash-table th, .dash-table td { padding: 9px 10px; }
+  .dash-foot { font-size: 11.5px; }
+  /* Three steps + two arrows no longer fit one row at this width. flex-wrap
+     let the third step drop to its own line but centred against the WHOLE
+     row's width rather than under anything in particular, so it just looked
+     randomly offset. Stacking vertically (with the arrows rotated to point
+     down) reads correctly at any width instead of wrapping awkwardly. */
+  /* align-items back to centre here: flex-start (the base/row-layout value,
+     needed so the arrows line up with the icon row rather than the taller
+     icon+label block) means something different once this is a column —
+     there it would left-align every step instead of centring the stack. */
+  .flow-row { flex-direction: column; align-items: center; gap: 4px; padding: 24px 18px; }
+  .flow-arrow { height: auto; transform: rotate(90deg); margin: 2px 0; }
+}
+
+/* ---------- Business results ---------- */
+.results-quote {
+  max-width: 640px; margin: 44px auto 0; padding: 0; border: none;
+}
+.results-quote p {
+  font-size: 19px; font-style: italic; color: var(--ink); line-height: 1.6; margin-bottom: 14px;
+}
+.results-quote cite {
+  font-style: normal; font-family: var(--mono); font-size: 12.5px; color: var(--ink-faint);
+}
+
+/* A second, lighter tier of proof under the main client quote: quick,
+   unprompted reactions from teammates, not a client. Deliberately smaller and
+   plainer than .results-quote (no italics, no large quote mark treatment) so
+   it reads as a supporting aside, not a second headline testimonial competing
+   with Northstar's. Kept anonymous by design, not just by omission. */
+.peer-quotes {
+  max-width: 820px; margin: 40px auto 0; display: grid; grid-template-columns: repeat(3,1fr); gap: 14px;
+}
+.peer-quote {
+  background: #FFFFFF; border: 1px solid var(--surface-border); border-radius: 12px;
+  padding: 18px 20px; text-align: left;
+}
+.peer-quote p { font-size: 14px; color: var(--ink-soft); line-height: 1.55; }
+.peer-quotes-caption {
+  margin-top: 16px; font-family: var(--mono); font-size: 11.5px; color: var(--ink-faint);
+}
+@media (max-width: 760px) { .peer-quotes { grid-template-columns: 1fr; } }
+
+/* ---------- Creative & execution ---------- */
+.creative-sec .narrative-body { max-width: 60ch; margin-bottom: 28px; }
+.client-tags { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 30px; }
+.client-tags span {
+  font-size: 13.5px; font-weight: 600; color: var(--ink-soft);
+  background: #FFFFFF; border: 1px solid var(--surface-border); border-radius: 999px; padding: 8px 16px;
 }
 
 /* ---------- Reduced motion: same content, no 3D, no snap, everything just visible ---------- */

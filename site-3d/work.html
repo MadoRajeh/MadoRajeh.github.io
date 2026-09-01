@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Work · Ahmad Rajeh</title>
+<meta name="description" content="Twenty built projects: three products, marketing automation, reporting systems and document work, with full engineering write-ups.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css?v=55">
+<link rel="stylesheet" href="css/work.css?v=4">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='34' cy='52' r='22' fill='%236E632E'/><circle cx='68' cy='36' r='14' fill='%23DBD1ED'/><circle cx='74' cy='70' r='10' fill='%23EDE8D0'/></svg>">
+</head>
+<body class="doc">
+
+<header class="nav">
+  <div class="nav-inner">
+    <a class="nav-logo" href="index.html">ahmad<span class="dot">.</span>rajeh</a>
+    <ul class="nav-links"><li><a href="index.html">Home</a></li><li><a href="work.html" aria-current="page">Work</a></li><li><a href="process.html">Process</a></li><li><a href="creatives.html">Creatives</a></li><li><a href="index.html#about">About</a></li><li><a href="index.html#contact">Contact</a></li></ul>
+    <a class="badge-legacy" href="index.html#contact">Book a call &rarr;</a>
+  </div>
+</header>
+
+<main>
+<section class="page-head">
+  <div class="wrap">
+    <span class="crumb"><a href="index.html">Home</a> / Work</span>
+    <h1 class="sec-title">Twenty things I built, and what each one was for.</h1>
+    <p class="page-head-lede">Three products of my own, a stack of automations and reporting
+      systems that run somebody's marketing operation, and the document work that keeps the data
+      going in clean. 11 of them have a full write-up: the problem, what goes in, how it was
+      engineered, and what came out.</p>
+    <div class="filter-bar"><button type="button" class="filter-btn" data-filter="all" aria-pressed="true">Everything</button><button type="button" class="filter-btn" data-filter="product" aria-pressed="false">Products</button><button type="button" class="filter-btn" data-filter="automation" aria-pressed="false">Automation</button><button type="button" class="filter-btn" data-filter="report" aria-pressed="false">Reporting</button><button type="button" class="filter-btn" data-filter="document" aria-pressed="false">Document systems</button></div>
+    <p class="filter-count" id="filter-count"></p>
+  </div>
+</section>
+
+<section class="doc-sec">
+  <div class="wrap">
+    <div class="work-grid" id="work-grid">
+    <a class="work-card is-product" data-kind="product" href="work/paylist.html">
+      <div class="work-card-top"><span class="work-glyph" aria-hidden="true">◈</span><span class="work-kind">Product &middot; Own product</span></div>
+      <h3>PayList</h3>
+      <p>A small business adds its customers and what they owe. PayList emails the reminders on schedule and gives each customer a page showing exactly how to pay — bank transfer, GCash or a scanned QR code. It never touches the money.</p>
+      <div class="chips"><span class="chip">Next.js</span><span class="chip">TypeScript</span><span class="chip">Postgres</span><span class="chip">Row-level security</span><span class="chip">Resend</span><span class="chip">PayPal</span><span class="chip">Vercel</span></div>
+      <div class="work-meta"><span class="work-stat"><span class="live-dot" aria-hidden="true"></span>Live · paying customers</span><span class="work-go">Read the build &rarr;</span></div>
+    </a>
+    <a class="work-card is-product" data-kind="product" href="work/bus-track-ph.html">
+      <div class="work-card-top"><span class="work-glyph" aria-hidden="true">◈</span><span class="work-kind">Product &middot; Own product</span></div>
+      <h3>BUS TRACK PH</h3>
+      <p>Philippine bus operators subscribe, drivers run a phone in the cab, and passengers watch the bus move on a public map with no app and no account. Built for a provincial operator with six buses as seriously as for a big one.</p>
+      <div class="chips"><span class="chip">Next.js</span><span class="chip">Postgres</span><span class="chip">MapLibre</span><span class="chip">Multi-tenant</span><span class="chip">Phone-as-GPS</span></div>
+      <div class="work-meta"><span class="work-stat">110 tests · 25 live checks</span><span class="work-go">Read the build &rarr;</span></div>
+    </a>
+    <a class="work-card is-product" data-kind="product" href="work/slack-attendance.html">
+      <div class="work-card-top"><span class="work-glyph" aria-hidden="true">◈</span><span class="work-kind">Product &middot; Own product</span></div>
+      <h3>Slack Attendance</h3>
+      <p>Companies connect their Slack workspace, staff clock in and out without leaving Slack, and managers get a payroll-ready dashboard. No new app for anyone to forget to open.</p>
+      <div class="chips"><span class="chip">Next.js</span><span class="chip">Postgres</span><span class="chip">Slack OAuth</span><span class="chip">Multi-tenant</span><span class="chip">Payroll export</span></div>
+      <div class="work-meta"><span class="work-stat">110 tests · multi-tenant</span><span class="work-go">Read the build &rarr;</span></div>
+    </a>
+    <a class="work-card is-automation" data-kind="automation" href="work/lead-sync.html">
+      <div class="work-card-top"><span class="work-glyph" aria-hidden="true">⟲</span><span class="work-kind">Automation &middot; Early-years network, 15 sites</span></div>
+      <h3>The self-repairing CRM sync</h3>
+      <p>Pulls every lead out of the CRM into a live sheet on a schedule, and repairs itself when the source misbehaves — deleted records, renamed columns, a silent API failure. Nobody babysits it.</p>
+      <div class="chips"><span class="chip">Apps Script</span><span class="chip">REST API</span><span class="chip">Google Sheets</span><span class="chip">Idempotent writes</span><span class="chip">Rollback points</span></div>
+      <div class="work-meta"><span class="work-stat">5+ hrs/week reclaimed</span><span class="work-go">Read the build &rarr;</span></div>
+    </a>
+    <a class="work-card is-automation" data-kind="automation" href="work/qyxera-hr.html">
+      <div class="work-card-top"><span class="work-glyph" aria-hidden="true">⟲</span><span class="work-kind">Automation &middot; Digital marketing agency</span></div>
+      <h3>Slack clock-in and payroll tracker</h3>
+      <p>Staff type "in", "out", "break" or "back" in a Slack channel. The system reads it — typos included — logs the shift, works out hours and pay, and settles a fortnight with one tick.</p>
+      <div class="chips"><span class="chip">Apps Script</span><span class="chip">Slack API</span><span class="chip">Fuzzy matching</span><span class="chip">Google Sheets</span><span class="chip">Payroll periods</span></div>
+      <div class="work-meta"><span class="work-stat">Zero manual timesheets</span><span class="work-go">Read the build &rarr;</span></div>
+    </a>
+    <a class="work-card is-automation" data-kind="automation" href="work/youtube-report.html">
+      <div class="work-card-top"><span class="work-glyph" aria-hidden="true">⟲</span><span class="work-kind">Automation &middot; US culinary media publisher</span></div>
+      <h3>Weekly YouTube report automation</h3>
+      <p>Two channels, a formula-driven workbook and a slide deck that used to be rebuilt by hand every Tuesday morning. Now the numbers land before anyone opens the file.</p>
+      <div class="chips"><span class="chip">YouTube Data API</span><span class="chip">Apps Script</span><span class="chip">Python</span><span class="chip">OAuth</span><span class="chip">Named ranges</span></div>
+      <div class="work-meta"><span class="work-stat">3 hrs → minutes</span><span class="work-go">Read the build &rarr;</span></div>
+    </a>
+    <div class="work-card is-automation no-page" data-kind="automation">
+      <div class="work-card-top"><span class="work-glyph" aria-hidden="true">⟲</span><span class="work-kind">Automation &middot; Early-years network, 15 sites</span></div>
+      <h3>Organic post tracker</h3>
+      <p>Automatically counts organic posts per day across fifteen Facebook pages, with per-post engagement and a direct link, so "are the sites posting?" stops being a question anyone has to answer by scrolling.</p>
+      <div class="chips"><span class="chip">Graph API</span><span class="chip">Apps Script</span><span class="chip">Google Sheets</span></div>
+      <div class="work-meta"><span class="work-stat">15 pages, counted daily</span><span class="work-go">Detail page coming</span></div>
+    </div>
+    <div class="work-card is-automation no-page" data-kind="automation">
+      <div class="work-card-top"><span class="work-glyph" aria-hidden="true">⟲</span><span class="work-kind">Automation &middot; Early-years network, 15 sites</span></div>
+      <h3>Ad spend and pacing sync</h3>
+      <p>Nightly pull of ad spend and results into the same sheet the rest of the reporting lives in, so cost per lead is one formula instead of a monthly export-and-paste ritual.</p>
+      <div class="chips"><span class="chip">Google Ads API</span><span class="chip">Meta API</span><span class="chip">Apps Script</span></div>
+      <div class="work-meta"><span class="work-stat">Nightly, unattended</span><span class="work-go">Detail page coming</span></div>
+    </div>
+    <div class="work-card is-automation no-page" data-kind="automation">
+      <div class="work-card-top"><span class="work-glyph" aria-hidden="true">⟲</span><span class="work-kind">Automation &middot; Internal tooling</span></div>
+      <h3>Spreadsheet audit and rebuild generator</h3>
+      <p>Dropped into any workbook, it audits every tab — formulas, charts, pivots, colour used as data, tabs that duplicate each other — and writes the brief for restructuring it. Always against a copy, never the live file.</p>
+      <div class="chips"><span class="chip">Apps Script</span><span class="chip">Static analysis</span><span class="chip">Safety guards</span></div>
+      <div class="work-meta"><span class="work-stat">Audits any workbook</span><span class="work-go">Detail page coming</span></div>
+    </div>
+    <a class="work-card is-report" data-kind="report" href="work/lead-funnel.html">
+      <div class="work-card-top"><span class="work-glyph" aria-hidden="true">▤</span><span class="work-kind">Reporting &middot; Early-years network, 15 sites</span></div>
+      <h3>Lead funnel reports</h3>
+      <p>A branded PDF showing leads flowing from source, to how they were handled, to where they ended up — plus a per-location table and the names of everyone still sitting untouched, so each site can work its own pile.</p>
+      <div class="chips"><span class="chip">Python</span><span class="chip">Sankey layout</span><span class="chip">PDF generation</span><span class="chip">Google Sheets</span></div>
+      <div class="work-meta"><span class="work-stat">Generated, not assembled</span><span class="work-go">Read the build &rarr;</span></div>
+    </a>
+    <a class="work-card is-report" data-kind="report" href="work/kpi-dashboard.html">
+      <div class="work-card-top"><span class="work-glyph" aria-hidden="true">▤</span><span class="work-kind">Reporting &middot; Early-years network, 15 sites</span></div>
+      <h3>Live KPI dashboard</h3>
+      <p>A web dashboard sitting on top of the marketing sheet: cost per lead by location, trend charts, filters, sortable tables. Built so the answer to a performance question takes seconds, not a day.</p>
+      <div class="chips"><span class="chip">Apps Script Web App</span><span class="chip">HTML/CSS/JS</span><span class="chip">Google Sheets</span><span class="chip">Charts</span></div>
+      <div class="work-meta"><span class="work-stat">Seconds to any answer</span><span class="work-go">Read the build &rarr;</span></div>
+    </a>
+    <a class="work-card is-report" data-kind="report" href="work/weekly-report.html">
+      <div class="work-card-top"><span class="work-glyph" aria-hidden="true">▤</span><span class="work-kind">Reporting &middot; Early-years network, 15 sites</span></div>
+      <h3>Automated weekly report</h3>
+      <p>Every Monday at six, the week's numbers, the movers, the locations that need attention and next week's actions assemble themselves into one page. It used to be half a workday.</p>
+      <div class="chips"><span class="chip">Apps Script</span><span class="chip">Scheduled triggers</span><span class="chip">PDF generation</span></div>
+      <div class="work-meta"><span class="work-stat">Half a day → automatic</span><span class="work-go">Read the build &rarr;</span></div>
+    </a>
+    <div class="work-card is-report no-page" data-kind="report">
+      <div class="work-card-top"><span class="work-glyph" aria-hidden="true">▤</span><span class="work-kind">Reporting &middot; Early-years network, 15 sites</span></div>
+      <h3>No-status ranking dashboard</h3>
+      <p>Ranks every location on how well it clears the pile of leads nobody has touched. The uncomfortable-but-useful chart: it makes the gap between sites impossible to argue with.</p>
+      <div class="chips"><span class="chip">Apps Script Web App</span><span class="chip">Google Sheets</span><span class="chip">Data cleaning</span></div>
+      <div class="work-meta"><span class="work-stat">15 sites, ranked weekly</span><span class="work-go">Detail page coming</span></div>
+    </div>
+    <div class="work-card is-report no-page" data-kind="report">
+      <div class="work-card-top"><span class="work-glyph" aria-hidden="true">▤</span><span class="work-kind">Reporting &middot; US culinary media publisher</span></div>
+      <h3>Weekly social dashboard</h3>
+      <p>Pulls weekly performance across social platforms into a single dashboard and rebuilds the underlying source tabs so the same figure means the same thing everywhere it appears.</p>
+      <div class="chips"><span class="chip">Apps Script</span><span class="chip">HTML dashboard</span><span class="chip">Source restructuring</span></div>
+      <div class="work-meta"><span class="work-stat">One source of truth</span><span class="work-go">Detail page coming</span></div>
+    </div>
+    <div class="work-card is-report no-page" data-kind="report">
+      <div class="work-card-top"><span class="work-glyph" aria-hidden="true">▤</span><span class="work-kind">Reporting &middot; Early-years network, 15 sites</span></div>
+      <h3>Google reviews report</h3>
+      <p>Collects review counts and ratings per location on a schedule and reports the movement, so reputation stops being something anyone checks manually when they remember to.</p>
+      <div class="chips"><span class="chip">Places API</span><span class="chip">Apps Script</span><span class="chip">Google Sheets</span></div>
+      <div class="work-meta"><span class="work-stat">Per-location, scheduled</span><span class="work-go">Detail page coming</span></div>
+    </div>
+    <div class="work-card is-report no-page" data-kind="report">
+      <div class="work-card-top"><span class="work-glyph" aria-hidden="true">▤</span><span class="work-kind">Reporting &middot; Early-years network, 15 sites</span></div>
+      <h3>Competitor rate tracker</h3>
+      <p>A structured comparison of competitor pricing per catchment, kept current, so pricing conversations start from evidence instead of an impression.</p>
+      <div class="chips"><span class="chip">Research</span><span class="chip">Google Sheets</span><span class="chip">Structured comparison</span></div>
+      <div class="work-meta"><span class="work-stat">Every catchment covered</span><span class="work-go">Detail page coming</span></div>
+    </div>
+    <a class="work-card" data-kind="document" href="work/training-guides.html">
+      <div class="work-card-top"><span class="work-glyph" aria-hidden="true">▧</span><span class="work-kind">Document system &middot; Early-years network, 15 sites</span></div>
+      <h3>CRM training guides</h3>
+      <p>No dashboard survives bad input. These guides taught fifteen front desks what each lead status means, what breaks when it's wrong, and exactly which field the reports read — the cheapest data-quality fix available.</p>
+      <div class="chips"><span class="chip">Technical writing</span><span class="chip">PDF design</span><span class="chip">Process design</span></div>
+      <div class="work-meta"><span class="work-stat">15 sites, one standard</span><span class="work-go">Read the build &rarr;</span></div>
+    </a>
+    <a class="work-card" data-kind="document" href="work/marketing-plan.html">
+      <div class="work-card-top"><span class="work-glyph" aria-hidden="true">▧</span><span class="work-kind">Document system &middot; Luxury retail pitch</span></div>
+      <h3>12-month marketing plan</h3>
+      <p>A quarter-by-quarter plan where every quarter has one job, one lead metric and one thing being stopped — plus the measurement plan that proves whether it worked.</p>
+      <div class="chips"><span class="chip">Strategy</span><span class="chip">Channel planning</span><span class="chip">PDF design</span><span class="chip">Measurement design</span></div>
+      <div class="work-meta"><span class="work-stat">24 pages, 14 drafts</span><span class="work-go">Read the build &rarr;</span></div>
+    </a>
+    <div class="work-card  no-page" data-kind="document">
+      <div class="work-card-top"><span class="work-glyph" aria-hidden="true">▧</span><span class="work-kind">Document system &middot; Early-years network, 15 sites</span></div>
+      <h3>SEO article system</h3>
+      <p>A repeatable brief-to-published pipeline for location and topic pages: research, structure, internal linking and a house style strict enough that the volume never shows.</p>
+      <div class="chips"><span class="chip">SEO research</span><span class="chip">Content system</span><span class="chip">WordPress</span><span class="chip">Internal linking</span></div>
+      <div class="work-meta"><span class="work-stat">300+ pages written</span><span class="work-go">Detail page coming</span></div>
+    </div>
+    <div class="work-card  no-page" data-kind="document">
+      <div class="work-card-top"><span class="work-glyph" aria-hidden="true">▧</span><span class="work-kind">Document system &middot; Early-years network, 15 sites</span></div>
+      <h3>Yearly event planner</h3>
+      <p>Twelve months of events, awareness dates and campaign moments laid out per location, rebuilt from a single source file so a change in one place doesn't need fifteen edits.</p>
+      <div class="chips"><span class="chip">Python</span><span class="chip">Google Sheets</span><span class="chip">Single-source generation</span></div>
+      <div class="work-meta"><span class="work-stat">12 months, 15 sites</span><span class="work-go">Detail page coming</span></div>
+    </div>
+    </div>
+    <p class="doc-note">Client names are left out on purpose and every figure in a sample
+      document is invented. The systems, the structures and the engineering decisions are the
+      real ones.</p>
+  </div>
+</section>
+
+<footer class="doc-footer">
+  <div class="wrap">
+    <div class="social-row">
+<a class="social-btn" href="https://www.linkedin.com/in/ahmad-rajeh-238292358/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.98 3.5C4.98 4.88 3.87 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.22 8h4.56v12H.22V8zm7.4 0h4.37v1.64h.06c.61-1.11 2.1-2.28 4.32-2.28 4.62 0 5.47 2.94 5.47 6.76V20h-4.56v-5.96c0-1.42-.03-3.25-2.02-3.25-2.02 0-2.33 1.55-2.33 3.15V20H7.62V8z"/></svg></a>
+<a class="social-btn is-placeholder" title="Facebook &mdash; link coming soon" aria-label="Facebook, link coming soon" data-social="facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06c0 5.02 3.66 9.18 8.44 9.94v-7.03H7.9v-2.91h2.54V9.85c0-2.52 1.49-3.91 3.77-3.91 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.78-1.63 1.57v1.89h2.78l-.44 2.91h-2.34V22c4.78-.76 8.44-4.92 8.44-9.94z"/></svg></a>
+<a class="social-btn is-placeholder" title="Instagram &mdash; link coming soon" aria-label="Instagram, link coming soon" data-social="instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41-.56-.22-.96-.48-1.38-.9-.42-.42-.68-.82-.9-1.38-.16-.42-.36-1.06-.41-2.23C2.17 15.58 2.16 15.2 2.16 12s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41 1.27-.06 1.65-.07 4.85-.07M12 0C8.74 0 8.33.01 7.05.07 5.78.13 4.9.33 4.14.63c-.79.3-1.46.72-2.12 1.38C1.36 2.67.94 3.34.63 4.14.33 4.9.13 5.78.07 7.05.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.06 1.27.26 2.15.56 2.91.31.8.73 1.47 1.39 2.13.66.66 1.33 1.08 2.12 1.38.76.3 1.64.5 2.91.56C8.33 23.99 8.74 24 12 24s3.67-.01 4.95-.07c1.27-.06 2.15-.26 2.91-.56.79-.3 1.46-.72 2.12-1.38.66-.66 1.08-1.33 1.39-2.13.3-.76.5-1.64.56-2.91.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.06-1.27-.26-2.15-.56-2.91-.31-.8-.73-1.47-1.39-2.13-.66-.66-1.33-1.08-2.12-1.38-.76-.3-1.64-.5-2.91-.56C15.67.01 15.26 0 12 0zm0 5.84a6.16 6.16 0 100 12.32A6.16 6.16 0 0012 5.84zm0 10.16a4 4 0 110-8 4 4 0 010 8zm7.85-10.4a1.44 1.44 0 11-2.88 0 1.44 1.44 0 012.88 0z"/></svg></a>
+<a class="social-btn" href="mailto:Ahmadoo.rajeh@gmail.com" aria-label="Email"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 4h20a1 1 0 011 1v14a1 1 0 01-1 1H2a1 1 0 01-1-1V5a1 1 0 011-1zm10 8.2L3.6 6H20.4L12 12.2zM3 8.3V18h18V8.3l-8.4 6.2a1 1 0 01-1.2 0L3 8.3z"/></svg></a>
+</div>
+<p class="social-hint">Facebook and Instagram links coming soon.</p>
+    <p style="margin-top:18px;">&copy; 2026 Ahmad Rajeh &middot;
+      <a href="mailto:Ahmadoo.rajeh@gmail.com">Ahmadoo.rajeh@gmail.com</a> &middot;
+      <a href="https://calendly.com/ahmadoo-rajeh/client-meeting" target="_blank" rel="noopener">Book a call</a>
+    </p>
+  </div>
+</footer>
+</main>
+
+<div class="lightbox" id="lightbox" hidden>
+  <div class="lightbox-bg" data-close="1"></div>
+  <div class="lightbox-panel">
+    <button type="button" class="lightbox-close" id="lightbox-close" aria-label="Close">&times;</button>
+    <video id="lightbox-video" controls playsinline hidden></video>
+    <img id="lightbox-img" alt="" hidden>
+  </div>
+</div>
+
+<script src="js/work.js?v=4"></script>
+</body>
+</html>

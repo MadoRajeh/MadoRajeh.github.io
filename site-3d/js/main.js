@@ -26,10 +26,21 @@
   const slides = document.querySelectorAll('.slide');
   const dotsNav = document.getElementById('slide-dots');
   const sceneBg = document.getElementById('scene-bg');
+  const deckStage = document.getElementById('deck-stage');
   if (slides.length) {
     let current = 0;
     let animating = false;
     const PUSH_MS = 600; // matches .slide's CSS transition duration
+
+    // The deck is only the first 100vh of the page now; everything below it is
+    // an ordinary scrolling case study. "Docked" means the deck still fills the
+    // viewport, so wheel/touch/keys should drive slide changes instead of
+    // scrolling the page. Once the user scrolls past it, this goes false and
+    // those handlers get out of the way entirely, letting native scroll run
+    // the rest of the page exactly like any other site. Scrolling back UP into
+    // the deck's range flips it true again automatically, since it's just a
+    // scrollY check, not a one-way latch.
+    const isDocked = () => !deckStage || window.scrollY < window.innerHeight - 2;
 
     const dots = [];
     if (dotsNav) {
@@ -219,46 +230,106 @@
     // deferral was the visible bug, a stray scrollbar racing to the bottom of
     // the slide before anything advanced.
 
+    // Scrolling past the last slide (or back up from the case study into the
+    // first) hands off to a real page scroll instead of doing nothing once
+    // there's no next/previous slide to go to.
+    function handOff(dir) {
+      if (dir > 0 && current === slides.length - 1) {
+        const story = document.getElementById('story-start');
+        if (story) story.scrollIntoView({ behavior: 'smooth' });
+        return true;
+      }
+      if (dir < 0 && current === 0) return true; // nothing above the first slide; let it no-op natively
+      return false;
+    }
+
     // Wheel: one tick of real intent = one slide. Trackpads fire many tiny
     // deltaY events per gesture, so `animating` (or the reduced-motion no-op
     // above) is what keeps a single swipe from skipping several slides.
     window.addEventListener('wheel', (e) => {
+      if (!isDocked()) return; // scrolled past the deck: this is just the page scrolling now
       const lightbox = document.getElementById('lightbox');
       if (lightbox && !lightbox.hidden) return;
       if (Math.abs(e.deltaY) < 4) return;
+      const dir = e.deltaY > 0 ? 1 : -1;
+      if (handOff(dir)) return; // not preventDefault-ed: this IS a real scroll now
       e.preventDefault();
-      advance(e.deltaY > 0 ? 1 : -1);
+      advance(dir);
     }, { passive: false });
 
     // Touch: swipe up = next (matches Stories/Reels), swipe down = previous.
     let touchStartY = null;
     window.addEventListener('touchstart', (e) => { touchStartY = e.touches[0].clientY; }, { passive: true });
     window.addEventListener('touchend', (e) => {
+      if (!isDocked()) return;
       const lightbox = document.getElementById('lightbox');
       if (lightbox && !lightbox.hidden) { touchStartY = null; return; }
       if (touchStartY === null) return;
       const dy = touchStartY - e.changedTouches[0].clientY;
       touchStartY = null;
       if (Math.abs(dy) <= 44) return;
-      advance(dy > 0 ? 1 : -1);
+      const dir = dy > 0 ? 1 : -1;
+      if (handOff(dir)) return;
+      advance(dir);
     }, { passive: true });
 
     // Keyboard: arrow/page keys and spacebar, presentation-clicker style.
     document.addEventListener('keydown', (e) => {
+      if (!isDocked()) return;
       const lightbox = document.getElementById('lightbox');
       if (lightbox && !lightbox.hidden) return;
-      if (['ArrowDown', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); advance(1); }
-      else if (['ArrowUp', 'PageUp'].includes(e.key)) { e.preventDefault(); advance(-1); }
+      if (['ArrowDown', 'PageDown', ' '].includes(e.key)) {
+        if (handOff(1)) return;
+        e.preventDefault(); advance(1);
+      } else if (['ArrowUp', 'PageUp'].includes(e.key)) {
+        if (handOff(-1)) return;
+        e.preventDefault(); advance(-1);
+      }
     });
 
-    // Nav links and hero CTAs point at slide ids (#work, #tools, etc.) — jump
-    // to that slide directly instead of letting the browser try to scroll.
+    // Nav links point either at a slide id (jump the deck to it directly
+    // instead of letting the browser try to scroll, since the deck doesn't
+    // natively scroll) or at a normal case-study section id below the deck
+    // (e.g. #about, #contact), which just falls through to the browser's
+    // ordinary anchor-jump behaviour, unmodified.
     document.querySelectorAll('a[href^="#"]').forEach((a) => {
       const id = a.getAttribute('href').slice(1);
       const idx = [...slides].findIndex((s) => s.id === id);
       if (idx === -1) return;
-      a.addEventListener('click', (e) => { e.preventDefault(); goTo(idx); });
+      a.addEventListener('click', (e) => {
+        e.preventDefault();
+        // goTo() only swaps which slide carries .current — it never scrolls
+        // the page. If you're already down in the case study when you click
+        // this, the deck (still up at the very top of the document) would
+        // switch slides completely out of view, so nothing looked like it
+        // happened. Scrolling back up first is what actually brings it back
+        // on screen; goTo() then does its normal job once it's visible again.
+        if (window.scrollY > 0) window.scrollTo({ top: 0, behavior: 'instant' });
+        goTo(idx);
+      });
     });
+  }
+
+  /* ---------- Case study: reveal-on-scroll ----------
+     The deck's slides fade/pop/split because JS decides the exact moment one
+     replaces another. Ordinary page scroll has no such moment, so everything
+     below the deck uses the standard pattern instead: .reveal starts faded
+     down slightly, and gets .in added the first time it crosses into view. */
+  const revealEls = document.querySelectorAll('.reveal');
+  if (revealEls.length) {
+    if (reduced || !('IntersectionObserver' in window)) {
+      revealEls.forEach((el) => el.classList.add('in'));
+    } else {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in');
+            io.unobserve(entry.target); // once revealed, stays revealed
+          }
+        });
+      }, { threshold: 0.15, rootMargin: '0px 0px -8% 0px' });
+      revealEls.forEach((el) => io.observe(el));
+    }
   }
 
   /* ---------- Tools ring: build once, position each logo around the circle ---------- */

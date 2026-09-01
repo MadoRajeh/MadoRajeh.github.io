@@ -1,0 +1,296 @@
+/* =====================================================================
+   Portfolio v4 — the Work section.
+
+   Loaded AFTER style.css on every page except the scroll-deck homepage,
+   so it inherits the same Warm Ivory tokens (--paper, --primary, the
+   Gilroy/Poppins/Plex trio) rather than redefining any of them. Nothing
+   in here touches .slide or #deck-stage: the deck is its own machine and
+   these are ordinary documents that scroll normally.
+
+   One deliberate difference from the deck: pages that use this file set
+   `body.doc`, which turns OFF the deck's scroll hijacking and restores
+   plain page scroll. Without that class a work page would inherit the
+   deck's touch-action:none and feel broken on a phone.
+   ===================================================================== */
+
+body.doc { overflow-x: hidden; }
+body.doc main { display: block; }
+
+/* ---------- Page header block (every non-home page opens with one) ---------- */
+.page-head {
+  padding: 128px 0 46px;
+  background:
+    radial-gradient(circle at 12% 0%, rgba(219,209,237,.5), transparent 55%),
+    radial-gradient(circle at 88% 10%, rgba(171,190,237,.42), transparent 50%),
+    var(--paper);
+  border-bottom: 1px solid var(--line);
+}
+.page-head .sec-title { max-width: 20ch; }
+.page-head-lede { max-width: 60ch; font-size: 17px; margin-top: 14px; }
+.crumb {
+  font-family: var(--mono); font-size: 12px; letter-spacing: .06em;
+  text-transform: uppercase; color: var(--ink-faint); margin-bottom: 16px;
+  display: block; text-decoration: none;
+}
+.crumb a { color: var(--ink-faint); text-decoration: none; }
+.crumb a:hover { color: var(--primary); }
+
+section.doc-sec { padding: 56px 0; }
+section.doc-sec.alt { background: #F6F2E4; border-block: 1px solid var(--line); }
+
+/* ---------- Filter bar ---------- */
+.filter-bar {
+  display: flex; flex-wrap: wrap; gap: 9px;
+  padding: 22px 0 4px;
+}
+.filter-btn {
+  font-family: var(--mono); font-size: 12px; letter-spacing: .04em;
+  padding: 7px 15px; border-radius: 999px; cursor: pointer;
+  border: 1px solid var(--surface-border); background: var(--paper-soft);
+  color: var(--ink-soft); transition: background .18s ease, color .18s ease, border-color .18s ease;
+}
+.filter-btn:hover { border-color: var(--primary); color: var(--primary); }
+.filter-btn[aria-pressed="true"] { background: var(--primary); border-color: var(--primary); color: #fff; }
+.filter-count { font-family: var(--mono); font-size: 12.5px; color: var(--ink-faint); margin-top: 16px; }
+
+/* ---------- Work grid ---------- */
+.work-grid {
+  display: grid; gap: 20px; margin-top: 24px;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+.work-card {
+  display: flex; flex-direction: column;
+  background: var(--paper-soft); border: 1px solid var(--surface-border);
+  border-radius: 16px; padding: 22px 22px 20px; text-decoration: none;
+  position: relative; overflow: hidden;
+  transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+}
+a.work-card:hover { transform: translateY(-4px); border-color: var(--primary); box-shadow: 0 18px 40px -18px rgba(0,0,0,.35); }
+.work-card[hidden] { display: none; }
+.work-card-top { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.work-glyph {
+  width: 38px; height: 38px; flex: 0 0 38px; border-radius: 11px;
+  display: grid; place-items: center; font-size: 17px;
+  background: var(--lavender); color: var(--lavender-ink);
+}
+.work-card.is-product .work-glyph { background: #CFE3D7; color: #2F6B4C; }
+.work-card.is-automation .work-glyph { background: var(--blue); color: var(--blue-ink); }
+.work-card.is-report .work-glyph { background: #EFE2BE; color: #6E5A1E; }
+.work-kind {
+  font-family: var(--mono); font-size: 10.5px; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--ink-faint);
+}
+.work-card h3 { font-size: 19px; line-height: 1.2; margin-bottom: 8px; color: var(--primary); }
+.work-card p { font-size: 14px; line-height: 1.6; flex: 1; }
+.work-meta {
+  margin-top: 16px; padding-top: 13px; border-top: 1px solid var(--line);
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+}
+.work-stat { font-family: var(--mono); font-size: 12px; color: var(--primary); font-weight: 600; }
+.work-go { font-size: 13px; font-weight: 600; color: var(--link-blue); white-space: nowrap; }
+.work-card .live-dot {
+  display: inline-block; width: 7px; height: 7px; border-radius: 50%;
+  background: #3F7F5B; margin-right: 6px; vertical-align: middle;
+}
+/* Cards with no detail page of their own are still real work — they just
+   don't get a click target. Making that visually explicit stops the grid
+   reading as "half these are broken links". */
+.work-card.no-page { cursor: default; }
+.work-card.no-page .work-go { color: var(--ink-faint); font-weight: 500; }
+
+/* ---------- Stack chips ---------- */
+.chips { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 14px; }
+.chip {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .03em;
+  padding: 4px 10px; border-radius: 999px;
+  background: rgba(110,99,46,.09); color: var(--primary);
+}
+
+/* ---------- Experience timeline ---------- */
+.timeline { position: relative; margin-top: 34px; padding-left: 30px; }
+.timeline::before {
+  content: ""; position: absolute; left: 7px; top: 6px; bottom: 6px; width: 2px;
+  background: linear-gradient(var(--primary), var(--lavender-dark), var(--blue));
+  border-radius: 2px;
+}
+.tl-item { position: relative; padding-bottom: 34px; }
+.tl-item:last-child { padding-bottom: 0; }
+.tl-item::before {
+  content: ""; position: absolute; left: -30px; top: 5px;
+  width: 16px; height: 16px; border-radius: 50%;
+  background: var(--paper); border: 3px solid var(--primary);
+}
+.tl-item.is-current::before { background: var(--primary); box-shadow: 0 0 0 4px rgba(110,99,46,.18); }
+.tl-when {
+  font-family: var(--mono); font-size: 12px; letter-spacing: .05em;
+  color: var(--ink-faint); text-transform: uppercase;
+}
+.tl-role { font-size: 20px; margin: 4px 0 2px; color: var(--primary); }
+.tl-org { font-weight: 600; font-size: 14.5px; color: var(--ink); margin-bottom: 8px; }
+.tl-org .tl-sep { color: var(--ink-faint); font-weight: 400; }
+.tl-item ul { margin: 10px 0 0 0; padding: 0; list-style: none; }
+.tl-item li {
+  position: relative; padding-left: 17px; font-size: 14.5px;
+  color: var(--ink-soft); margin-bottom: 6px; line-height: 1.6;
+}
+.tl-item li::before {
+  content: ""; position: absolute; left: 2px; top: 9px;
+  width: 5px; height: 5px; border-radius: 50%; background: var(--lavender-dark);
+}
+
+/* ---------- Document previews ---------- */
+.doc-row {
+  display: grid; gap: 22px; margin-top: 26px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+.doc-card {
+  background: var(--paper-soft); border: 1px solid var(--surface-border);
+  border-radius: 14px; overflow: hidden; display: flex; flex-direction: column;
+  transition: transform .22s ease, box-shadow .22s ease;
+}
+.doc-card:hover { transform: translateY(-3px); box-shadow: 0 16px 36px -18px rgba(0,0,0,.32); }
+.doc-shot {
+  position: relative; display: block; border: none; padding: 0; cursor: zoom-in;
+  background: #DAD4BE; line-height: 0; width: 100%;
+}
+.doc-shot img { width: 100%; height: auto; display: block; }
+.doc-shot::after {
+  content: "⤢"; position: absolute; right: 10px; bottom: 10px;
+  width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center;
+  background: rgba(46,46,46,.72); color: #fff; font-size: 15px;
+  opacity: 0; transition: opacity .2s ease;
+}
+.doc-shot:hover::after, .doc-shot:focus-visible::after { opacity: 1; }
+.doc-body { padding: 16px 18px 18px; }
+.doc-body h4 { font-family: var(--heading); font-weight: 800; font-size: 16px; color: var(--primary); margin-bottom: 6px; }
+.doc-body p { font-size: 13.5px; line-height: 1.6; }
+.doc-links { margin-top: 12px; display: flex; gap: 14px; flex-wrap: wrap; }
+.doc-links a { font-size: 13px; font-weight: 600; }
+.doc-note {
+  font-family: var(--mono); font-size: 11.5px; color: var(--ink-faint);
+  margin-top: 18px; padding: 10px 14px; border-left: 3px solid var(--lavender-dark);
+  background: rgba(219,209,237,.22);
+}
+
+/* ---------- Case-study anatomy blocks ---------- */
+.anatomy { display: grid; gap: 18px; margin-top: 26px; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
+.anat-card {
+  background: var(--paper-soft); border: 1px solid var(--surface-border);
+  border-radius: 14px; padding: 20px;
+}
+.anat-num {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .12em;
+  color: var(--ink-faint); text-transform: uppercase; display: block; margin-bottom: 8px;
+}
+.anat-card h4 { font-family: var(--heading); font-weight: 800; font-size: 17px; color: var(--primary); margin-bottom: 8px; }
+.anat-card p { font-size: 14px; line-height: 1.62; }
+
+/* ---------- The pipeline diagram ---------- */
+.pipeline {
+  display: flex; align-items: stretch; gap: 0; flex-wrap: wrap;
+  margin-top: 26px; background: var(--paper-soft);
+  border: 1px solid var(--surface-border); border-radius: 14px; padding: 22px 18px;
+}
+.pipe-step { flex: 1 1 150px; min-width: 140px; text-align: center; padding: 4px 10px; }
+.pipe-icon {
+  width: 44px; height: 44px; margin: 0 auto 10px; border-radius: 13px;
+  display: grid; place-items: center; font-size: 19px;
+  background: var(--lavender); color: var(--lavender-ink);
+}
+.pipe-step:nth-child(4n+3) .pipe-icon { background: var(--blue); color: var(--blue-ink); }
+.pipe-step:nth-child(4n+5) .pipe-icon { background: #CFE3D7; color: #2F6B4C; }
+.pipe-step b { display: block; font-family: var(--heading); font-size: 14.5px; color: var(--primary); margin-bottom: 5px; }
+.pipe-step span { font-size: 12.5px; color: var(--ink-soft); line-height: 1.5; display: block; }
+.pipe-arrow {
+  flex: 0 0 26px; display: grid; place-items: center;
+  color: var(--surface-border); font-size: 19px;
+}
+@media (max-width: 700px) {
+  .pipe-arrow { flex-basis: 100%; height: 22px; transform: rotate(90deg); }
+}
+
+/* ---------- Numbered build steps ---------- */
+.steps { counter-reset: s; margin-top: 24px; }
+.step {
+  position: relative; padding: 0 0 26px 54px; counter-increment: s;
+}
+.step::before {
+  content: counter(s, decimal-leading-zero);
+  position: absolute; left: 0; top: -2px;
+  font-family: var(--mono); font-size: 13px; font-weight: 600; color: #fff;
+  width: 34px; height: 34px; border-radius: 10px; background: var(--primary);
+  display: grid; place-items: center;
+}
+.step:not(:last-child)::after {
+  content: ""; position: absolute; left: 16px; top: 38px; bottom: 6px;
+  width: 2px; background: var(--line);
+}
+.step h4 { font-family: var(--heading); font-weight: 800; font-size: 17px; color: var(--primary); margin-bottom: 6px; }
+.step p { font-size: 14.5px; line-height: 1.65; }
+
+/* ---------- Data in / data out table ---------- */
+.io-table { width: 100%; border-collapse: collapse; margin-top: 22px; font-size: 14px; }
+.io-table th, .io-table td { text-align: left; padding: 11px 13px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.io-table thead th {
+  font-family: var(--mono); font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--primary); background: rgba(110,99,46,.07);
+}
+.io-table td:first-child { font-weight: 600; color: var(--ink); width: 30%; }
+.io-table td { color: var(--ink-soft); }
+.io-wrap { overflow-x: auto; }
+
+/* ---------- Result band ---------- */
+.result-band {
+  margin-top: 30px; padding: 26px 24px; border-radius: 16px;
+  background: linear-gradient(135deg, rgba(110,99,46,.10), rgba(171,190,237,.22));
+  border: 1px solid var(--surface-border);
+}
+.result-band .stats-grid { border-top: none; padding-top: 0; margin-top: 0; }
+
+/* ---------- Prev / next ---------- */
+.pager { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-top: 44px; }
+.pager a { font-size: 14px; font-weight: 600; text-decoration: none; }
+.pager a:hover { text-decoration: underline; }
+
+/* ---------- Social row ---------- */
+.social-row { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 20px; }
+.social-btn {
+  width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--paper-soft); border: 1px solid var(--surface-border);
+  color: var(--primary); text-decoration: none;
+  transition: transform .2s ease, background .2s ease, color .2s ease, border-color .2s ease;
+}
+.social-btn:hover { transform: translateY(-3px); background: var(--primary); color: #fff; border-color: var(--primary); }
+.social-btn svg { width: 18px; height: 18px; fill: currentColor; display: block; }
+/* Placeholder profiles: real markup, real icon, href swapped in later.
+   Kept visibly muted so an unfinished link never looks like a live one. */
+.social-btn.is-placeholder { opacity: .45; cursor: not-allowed; }
+.social-btn.is-placeholder:hover { transform: none; background: var(--paper-soft); color: var(--primary); border-color: var(--surface-border); }
+.social-hint { font-family: var(--mono); font-size: 11px; color: var(--ink-faint); margin-top: 10px; }
+
+/* ---------- Lightbox, resized for documents ----------
+   style.css sizes the panel at min(720px, 92vw), which suits the portrait
+   video clips on the creatives page. A landscape report page at 720px is
+   unreadable — the whole point of opening it is to read the small print —
+   so document pages get a near-fullscreen panel that fits either
+   orientation without cropping. Scoped to body.doc so the creatives
+   lightbox keeps its original sizing. */
+body.doc .lightbox-panel { width: auto; max-width: 96vw; max-height: 92vh; }
+body.doc .lightbox-panel img {
+  width: auto; height: auto;
+  max-width: 96vw; max-height: 92vh;
+  border-radius: 10px; box-shadow: 0 30px 70px -20px rgba(0,0,0,.7);
+}
+body.doc .lightbox-close { top: -6px; right: -6px; }
+
+/* ---------- Footer ---------- */
+.doc-footer { padding: 40px 0 48px; text-align: center; border-top: 1px solid var(--line); margin-top: 10px; }
+.doc-footer p { font-size: 13.5px; color: var(--ink-faint); }
+
+@media (max-width: 700px) {
+  .page-head { padding: 104px 0 34px; }
+  section.doc-sec { padding: 40px 0; }
+  .work-grid { grid-template-columns: 1fr; }
+  .timeline { padding-left: 24px; }
+  .tl-item::before { left: -24px; width: 13px; height: 13px; }
+}
