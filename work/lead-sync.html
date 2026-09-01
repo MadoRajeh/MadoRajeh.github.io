@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The self-repairing CRM sync · Ahmad Rajeh</title>
+<meta name="description" content="The one that stopped a weekly export — Pulls every lead out of the CRM into a live sheet on a schedule, and repairs itself when the source misbehaves">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css?v=55">
+<link rel="stylesheet" href="../css/work.css?v=16">
+<noscript><style>.reveal{opacity:1 !important;transform:none !important;}</style></noscript>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='34' cy='52' r='22' fill='%236E632E'/><circle cx='68' cy='36' r='14' fill='%23DBD1ED'/><circle cx='74' cy='70' r='10' fill='%23EDE8D0'/></svg>">
+</head>
+<body class="doc">
+
+<div id="scene-bg" aria-hidden="true"></div>
+
+<div id="scene-parallax" aria-hidden="true">
+  <div class="scene-blob b1" data-depth="1.0"></div>
+  <div class="scene-blob b2" data-depth="1.8"></div>
+  <div class="scene-blob b3" data-depth="2.6"></div>
+</div>
+<canvas id="leaf-canvas" aria-hidden="true"></canvas>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a class="nav-logo" href="../index.html">ahmad<span class="dot">.</span>rajeh</a>
+    <ul class="nav-links"><li><a href="../work.html" aria-current="page">Work</a></li><li><a href="../case-study.html">Case study</a></li><li><a href="../process.html">Process</a></li><li><a href="../creatives.html">Creatives</a></li><li><a href="../index.html#about">About</a></li><li><a href="../index.html#contact">Contact</a></li></ul>
+    <a class="badge-legacy" href="../index.html#contact">Book a call &rarr;</a>
+  </div>
+</header>
+
+<main>
+<section class="page-head">
+  <div class="wrap">
+    <span class="crumb"><a href="../index.html">Home</a> / <a href="../work.html">Work</a> / The self-repairing CRM sync</span>
+    <span class="hero-kicker">Automation &middot; Early-years network, 15 sites</span>
+    <h1 class="sec-title" style="max-width:22ch;">The self-repairing CRM sync</h1>
+    <p class="page-head-lede">The system that quietly removed five hours a week, and the one I'd point at first if someone asked what I actually do.</p>
+    <div class="chips"><span class="chip">Apps Script</span><span class="chip">REST API</span><span class="chip">Google Sheets</span><span class="chip">Idempotent writes</span><span class="chip">Rollback points</span></div>
+    <p style="margin-top:22px;"><a class="btn btn-ghost" href="../index.html#contact">Talk about something like this</a></p>
+  </div>
+</section>
+
+<section class="doc-sec">
+  <div class="wrap">
+    <span class="sec-label reveal">The problem</span>
+    <h2 class="sec-title reveal" style="max-width:28ch;">A person was the integration</h2>
+    <p class="page-head-lede reveal">Every week somebody logged into the CRM, exported a file, opened it, cleaned it, pasted it into the reporting sheet and fixed whatever broke. Every report downstream was only as fresh as the last time a human remembered. Worse, the CRM's own exports quietly omitted a category of leads, so the numbers everyone trusted had a hole in them.</p>
+  </div>
+</section>
+
+<section class="doc-sec alt">
+  <div class="wrap">
+    <span class="sec-label reveal">What goes in, what comes out</span>
+    <h2 class="sec-title reveal">The data, end to end</h2>
+    <div class="io-wrap reveal">
+      <table class="io-table">
+        <thead><tr><th>Source</th><th>What comes in</th><th>What it becomes</th></tr></thead>
+        <tbody><tr><td>CRM API</td><td>Every lead, on a schedule</td><td>A live mirror of the source</td></tr><tr><td>Deleted records</td><td>Rows that vanish upstream</td><td>Removed here too, safely</td></tr><tr><td>Schema changes</td><td>Renamed or added fields</td><td>Detected, not silently dropped</td></tr><tr><td>The reporting sheet</td><td>Always current</td><td>Dashboards and reports downstream</td></tr></tbody>
+      </table>
+    </div>
+    <div class="pipeline reveal">
+      <div class="pipe-step"><div class="pipe-icon" aria-hidden="true">⟲</div><b>Scheduled pull</b><span>Every lead from the API, not an export</span></div>
+      <div class="pipe-arrow" aria-hidden="true">&rarr;</div>
+      <div class="pipe-step"><div class="pipe-icon" aria-hidden="true">▣</div><b>Reconcile</b><span>Added, changed, deleted — all three</span></div>
+      <div class="pipe-arrow" aria-hidden="true">&rarr;</div>
+      <div class="pipe-step"><div class="pipe-icon" aria-hidden="true">◈</div><b>Strict mirror</b><span>The sheet matches the source exactly</span></div>
+      <div class="pipe-arrow" aria-hidden="true">&rarr;</div>
+      <div class="pipe-step"><div class="pipe-icon" aria-hidden="true">▤</div><b>Everything downstream</b><span>Dashboards, reports, funnels</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="doc-sec">
+  <div class="wrap">
+    <span class="sec-label reveal">The engineering</span>
+    <h2 class="sec-title reveal">The decisions that actually mattered</h2>
+    <div class="steps"><div class="step reveal"><h4>Read the vendor's documentation before probing the API</h4><p>I initially swept the API for endpoints and built against what answered. The docs listed endpoints the sweep never found — including the ones holding the records the exports were missing. The lesson stuck: probing tells you what responds, documentation tells you what exists.</p></div><div class="step reveal"><h4>Strict mirror, not append-only</h4><p>Early versions only ever added rows, so anything deleted upstream lived on forever and inflated every count. The sync now reconciles all three cases — new, changed and gone — and the sheet is a true mirror rather than an archive of everything that was ever true.</p></div><div class="step reveal"><h4>A guard so a bad pull can't wipe the sheet</h4><p>If the API returns empty or wildly short, that is far more likely to be an outage than an evacuated CRM. The sync refuses the write and leaves yesterday's good data in place. Stale data you can spot beats an empty sheet you can't recover.</p></div><div class="step reveal"><h4>Versioned rollback points, kept deliberately</h4><p>Eight numbered snapshots of the script sit alongside it, each named for what changed next. When a change misbehaves, recovery is a file swap rather than an evening of archaeology.</p></div><div class="step reveal"><h4>It repairs itself instead of raising a ticket</h4><p>Transient failures retry with backoff. Recoverable problems get fixed in place. Only something genuinely novel surfaces to a human. Automation that needs babysitting has just moved the work, not removed it.</p></div></div>
+  </div>
+</section>
+
+
+
+<section class="doc-sec alt">
+  <div class="wrap">
+    <span class="sec-label reveal">Where it landed</span>
+    <h2 class="sec-title reveal">The outcome</h2>
+    <div class="result-band reveal">
+      <div class="stats-grid"><div class="stat"><b>5+ hrs</b><span>reclaimed every week</span></div><div class="stat"><b>Hourly</b><span>then down to near-live</span></div><div class="stat"><b>8</b><span>rollback points kept</span></div><div class="stat"><b>0</b><span>manual exports remaining</span></div></div>
+    </div>
+    <p class="doc-note reveal" style="margin-top:24px;"><strong>Being straight about it:</strong> This is the least impressive-looking thing here and the one that mattered most. It has no interface. Its entire success condition is that nobody thinks about it.</p>
+    <div class="pager reveal">
+      <a href="../work/slack-attendance.html">&larr; Slack Attendance</a>
+      <a href="../work.html">All 20 projects</a>
+      <a href="../work/qyxera-hr.html">Slack clock-in and payroll tracker &rarr;</a>
+    </div>
+  </div>
+</section>
+
+<footer class="doc-footer">
+  <div class="wrap">
+    <div class="social-row">
+<a class="social-btn" href="https://www.linkedin.com/in/ahmad-rajeh-238292358/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.98 3.5C4.98 4.88 3.87 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.22 8h4.56v12H.22V8zm7.4 0h4.37v1.64h.06c.61-1.11 2.1-2.28 4.32-2.28 4.62 0 5.47 2.94 5.47 6.76V20h-4.56v-5.96c0-1.42-.03-3.25-2.02-3.25-2.02 0-2.33 1.55-2.33 3.15V20H7.62V8z"/></svg></a>
+<a class="social-btn is-placeholder" title="Facebook &mdash; link coming soon" aria-label="Facebook, link coming soon" data-social="facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06c0 5.02 3.66 9.18 8.44 9.94v-7.03H7.9v-2.91h2.54V9.85c0-2.52 1.49-3.91 3.77-3.91 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.78-1.63 1.57v1.89h2.78l-.44 2.91h-2.34V22c4.78-.76 8.44-4.92 8.44-9.94z"/></svg></a>
+<a class="social-btn is-placeholder" title="Instagram &mdash; link coming soon" aria-label="Instagram, link coming soon" data-social="instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41-.56-.22-.96-.48-1.38-.9-.42-.42-.68-.82-.9-1.38-.16-.42-.36-1.06-.41-2.23C2.17 15.58 2.16 15.2 2.16 12s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41 1.27-.06 1.65-.07 4.85-.07M12 0C8.74 0 8.33.01 7.05.07 5.78.13 4.9.33 4.14.63c-.79.3-1.46.72-2.12 1.38C1.36 2.67.94 3.34.63 4.14.33 4.9.13 5.78.07 7.05.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.06 1.27.26 2.15.56 2.91.31.8.73 1.47 1.39 2.13.66.66 1.33 1.08 2.12 1.38.76.3 1.64.5 2.91.56C8.33 23.99 8.74 24 12 24s3.67-.01 4.95-.07c1.27-.06 2.15-.26 2.91-.56.79-.3 1.46-.72 2.12-1.38.66-.66 1.08-1.33 1.39-2.13.3-.76.5-1.64.56-2.91.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.06-1.27-.26-2.15-.56-2.91-.31-.8-.73-1.47-1.39-2.13-.66-.66-1.33-1.08-2.12-1.38-.76-.3-1.64-.5-2.91-.56C15.67.01 15.26 0 12 0zm0 5.84a6.16 6.16 0 100 12.32A6.16 6.16 0 0012 5.84zm0 10.16a4 4 0 110-8 4 4 0 010 8zm7.85-10.4a1.44 1.44 0 11-2.88 0 1.44 1.44 0 012.88 0z"/></svg></a>
+<a class="social-btn" href="mailto:Ahmadoo.rajeh@gmail.com" aria-label="Email"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 4h20a1 1 0 011 1v14a1 1 0 01-1 1H2a1 1 0 01-1-1V5a1 1 0 011-1zm10 8.2L3.6 6H20.4L12 12.2zM3 8.3V18h18V8.3l-8.4 6.2a1 1 0 01-1.2 0L3 8.3z"/></svg></a>
+</div>
+<p class="social-hint">Facebook and Instagram links coming soon.</p>
+    <p style="margin-top:18px;">&copy; 2026 Ahmad Rajeh &middot;
+      <a href="mailto:Ahmadoo.rajeh@gmail.com">Ahmadoo.rajeh@gmail.com</a> &middot;
+      <a href="https://calendly.com/ahmadoo-rajeh/client-meeting" target="_blank" rel="noopener">Book a call</a>
+    </p>
+  </div>
+</footer>
+</main>
+
+<div class="lightbox" id="lightbox" hidden>
+  <div class="lightbox-bg" data-close="1"></div>
+  <div class="lightbox-panel">
+    <button type="button" class="lightbox-close" id="lightbox-close" aria-label="Close">&times;</button>
+    <video id="lightbox-video" controls playsinline hidden></video>
+    <img id="lightbox-img" alt="" hidden>
+  </div>
+</div>
+
+<script src="../js/main.js?v=23"></script>
+<script src="../js/work.js?v=16"></script>
+<script src="../js/scene.js?v=6"></script>
+</body>
+</html>

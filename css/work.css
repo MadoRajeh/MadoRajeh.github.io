@@ -1,0 +1,614 @@
+/* =====================================================================
+   Portfolio v4 — the Work section.
+
+   Loaded AFTER style.css on every page except the scroll-deck homepage,
+   so it inherits the same Warm Ivory tokens (--paper, --primary, the
+   Gilroy/Poppins/Plex trio) rather than redefining any of them. Nothing
+   in here touches .slide or #deck-stage: the deck is its own machine and
+   these are ordinary documents that scroll normally.
+
+   One deliberate difference from the deck: pages that use this file set
+   `body.doc`, which turns OFF the deck's scroll hijacking and restores
+   plain page scroll. Without that class a work page would inherit the
+   deck's touch-action:none and feel broken on a phone.
+   ===================================================================== */
+
+body.doc { overflow-x: hidden; }
+body.doc main { display: block; }
+
+/* ---------- Page header block (every non-home page opens with one) ---------- */
+.page-head {
+  padding: 128px 0 46px;
+  /* No opaque base colour here. The scene layers (leaves, parallax) sit behind
+     the page at a negative z-index, so an opaque section background hides them
+     exactly the way body's did. Gradients only — html supplies the paper. */
+  background:
+    radial-gradient(circle at 12% 0%, rgba(219,209,237,.5), transparent 55%),
+    radial-gradient(circle at 88% 10%, rgba(171,190,237,.42), transparent 50%);
+  border-bottom: 1px solid var(--line);
+}
+.page-head .sec-title { max-width: 20ch; }
+.page-head-lede { max-width: 60ch; font-size: 17px; margin-top: 14px; }
+.crumb {
+  font-family: var(--mono); font-size: 12px; letter-spacing: .06em;
+  text-transform: uppercase; color: var(--ink-faint); margin-bottom: 16px;
+  display: block; text-decoration: none;
+}
+.crumb a { color: var(--ink-faint); text-decoration: none; }
+.crumb a:hover { color: var(--primary); }
+
+section.doc-sec { padding: 56px 0; }
+/* Translucent, so leaves drift behind the reading areas instead of
+   disappearing under them. Cards stay solid for text contrast. */
+section.doc-sec.alt { background: rgba(246,242,228,.72); border-block: 1px solid var(--line); }
+
+/* ---------- Filter bar ---------- */
+.filter-bar {
+  display: flex; flex-wrap: wrap; gap: 9px;
+  padding: 22px 0 4px;
+}
+.filter-btn {
+  font-family: var(--mono); font-size: 12px; letter-spacing: .04em;
+  padding: 7px 15px; border-radius: 999px; cursor: pointer;
+  border: 1px solid var(--surface-border); background: var(--paper-soft);
+  color: var(--ink-soft); transition: background .18s ease, color .18s ease, border-color .18s ease;
+}
+.filter-btn:hover { border-color: var(--primary); color: var(--primary); }
+.filter-btn[aria-pressed="true"] { background: var(--primary); border-color: var(--primary); color: #fff; }
+.filter-count { font-family: var(--mono); font-size: 12.5px; color: var(--ink-faint); margin-top: 16px; }
+
+/* ---------- Work grid ---------- */
+.work-grid {
+  display: grid; gap: 20px; margin-top: 24px;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+.work-card {
+  display: flex; flex-direction: column;
+  background: var(--paper-soft); border: 1px solid var(--surface-border);
+  border-radius: 16px; padding: 22px 22px 20px; text-decoration: none;
+  position: relative; overflow: hidden;
+  transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+}
+a.work-card:hover { transform: translateY(-4px); border-color: var(--primary); box-shadow: 0 18px 40px -18px rgba(0,0,0,.35); }
+.work-card[hidden] { display: none; }
+.work-card-top { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.work-glyph {
+  width: 38px; height: 38px; flex: 0 0 38px; border-radius: 11px;
+  display: grid; place-items: center; font-size: 17px;
+  background: var(--lavender); color: var(--lavender-ink);
+}
+.work-card.is-product .work-glyph { background: #CFE3D7; color: #2F6B4C; }
+.work-card.is-automation .work-glyph { background: var(--blue); color: var(--blue-ink); }
+.work-card.is-report .work-glyph { background: #EFE2BE; color: #6E5A1E; }
+.work-kind {
+  font-family: var(--mono); font-size: 10.5px; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--ink-faint);
+}
+.work-card h3 { font-size: 19px; line-height: 1.2; margin-bottom: 8px; color: var(--primary); }
+.work-card p { font-size: 14px; line-height: 1.6; flex: 1; }
+.work-meta {
+  margin-top: 16px; padding-top: 13px; border-top: 1px solid var(--line);
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+}
+.work-stat { font-family: var(--mono); font-size: 12px; color: var(--primary); font-weight: 600; }
+.work-go { font-size: 13px; font-weight: 600; color: var(--link-blue); white-space: nowrap; }
+.work-card .live-dot {
+  display: inline-block; width: 7px; height: 7px; border-radius: 50%;
+  background: #3F7F5B; margin-right: 6px; vertical-align: middle;
+}
+/* Cards with no detail page of their own are still real work — they just
+   don't get a click target. Making that visually explicit stops the grid
+   reading as "half these are broken links". */
+.work-card.no-page { cursor: default; }
+.work-card.no-page .work-go { color: var(--ink-faint); font-weight: 500; }
+
+/* ---------- Stack chips ---------- */
+.chips { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 14px; }
+.chip {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .03em;
+  padding: 4px 10px; border-radius: 999px;
+  background: rgba(110,99,46,.09); color: var(--primary);
+}
+
+/* ---------- Experience timeline ---------- */
+.timeline { position: relative; margin-top: 34px; padding-left: 30px; }
+.timeline::before {
+  content: ""; position: absolute; left: 7px; top: 6px; bottom: 6px; width: 2px;
+  background: linear-gradient(var(--primary), var(--lavender-dark), var(--blue));
+  border-radius: 2px;
+}
+.tl-item { position: relative; padding-bottom: 34px; }
+.tl-item:last-child { padding-bottom: 0; }
+.tl-item::before {
+  content: ""; position: absolute; left: -30px; top: 5px;
+  width: 16px; height: 16px; border-radius: 50%;
+  background: var(--paper); border: 3px solid var(--primary);
+}
+.tl-item.is-current::before { background: var(--primary); box-shadow: 0 0 0 4px rgba(110,99,46,.18); }
+.tl-when {
+  font-family: var(--mono); font-size: 12px; letter-spacing: .05em;
+  color: var(--ink-faint); text-transform: uppercase;
+}
+.tl-role { font-size: 20px; margin: 4px 0 2px; color: var(--primary); }
+.tl-org { font-weight: 600; font-size: 14.5px; color: var(--ink); margin-bottom: 8px; }
+.tl-org .tl-sep { color: var(--ink-faint); font-weight: 400; }
+.tl-item ul { margin: 10px 0 0 0; padding: 0; list-style: none; }
+.tl-item li {
+  position: relative; padding-left: 17px; font-size: 14.5px;
+  color: var(--ink-soft); margin-bottom: 6px; line-height: 1.6;
+}
+.tl-item li::before {
+  content: ""; position: absolute; left: 2px; top: 9px;
+  width: 5px; height: 5px; border-radius: 50%; background: var(--lavender-dark);
+}
+
+/* ---------- Document previews ---------- */
+.doc-row {
+  display: grid; gap: 22px; margin-top: 26px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+.doc-card {
+  background: var(--paper-soft); border: 1px solid var(--surface-border);
+  border-radius: 14px; overflow: hidden; display: flex; flex-direction: column;
+  transition: transform .22s ease, box-shadow .22s ease;
+}
+.doc-card:hover { transform: translateY(-3px); box-shadow: 0 16px 36px -18px rgba(0,0,0,.32); }
+.doc-shot {
+  position: relative; display: block; border: none; padding: 0; cursor: zoom-in;
+  background: #DAD4BE; line-height: 0; width: 100%;
+}
+.doc-shot img { width: 100%; height: auto; display: block; }
+.doc-shot::after {
+  content: "⤢"; position: absolute; right: 10px; bottom: 10px;
+  width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center;
+  background: rgba(46,46,46,.72); color: #fff; font-size: 15px;
+  opacity: 0; transition: opacity .2s ease;
+}
+.doc-shot:hover::after, .doc-shot:focus-visible::after { opacity: 1; }
+.doc-body { padding: 16px 18px 18px; }
+.doc-body h4 { font-family: var(--heading); font-weight: 800; font-size: 16px; color: var(--primary); margin-bottom: 6px; }
+.doc-body p { font-size: 13.5px; line-height: 1.6; }
+.doc-links { margin-top: 12px; display: flex; gap: 14px; flex-wrap: wrap; }
+.doc-links a { font-size: 13px; font-weight: 600; }
+.doc-note {
+  font-family: var(--mono); font-size: 11.5px; color: var(--ink-faint);
+  margin-top: 18px; padding: 10px 14px; border-left: 3px solid var(--lavender-dark);
+  background: rgba(219,209,237,.22);
+}
+
+/* ---------- Case-study anatomy blocks ---------- */
+.anatomy { display: grid; gap: 18px; margin-top: 26px; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
+.anat-card {
+  background: var(--paper-soft); border: 1px solid var(--surface-border);
+  border-radius: 14px; padding: 20px;
+}
+.anat-num {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .12em;
+  color: var(--ink-faint); text-transform: uppercase; display: block; margin-bottom: 8px;
+}
+.anat-card h4 { font-family: var(--heading); font-weight: 800; font-size: 17px; color: var(--primary); margin-bottom: 8px; }
+.anat-card p { font-size: 14px; line-height: 1.62; }
+
+/* ---------- The pipeline diagram ---------- */
+.pipeline {
+  display: flex; align-items: stretch; gap: 0; flex-wrap: wrap;
+  margin-top: 26px; background: var(--paper-soft);
+  border: 1px solid var(--surface-border); border-radius: 14px; padding: 22px 18px;
+}
+.pipe-step { flex: 1 1 150px; min-width: 140px; text-align: center; padding: 4px 10px; }
+.pipe-icon {
+  width: 44px; height: 44px; margin: 0 auto 10px; border-radius: 13px;
+  display: grid; place-items: center; font-size: 19px;
+  background: var(--lavender); color: var(--lavender-ink);
+}
+.pipe-step:nth-child(4n+3) .pipe-icon { background: var(--blue); color: var(--blue-ink); }
+.pipe-step:nth-child(4n+5) .pipe-icon { background: #CFE3D7; color: #2F6B4C; }
+.pipe-step b { display: block; font-family: var(--heading); font-size: 14.5px; color: var(--primary); margin-bottom: 5px; }
+.pipe-step span { font-size: 12.5px; color: var(--ink-soft); line-height: 1.5; display: block; }
+.pipe-arrow {
+  flex: 0 0 26px; display: grid; place-items: center;
+  color: var(--surface-border); font-size: 19px;
+}
+@media (max-width: 700px) {
+  .pipe-arrow { flex-basis: 100%; height: 22px; transform: rotate(90deg); }
+}
+
+/* ---------- Numbered build steps ---------- */
+.steps { counter-reset: s; margin-top: 24px; }
+.step {
+  position: relative; padding: 0 0 26px 54px; counter-increment: s;
+}
+.step::before {
+  content: counter(s, decimal-leading-zero);
+  position: absolute; left: 0; top: -2px;
+  font-family: var(--mono); font-size: 13px; font-weight: 600; color: #fff;
+  width: 34px; height: 34px; border-radius: 10px; background: var(--primary);
+  display: grid; place-items: center;
+}
+.step:not(:last-child)::after {
+  content: ""; position: absolute; left: 16px; top: 38px; bottom: 6px;
+  width: 2px; background: var(--line);
+}
+.step h4 { font-family: var(--heading); font-weight: 800; font-size: 17px; color: var(--primary); margin-bottom: 6px; }
+.step p { font-size: 14.5px; line-height: 1.65; }
+
+/* ---------- Data in / data out table ---------- */
+.io-table { width: 100%; border-collapse: collapse; margin-top: 22px; font-size: 14px; }
+.io-table th, .io-table td { text-align: left; padding: 11px 13px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.io-table thead th {
+  font-family: var(--mono); font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--primary); background: rgba(110,99,46,.07);
+}
+.io-table td:first-child { font-weight: 600; color: var(--ink); width: 30%; }
+.io-table td { color: var(--ink-soft); }
+.io-wrap { overflow-x: auto; }
+
+/* ---------- Result band ----------
+   HARD-WON: style.css declares `.stats-grid { opacity: 0 }` and only turns it
+   back on via `.slide.current .stats-grid` — it is a DECK component, invisible
+   unless it sits inside the current homepage slide. Reusing it on an ordinary
+   document page rendered a completely empty box on all eleven project pages.
+   The opacity reset below is load-bearing, not cosmetic. Do not remove it, and
+   before reusing any other class from style.css on a `body.doc` page, check
+   whether it is gated behind `.slide.current`. */
+.result-band {
+  margin-top: 30px; padding: 26px 24px; border-radius: 16px;
+  background: linear-gradient(135deg, rgba(110,99,46,.10), rgba(171,190,237,.22));
+  border: 1px solid var(--surface-border);
+}
+body.doc .result-band .stats-grid {
+  opacity: 1;                       /* undoes the deck gate — see note above */
+  max-width: none;                  /* deck version caps at 640px; the band is wider */
+  border-top: none; padding-top: 0; margin-top: 0;
+  gap: 22px;
+}
+body.doc .result-band .stat b { font-size: clamp(24px, 2.8vw, 32px); }
+body.doc .result-band .stat span { font-size: 12.5px; line-height: 1.45; display: block; }
+@media (max-width: 700px) {
+  body.doc .result-band .stats-grid { grid-template-columns: 1fr 1fr; }
+}
+
+/* ---------- Prev / next ---------- */
+.pager { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-top: 44px; }
+.pager a { font-size: 14px; font-weight: 600; text-decoration: none; }
+.pager a:hover { text-decoration: underline; }
+
+/* ---------- Social row ---------- */
+.social-row { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 20px; }
+.social-btn {
+  width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--paper-soft); border: 1px solid var(--surface-border);
+  color: var(--primary); text-decoration: none;
+  transition: transform .2s ease, background .2s ease, color .2s ease, border-color .2s ease;
+}
+.social-btn:hover { transform: translateY(-3px); background: var(--primary); color: #fff; border-color: var(--primary); }
+.social-btn svg { width: 18px; height: 18px; fill: currentColor; display: block; }
+/* Placeholder profiles: real markup, real icon, href swapped in later.
+   Kept visibly muted so an unfinished link never looks like a live one. */
+.social-btn.is-placeholder { opacity: .45; cursor: not-allowed; }
+.social-btn.is-placeholder:hover { transform: none; background: var(--paper-soft); color: var(--primary); border-color: var(--surface-border); }
+.social-hint { font-family: var(--mono); font-size: 11px; color: var(--ink-faint); margin-top: 10px; }
+
+/* ---------- Lightbox, resized for documents ----------
+   style.css sizes the panel at min(720px, 92vw), which suits the portrait
+   video clips on the creatives page. A landscape report page at 720px is
+   unreadable — the whole point of opening it is to read the small print —
+   so document pages get a near-fullscreen panel that fits either
+   orientation without cropping. Scoped to body.doc so the creatives
+   lightbox keeps its original sizing. */
+body.doc .lightbox-panel { width: auto; max-width: 96vw; max-height: 92vh; }
+body.doc .lightbox-panel img {
+  width: auto; height: auto;
+  max-width: 96vw; max-height: 92vh;
+  border-radius: 10px; box-shadow: 0 30px 70px -20px rgba(0,0,0,.7);
+}
+body.doc .lightbox-close { top: -6px; right: -6px; }
+
+/* =====================================================================
+   THE LIVING BACKGROUND — spatial parallax + leaves on the wind.
+   Driven by js/scene.js. Three stacked fixed layers, all behind content:
+
+     #scene-bg        z-index -2, painted by main.js, cross-fades per slide
+     #scene-parallax  z-index -2 but LATER in the DOM, so it paints on top
+                      of scene-bg without needing a z-index fight
+     #leaf-canvas     z-index -1, above both, still below all content
+                      (content is z-index auto, i.e. above every negative)
+
+   Nothing here uses a filter or opacity on a parent of the canvas: that
+   would create a new stacking/compositing context and force the leaves to
+   re-rasterise every frame instead of staying on the GPU.
+   ===================================================================== */
+
+/* LOAD-BEARING, and it fixed a long-standing invisible bug.
+   All three scene layers sit at a negative z-index. In the root stacking
+   context, negative-z children paint BEFORE the backgrounds of in-flow block
+   boxes — so `body { background: var(--paper) }` in style.css was painting
+   straight over them. Two consequences, both confirmed by screenshot:
+     · the leaves were drawn every frame and never once visible;
+     · #scene-bg's per-slide colour cross-fade — the whole "background changes
+       as you scroll" effect — had never actually shown either, because it is
+       the same ivory as body, so nobody could tell it was being covered.
+   The base colour therefore lives on `html` (the root background paints first,
+   below everything) and `body` goes transparent. Do not put a background back
+   on body. */
+html { background: var(--paper); }
+body { background: transparent; }
+
+#scene-parallax {
+  position: fixed; inset: 0; z-index: -2;
+  pointer-events: none; overflow: hidden;
+}
+.scene-blob {
+  position: absolute; border-radius: 50%;
+  /* Only `transform` is animated, by scene.js. will-change promotes each blob
+     to its own compositor layer so the parallax is a GPU translate rather
+     than a repaint of a very large radial gradient every frame. */
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+}
+.scene-blob.b1 {
+  width: 62vw; height: 62vw; left: -14vw; top: -18vw;
+  background: radial-gradient(circle at 42% 40%, rgba(219,209,237,.62), rgba(219,209,237,0) 68%);
+}
+.scene-blob.b2 {
+  width: 54vw; height: 54vw; right: -12vw; top: 4vh;
+  background: radial-gradient(circle at 55% 45%, rgba(171,190,237,.52), rgba(171,190,237,0) 70%);
+}
+.scene-blob.b3 {
+  width: 48vw; height: 48vw; left: 22vw; bottom: -20vw;
+  background: radial-gradient(circle at 50% 50%, rgba(202,149,43,.26), rgba(202,149,43,0) 72%);
+}
+
+#leaf-canvas {
+  position: fixed; inset: 0; z-index: -1;
+  pointer-events: none;   /* load-bearing: the canvas must never eat a click */
+  display: block;
+}
+
+/* The leaves are decoration. On a phone they cost fill rate and the parallax
+   has no pointer to follow, so the whole scene steps back rather than
+   competing with the content. */
+@media (max-width: 700px) {
+  .scene-blob.b3 { display: none; }
+  #leaf-canvas { opacity: .55; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #leaf-canvas { opacity: .35; }
+}
+
+/* =====================================================================
+   DECK MODE — the landing page runs the slide engine.
+
+   Everything below is scoped to `.slide`, so the identical components keep
+   their roomy document styling on work.html (a filterable 20-card grid can't
+   be a deck) and get compacted here, where a slide is `overflow: hidden` and
+   strictly ONE screenful. Anything taller than the panel is CLIPPED AND
+   UNREACHABLE — worse than ugly, it's invisible content. Every rule here
+   exists to keep that from happening; if you add a component to a slide,
+   measure it at 375x667 before shipping.
+   ===================================================================== */
+
+.slide .wrap { width: 100%; }
+.slide .sec-label { margin-bottom: 9px; }
+.slide .sec-title { font-size: clamp(23px, 3.1vw, 36px); margin-bottom: 12px; }
+.slide .page-head-lede { font-size: 16px; margin-top: 10px; max-width: 58ch; }
+.slide .chips { margin-top: 16px; }
+
+/* --- slide 3: the data table --- */
+.slide .io-wrap { margin-top: 18px; }
+.slide .io-table { font-size: 13.5px; margin-top: 0; }
+.slide .io-table th, .slide .io-table td { padding: 8px 12px; }
+
+/* --- slide 4: the pipeline diagram --- */
+.slide .pipeline { margin-top: 20px; padding: 18px 14px; }
+.slide .pipe-icon { width: 40px; height: 40px; margin-bottom: 8px; font-size: 17px; }
+.slide .pipe-step span { font-size: 12px; }
+
+/* --- engineering slides: two decisions side by side --- */
+.steps-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 22px; }
+.slide .steps-pair .step { padding: 0 0 0 46px; }
+.slide .steps-pair .step::after { display: none; }   /* no connector between columns */
+.slide .steps-pair .step h4 { font-size: 16px; }
+.slide .steps-pair .step p { font-size: 14px; line-height: 1.58; }
+
+/* --- deliverable slide --- */
+.slide .doc-row { margin-top: 18px; gap: 16px; }
+.slide .doc-body { padding: 12px 14px 14px; }
+.slide .doc-body h4 { font-size: 14px; }
+.slide .doc-body p { font-size: 12.5px; }
+
+/* --- outcome slide --- */
+.slide .result-band { margin-top: 20px; padding: 22px 22px; }
+.slide .doc-note { margin-top: 16px; font-size: 12px; }
+
+/* The deck's own rule `.slide.current .stats-grid { opacity: 1 }` now applies
+   here, which is exactly what we want — the stats arrive with their slide.
+   The width cap still has to go, though: the deck version is sized for the
+   hero's narrow column, not a full-width results band. */
+.slide .result-band .stats-grid { max-width: none; border-top: none; padding-top: 0; margin-top: 0; gap: 20px; }
+.slide .result-band .stat b { font-size: clamp(22px, 2.6vw, 30px); }
+.slide .result-band .stat span { font-size: 12px; line-height: 1.4; display: block; }
+
+/* --- the hero's two-way choice ---
+   Keep scrolling through the deck, OR jump straight to the normal scrolling
+   site. style.css styles `.hero-choice a` as a plain text link, so a real
+   button in there needs its colour and underline put back. */
+.hero-choice .choice-or { color: var(--ink-faint); font-size: 13px; }
+.hero-choice a.btn,
+.hero-choice a.btn:hover { color: #fff; text-decoration: none; }
+.hero-choice a.btn { padding: 10px 20px; font-size: 14.5px; }
+@media (max-height: 700px) {
+  .hero-choice { margin-top: 14px; gap: 10px; }
+  .hero-choice a.btn { padding: 8px 16px; font-size: 13.5px; }
+}
+
+/* --- the closing section below the deck (ordinary scroll again) --- */
+.deck-outro { padding: 90px 0 20px; }
+
+/* --- compact project rows, for the landing deck's work slide ---
+   Three full .work-card blocks stacked 569px past the panel on a phone.
+   A row is ~68px, so three fit at every size with room to spare. */
+.work-mini-list { display: flex; flex-direction: column; gap: 12px; margin-top: 22px; }
+.work-mini {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 18px; border-radius: 14px; text-decoration: none;
+  background: var(--paper-soft); border: 1px solid var(--surface-border);
+  transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+}
+.work-mini:hover {
+  transform: translateX(4px); border-color: var(--primary);
+  box-shadow: 0 12px 28px -16px rgba(0,0,0,.34);
+}
+.work-mini-glyph {
+  flex: 0 0 34px; width: 34px; height: 34px; border-radius: 10px;
+  display: grid; place-items: center; font-size: 15px;
+  background: var(--lavender); color: var(--lavender-ink);
+}
+.work-mini-body { flex: 1; min-width: 0; }
+.work-mini-body b {
+  display: block; font-family: var(--heading); font-weight: 800;
+  font-size: 16px; color: var(--primary); line-height: 1.2;
+}
+.work-mini-body span {
+  display: block; font-size: 13px; color: var(--ink-soft); margin-top: 2px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.work-mini-stat {
+  font-family: var(--mono); font-size: 11.5px; color: var(--primary);
+  font-weight: 600; white-space: nowrap; text-align: right;
+}
+@media (max-width: 560px) { .work-mini-stat { display: none; } }
+
+/* --- one role per experience slide --- */
+.role-points { list-style: none; margin: 18px 0 0; padding: 0; }
+.role-points li {
+  position: relative; padding-left: 20px; margin-bottom: 10px;
+  font-size: 15px; line-height: 1.62; color: var(--ink-soft); max-width: 62ch;
+}
+.role-points li::before {
+  content: ""; position: absolute; left: 3px; top: 10px;
+  width: 6px; height: 6px; border-radius: 50%; background: var(--primary);
+}
+
+/* ---------- Deck compaction: short viewports and phones ----------
+   Two separate triggers on purpose. A phone is narrow AND short; a laptop in
+   a small window is wide but short. Both clip a slide, so both need the copy
+   to shrink. */
+@media (max-width: 860px) {
+  .steps-pair { grid-template-columns: 1fr; gap: 18px; }
+  .slide .steps-pair .step { padding-left: 42px; }
+  .slide .io-table { font-size: 12.5px; }
+  .slide .io-table th, .slide .io-table td { padding: 7px 9px; }
+}
+@media (max-height: 780px) {
+  .slide { padding: 84px 24px 44px; }
+  .slide .sec-title { font-size: clamp(21px, 2.6vw, 30px); margin-bottom: 9px; }
+  .slide .page-head-lede { font-size: 14.5px; margin-top: 8px; }
+  .slide .steps-pair { margin-top: 16px; gap: 20px; }
+  .slide .steps-pair .step h4 { font-size: 15px; margin-bottom: 4px; }
+  .slide .steps-pair .step p { font-size: 13px; line-height: 1.5; }
+  .slide .pipeline { margin-top: 14px; padding: 14px 12px; }
+  .slide .pipe-icon { width: 34px; height: 34px; margin-bottom: 6px; font-size: 15px; }
+  .slide .pipe-step b { font-size: 13.5px; }
+  .slide .pipe-step span { font-size: 11.5px; }
+  .slide .io-wrap { margin-top: 14px; }
+  .slide .io-table { font-size: 12.5px; }
+  .slide .io-table th, .slide .io-table td { padding: 6px 9px; }
+  .slide .result-band { margin-top: 14px; padding: 16px 18px; }
+  .slide .doc-note { margin-top: 12px; font-size: 11.5px; }
+  .slide .chips { margin-top: 12px; }
+  .slide .chip { font-size: 10.5px; padding: 3px 9px; }
+}
+/* A 375x667 phone is the harshest case: it trips both the narrow and the short
+   query above and STILL clipped up to 35px on the denser slides. These numbers
+   were measured, not guessed — see the deck-overflow probe in WEBSITE-RULES.md.
+   Clipped content on a slide is unreachable, so this block is a correctness
+   fix, not polish. */
+/* Landing-deck components at short viewports. style.css compacts the ones it
+   owns (.stat, .hero-*) for the old 4-slide deck; these are the ones the
+   longer landing deck adds. Numbers came from the overflow probe. */
+@media (max-height: 780px) {
+  .slide .role-points { margin-top: 12px; }
+  .slide .role-points li { font-size: 13.5px; line-height: 1.5; margin-bottom: 7px; }
+  .slide .work-mini-list { gap: 9px; margin-top: 16px; }
+  .slide .work-mini { padding: 10px 14px; gap: 11px; }
+  .slide .work-mini-glyph { flex-basis: 28px; width: 28px; height: 28px; font-size: 13px; }
+  .slide .work-mini-body b { font-size: 14.5px; }
+  .slide .work-mini-body span { font-size: 12px; }
+  .slide .results-quote { margin-top: 16px !important; }
+  .slide .results-quote p { font-size: 14px; line-height: 1.55; }
+  .slide .client-tags { gap: 7px; margin-bottom: 16px; }
+  .slide .client-tags span { font-size: 12px; padding: 6px 12px; }
+  .slide .pillars-row { margin-top: 16px !important; }
+  .slide .contact-box { padding: 20px; }
+}
+@media (max-height: 700px) {
+  /* On a short screen the hero stacks to one column and the photo card becomes
+     a tall block. It pushed the stats 27px past the panel at 360x600, and 11px
+     over at 375x667 once the hero gained its second button. The photo appears
+     again on the About slide, so dropping it here loses nothing and keeps every
+     stat reachable. */
+  .slide.hero .hero-card-wrap { display: none; }
+  .slide .role-points li { font-size: 12.5px; line-height: 1.45; margin-bottom: 6px; }
+  .slide .work-mini-list { gap: 7px; margin-top: 12px; }
+  .slide .work-mini { padding: 8px 12px; border-radius: 11px; }
+  .slide .work-mini-body b { font-size: 13.5px; }
+  .slide .work-mini-body span { font-size: 11.5px; }
+  .slide .results-quote p { font-size: 13px; line-height: 1.48; }
+  .slide .client-tags span { font-size: 11px; padding: 5px 10px; }
+  .slide .hero-sub { font-size: 14px; margin: 12px 0 16px; }
+  .slide .contact-box { padding: 16px; }
+  .slide .contact-box h3 { font-size: 18px; }
+  .slide .contact-box p { font-size: 13px; }
+  .slide { padding: 72px 20px 34px; }
+  .slide .sec-label { font-size: 11.5px; margin-bottom: 6px; }
+  .slide .sec-title { font-size: clamp(19px, 2.4vw, 27px); margin-bottom: 8px; }
+  .slide .page-head-lede { font-size: 13.5px; margin-top: 7px; line-height: 1.55; }
+  .slide .steps-pair { margin-top: 13px; gap: 15px; }
+  .slide .steps-pair .step { padding-left: 38px; }
+  .slide .steps-pair .step::before { width: 28px; height: 28px; font-size: 11.5px; border-radius: 8px; }
+  .slide .steps-pair .step h4 { font-size: 14px; margin-bottom: 3px; }
+  .slide .steps-pair .step p { font-size: 12.5px; line-height: 1.46; }
+  .slide .io-wrap { margin-top: 11px; }
+  .slide .io-table { font-size: 11.5px; }
+  .slide .io-table th, .slide .io-table td { padding: 5px 7px; }
+  .slide .pipeline { margin-top: 11px; padding: 11px 10px; }
+  .slide .pipe-icon { width: 30px; height: 30px; margin-bottom: 4px; font-size: 14px; }
+  .slide .pipe-step { padding: 3px 7px; }
+  .slide .pipe-step b { font-size: 12.5px; margin-bottom: 3px; }
+  .slide .pipe-step span { font-size: 11px; line-height: 1.4; }
+  .slide .pipe-arrow { font-size: 15px; }
+  .slide .anatomy { gap: 10px; margin-top: 12px; }
+  .slide .anat-card { padding: 12px; }
+  .slide .anat-card h4 { font-size: 14px; margin-bottom: 4px; }
+  .slide .anat-card p { font-size: 12px; line-height: 1.45; }
+  .slide .anat-num { margin-bottom: 4px; }
+  .slide .result-band { margin-top: 11px; padding: 13px 15px; }
+  .slide .chips { margin-top: 10px; }
+  .slide .chip { font-size: 10px; padding: 3px 8px; }
+}
+/* 360x600 — small older Android, the worst realistic case. The two longest
+   process rules still clipped 10px here, so this shaves a little more. */
+@media (max-height: 620px) {
+  .slide .hero-sub { font-size: 13px; margin: 10px 0 12px; }
+  .slide { padding: 66px 18px 28px; }
+  .slide .sec-label { font-size: 11px; margin-bottom: 5px; }
+  .slide .sec-title { font-size: clamp(18px, 2.2vw, 24px); margin-bottom: 7px; }
+  .slide .steps-pair { margin-top: 10px; gap: 12px; }
+  .slide .steps-pair .step h4 { font-size: 13.5px; }
+  .slide .steps-pair .step p { font-size: 11.5px; line-height: 1.42; }
+  .slide .page-head-lede { font-size: 13px; line-height: 1.5; }
+  .slide .doc-note { display: none; }   /* last thing to go, never the substance */
+}
+
+/* ---------- Footer ---------- */
+.doc-footer { padding: 40px 0 48px; text-align: center; border-top: 1px solid var(--line); margin-top: 10px; }
+.doc-footer p { font-size: 13.5px; color: var(--ink-faint); }
+
+@media (max-width: 700px) {
+  .page-head { padding: 104px 0 34px; }
+  section.doc-sec { padding: 40px 0; }
+  .work-grid { grid-template-columns: 1fr; }
+  .timeline { padding-left: 24px; }
+  .tl-item::before { left: -24px; width: 13px; height: 13px; }
+}
