@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 800">
-  <rect width="600" height="800" fill="#FDFBF7"/>
-  <circle cx="470" cy="120" r="150" fill="#FF6B4A" opacity=".14"/>
-  <circle cx="90" cy="700" r="120" fill="#4F46E5" opacity=".10"/>
-  <circle cx="300" cy="310" r="110" fill="#E9E5DC"/>
-  <path d="M120 800 C120 620 220 560 300 560 C380 560 480 620 480 800 Z" fill="#E9E5DC"/>
-  <rect x="160" y="690" width="280" height="46" rx="23" fill="#FFFFFF" stroke="#4F46E5" stroke-width="2"/>
-  <text x="300" y="720" text-anchor="middle" font-family="'Poppins',sans-serif" font-weight="600" font-size="19" fill="#4F46E5">Photo coming soon</text>
-</svg>
