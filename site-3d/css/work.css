@@ -239,13 +239,30 @@ a.work-card:hover { transform: translateY(-4px); border-color: var(--primary); b
 .io-table td { color: var(--ink-soft); }
 .io-wrap { overflow-x: auto; }
 
-/* ---------- Result band ---------- */
+/* ---------- Result band ----------
+   HARD-WON: style.css declares `.stats-grid { opacity: 0 }` and only turns it
+   back on via `.slide.current .stats-grid` — it is a DECK component, invisible
+   unless it sits inside the current homepage slide. Reusing it on an ordinary
+   document page rendered a completely empty box on all eleven project pages.
+   The opacity reset below is load-bearing, not cosmetic. Do not remove it, and
+   before reusing any other class from style.css on a `body.doc` page, check
+   whether it is gated behind `.slide.current`. */
 .result-band {
   margin-top: 30px; padding: 26px 24px; border-radius: 16px;
   background: linear-gradient(135deg, rgba(110,99,46,.10), rgba(171,190,237,.22));
   border: 1px solid var(--surface-border);
 }
-.result-band .stats-grid { border-top: none; padding-top: 0; margin-top: 0; }
+body.doc .result-band .stats-grid {
+  opacity: 1;                       /* undoes the deck gate — see note above */
+  max-width: none;                  /* deck version caps at 640px; the band is wider */
+  border-top: none; padding-top: 0; margin-top: 0;
+  gap: 22px;
+}
+body.doc .result-band .stat b { font-size: clamp(24px, 2.8vw, 32px); }
+body.doc .result-band .stat span { font-size: 12.5px; line-height: 1.45; display: block; }
+@media (max-width: 700px) {
+  body.doc .result-band .stats-grid { grid-template-columns: 1fr 1fr; }
+}
 
 /* ---------- Prev / next ---------- */
 .pager { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-top: 44px; }

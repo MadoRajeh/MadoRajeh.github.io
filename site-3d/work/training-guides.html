@@ -9,7 +9,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../css/style.css?v=55">
-<link rel="stylesheet" href="../css/work.css?v=4">
+<link rel="stylesheet" href="../css/work.css?v=6">
+<noscript><style>.reveal{opacity:1 !important;transform:none !important;}</style></noscript>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='34' cy='52' r='22' fill='%236E632E'/><circle cx='68' cy='36' r='14' fill='%23DBD1ED'/><circle cx='74' cy='70' r='10' fill='%23EDE8D0'/></svg>">
 </head>
 <body class="doc">
@@ -36,23 +37,23 @@
 
 <section class="doc-sec">
   <div class="wrap">
-    <span class="sec-label">The problem</span>
-    <h2 class="sec-title">The reports were wrong before they were built</h2>
-    <p class="page-head-lede">Statuses were left blank. The source was typed into the status field. Leads were marked enrolled before paperwork was signed. Every one of those is a data-entry habit, not a software fault, and no amount of engineering downstream can recover a fact that was never recorded.</p>
+    <span class="sec-label reveal">The problem</span>
+    <h2 class="sec-title reveal">The reports were wrong before they were built</h2>
+    <p class="page-head-lede reveal">Statuses were left blank. The source was typed into the status field. Leads were marked enrolled before paperwork was signed. Every one of those is a data-entry habit, not a software fault, and no amount of engineering downstream can recover a fact that was never recorded.</p>
   </div>
 </section>
 
 <section class="doc-sec alt">
   <div class="wrap">
-    <span class="sec-label">What goes in, what comes out</span>
-    <h2 class="sec-title">The data, end to end</h2>
-    <div class="io-wrap">
+    <span class="sec-label reveal">What goes in, what comes out</span>
+    <h2 class="sec-title reveal">The data, end to end</h2>
+    <div class="io-wrap reveal">
       <table class="io-table">
         <thead><tr><th>Source</th><th>What comes in</th><th>What it becomes</th></tr></thead>
         <tbody><tr><td>Fifteen front desks</td><td>Different habits, no shared standard</td><td>One standard</td></tr><tr><td>Five statuses</td><td>Previously interpreted differently per site</td><td>Defined, with examples</td></tr><tr><td>The actual form</td><td>Annotated, field by field</td><td>No ambiguity about where to type</td></tr><tr><td>The three common mistakes</td><td>Named, with the consequence</td><td>Fewer of them</td></tr></tbody>
       </table>
     </div>
-    <div class="pipeline">
+    <div class="pipeline reveal">
       <div class="pipe-step"><div class="pipe-icon" aria-hidden="true">▣</div><b>Find the real errors</b><span>From the data, not from assumptions</span></div>
       <div class="pipe-arrow" aria-hidden="true">&rarr;</div>
       <div class="pipe-step"><div class="pipe-icon" aria-hidden="true">◈</div><b>Write the standard</b><span>Five statuses, plainly defined</span></div>
@@ -66,37 +67,37 @@
 
 <section class="doc-sec">
   <div class="wrap">
-    <span class="sec-label">The engineering</span>
-    <h2 class="sec-title">The decisions that actually mattered</h2>
-    <div class="steps"><div class="step"><h4>Diagnose from the data, not from a theory</h4><p>The three mistakes in the guide are the three that actually appeared in the records, found by looking at the rows. Guessing at what people get wrong produces a guide that addresses problems nobody has.</p></div><div class="step"><h4>Say what breaks, not just what to do</h4><p>"Don't leave the status blank" is an instruction. "A blank lead is invisible to every report — it isn't counted as lost, it isn't counted at all" is a reason. People follow reasons and forget instructions.</p></div><div class="step"><h4>Show the screen, don't describe it</h4><p>The guide contains the form with the one field the reports read highlighted. A paragraph describing where to click is a paragraph that gets skipped.</p></div><div class="step"><h4>Four minutes, or it doesn't get read</h4><p>Written to be read once, standing up, by someone with a phone ringing. Length was a design constraint, not an afterthought.</p></div></div>
+    <span class="sec-label reveal">The engineering</span>
+    <h2 class="sec-title reveal">The decisions that actually mattered</h2>
+    <div class="steps"><div class="step reveal"><h4>Diagnose from the data, not from a theory</h4><p>The three mistakes in the guide are the three that actually appeared in the records, found by looking at the rows. Guessing at what people get wrong produces a guide that addresses problems nobody has.</p></div><div class="step reveal"><h4>Say what breaks, not just what to do</h4><p>"Don't leave the status blank" is an instruction. "A blank lead is invisible to every report — it isn't counted as lost, it isn't counted at all" is a reason. People follow reasons and forget instructions.</p></div><div class="step reveal"><h4>Show the screen, don't describe it</h4><p>The guide contains the form with the one field the reports read highlighted. A paragraph describing where to click is a paragraph that gets skipped.</p></div><div class="step reveal"><h4>Four minutes, or it doesn't get read</h4><p>Written to be read once, standing up, by someone with a phone ringing. Length was a design constraint, not an afterthought.</p></div></div>
   </div>
 </section>
 
 <section class="doc-sec alt">
   <div class="wrap">
-    <span class="sec-label">The deliverable</span>
-    <h2 class="sec-title">CRM lead status guide</h2>
-    <p class="page-head-lede">The front-desk guide: what each status means, the five steps to set one, an annotated form, and the three mistakes that break every report downstream.</p>
+    <span class="sec-label reveal">The deliverable</span>
+    <h2 class="sec-title reveal">CRM lead status guide</h2>
+    <p class="page-head-lede reveal">The front-desk guide: what each status means, the five steps to set one, an annotated form, and the three mistakes that break every report downstream.</p>
     <div class="doc-row">
-      <div class="doc-card"><button type="button" class="doc-shot" data-img="../img/docs/training-p1.png" data-caption="CRM lead status guide &middot; page 1 of 1"><img src="../img/docs/training-p1.png" alt="CRM lead status guide, page 1" loading="lazy"></button></div>
+      <div class="doc-card reveal"><button type="button" class="doc-shot" data-img="../img/docs/training-p1.png" data-caption="CRM lead status guide &middot; page 1 of 1"><img src="../img/docs/training-p1.png" alt="CRM lead status guide, page 1" loading="lazy"></button></div>
     </div>
     <p style="margin-top:20px;">
       <a class="btn btn-ghost" href="../docs/sample-crm-training-guide.pdf" target="_blank" rel="noopener">Open the full PDF &rarr;</a>
     </p>
-    <p class="doc-note">This is a rebuilt sample, not a client file. Same structure and same
+    <p class="doc-note reveal">This is a rebuilt sample, not a client file. Same structure and same
       layout as the real thing; every name and number in it is invented.</p>
   </div>
 </section>
 
 <section class="doc-sec">
   <div class="wrap">
-    <span class="sec-label">Where it landed</span>
-    <h2 class="sec-title">The outcome</h2>
-    <div class="result-band">
+    <span class="sec-label reveal">Where it landed</span>
+    <h2 class="sec-title reveal">The outcome</h2>
+    <div class="result-band reveal">
       <div class="stats-grid"><div class="stat"><b>15</b><span>sites on one standard</span></div><div class="stat"><b>4 min</b><span>read time, by design</span></div><div class="stat"><b>3</b><span>root causes fixed</span></div><div class="stat"><b>v3</b><span>revised from real use</span></div></div>
     </div>
-    <p class="doc-note" style="margin-top:24px;"><strong>Being straight about it:</strong> Documentation decays. This is version three, and it will need a fourth. Writing it once and considering the problem solved is the mistake that makes people say training doesn't work.</p>
-    <div class="pager">
+    <p class="doc-note reveal" style="margin-top:24px;"><strong>Being straight about it:</strong> Documentation decays. This is version three, and it will need a fourth. Writing it once and considering the problem solved is the mistake that makes people say training doesn't work.</p>
+    <div class="pager reveal">
       <a href="../work/weekly-report.html">&larr; Automated weekly report</a>
       <a href="../work.html">All work</a>
       <a href="../work/marketing-plan.html">12-month marketing plan &rarr;</a>
@@ -130,6 +131,7 @@
   </div>
 </div>
 
-<script src="../js/work.js?v=4"></script>
+<script src="../js/main.js?v=22"></script>
+<script src="../js/work.js?v=6"></script>
 </body>
 </html>

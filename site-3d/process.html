@@ -9,7 +9,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css?v=55">
-<link rel="stylesheet" href="css/work.css?v=4">
+<link rel="stylesheet" href="css/work.css?v=6">
+<noscript><style>.reveal{opacity:1 !important;transform:none !important;}</style></noscript>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='34' cy='52' r='22' fill='%236E632E'/><circle cx='68' cy='36' r='14' fill='%23DBD1ED'/><circle cx='74' cy='70' r='10' fill='%23EDE8D0'/></svg>">
 </head>
 <body class="doc">
@@ -44,31 +45,31 @@
 
 <section class="doc-sec">
   <div class="wrap">
-    <span class="sec-label">Eight rules</span>
-    <h2 class="sec-title">The ones I actually follow</h2>
-    <div class="steps"><div class="step"><h4>Look at the real rows before forming a theory</h4><p>The first thing I do with a data problem is print the actual records — not a summary, not a sample, the rows. Almost every wrong fix I have shipped came from starting with a plausible explanation instead of the data. A theory that survives contact with the raw rows is worth building on; one that hasn't met them yet is a guess wearing a lab coat.</p></div><div class="step"><h4>Read the documentation before probing the system</h4><p>Sweeping an API to see what answers tells you what responds. It does not tell you what exists. On one integration the vendor's own docs listed endpoints my probe never found — including the ones holding the records that were missing from every export. Twenty minutes of reading would have saved a fortnight.</p></div><div class="step"><h4>Fix the input before polishing the output</h4><p>A dashboard cannot recover a fact that was never recorded. When the reporting looks wrong, the cause is usually upstream of the reporting, and the cheapest fix in the whole chain is often a one-page guide that changes how something gets typed in.</p></div><div class="step"><h4>Build the check into the tool, not into someone's routine</h4><p>If a system needs a person to run a script, remember a step, or watch for a failure, it will eventually not get done — and the failure will be silent. Whatever needs checking gets built into the thing itself, so the tool is responsible for its own correctness.</p></div><div class="step"><h4>Never let it guess</h4><p>Where a system doesn't know something — a missing clock-out, an ambiguous status, an empty API response — it flags it rather than filling in something plausible. A confident wrong number is far more expensive than an obvious gap, because nobody goes back and checks it.</p></div><div class="step"><h4>Work on a copy, and keep the way back</h4><p>Anything that restructures live data runs against a copy first. Scripts keep numbered rollback points named for what changed next, so recovering from a bad change is a file swap rather than an evening of archaeology.</p></div><div class="step"><h4>Don't break the shape people already read</h4><p>When automating something a team has used for years, the output stays exactly as it was. Trading three hours of manual assembly for weeks of everyone relearning where their number lives is not a win, however much better the new layout is.</p></div><div class="step"><h4>Ship it, then fix it against real use</h4><p>The attendance tracker took nineteen rounds of fixes — overnight shifts, rounding, missed clock-outs, absence tagging. None of those were findable at the design stage. Real use is the only honest test, so the goal is to get there early and keep a short loop afterwards.</p></div></div>
+    <span class="sec-label reveal">Eight rules</span>
+    <h2 class="sec-title reveal">The ones I actually follow</h2>
+    <div class="steps"><div class="step reveal"><h4>Look at the real rows before forming a theory</h4><p>The first thing I do with a data problem is print the actual records — not a summary, not a sample, the rows. Almost every wrong fix I have shipped came from starting with a plausible explanation instead of the data. A theory that survives contact with the raw rows is worth building on; one that hasn't met them yet is a guess wearing a lab coat.</p></div><div class="step reveal"><h4>Read the documentation before probing the system</h4><p>Sweeping an API to see what answers tells you what responds. It does not tell you what exists. On one integration the vendor's own docs listed endpoints my probe never found — including the ones holding the records that were missing from every export. Twenty minutes of reading would have saved a fortnight.</p></div><div class="step reveal"><h4>Fix the input before polishing the output</h4><p>A dashboard cannot recover a fact that was never recorded. When the reporting looks wrong, the cause is usually upstream of the reporting, and the cheapest fix in the whole chain is often a one-page guide that changes how something gets typed in.</p></div><div class="step reveal"><h4>Build the check into the tool, not into someone's routine</h4><p>If a system needs a person to run a script, remember a step, or watch for a failure, it will eventually not get done — and the failure will be silent. Whatever needs checking gets built into the thing itself, so the tool is responsible for its own correctness.</p></div><div class="step reveal"><h4>Never let it guess</h4><p>Where a system doesn't know something — a missing clock-out, an ambiguous status, an empty API response — it flags it rather than filling in something plausible. A confident wrong number is far more expensive than an obvious gap, because nobody goes back and checks it.</p></div><div class="step reveal"><h4>Work on a copy, and keep the way back</h4><p>Anything that restructures live data runs against a copy first. Scripts keep numbered rollback points named for what changed next, so recovering from a bad change is a file swap rather than an evening of archaeology.</p></div><div class="step reveal"><h4>Don't break the shape people already read</h4><p>When automating something a team has used for years, the output stays exactly as it was. Trading three hours of manual assembly for weeks of everyone relearning where their number lives is not a win, however much better the new layout is.</p></div><div class="step reveal"><h4>Ship it, then fix it against real use</h4><p>The attendance tracker took nineteen rounds of fixes — overnight shifts, rounding, missed clock-outs, absence tagging. None of those were findable at the design stage. Real use is the only honest test, so the goal is to get there early and keep a short loop afterwards.</p></div></div>
   </div>
 </section>
 
 <section class="doc-sec alt">
   <div class="wrap">
-    <span class="sec-label">What this looks like in practice</span>
-    <h2 class="sec-title">Same shape, every project</h2>
+    <span class="sec-label reveal">What this looks like in practice</span>
+    <h2 class="sec-title reveal">Same shape, every project</h2>
     <div class="anatomy">
-      <div class="anat-card"><span class="anat-num">01</span><h4>Understand the loss</h4>
+      <div class="anat-card reveal"><span class="anat-num">01</span><h4>Understand the loss</h4>
         <p>What is actually going wrong, measured — not what everyone assumes is going wrong.
           This is where most of the value gets found, and it costs nothing but attention.</p></div>
-      <div class="anat-card"><span class="anat-num">02</span><h4>Fix the input</h4>
+      <div class="anat-card reveal"><span class="anat-num">02</span><h4>Fix the input</h4>
         <p>Clean data at the point it is created. A training guide or a validation rule beats
           any amount of cleverness applied downstream.</p></div>
-      <div class="anat-card"><span class="anat-num">03</span><h4>Automate the middle</h4>
+      <div class="anat-card reveal"><span class="anat-num">03</span><h4>Automate the middle</h4>
         <p>Whatever a person does the same way every week becomes a scheduled job that repairs
           itself, guards against bad writes, and keeps a way back.</p></div>
-      <div class="anat-card"><span class="anat-num">04</span><h4>Make the output obvious</h4>
+      <div class="anat-card reveal"><span class="anat-num">04</span><h4>Make the output obvious</h4>
         <p>One number that decides something, shown so plainly that nobody needs a walkthrough.
           Then get out of the way.</p></div>
     </div>
-    <p class="doc-note">Worth saying plainly: I am not a computer science graduate. I started in
+    <p class="doc-note reveal">Worth saying plainly: I am not a computer science graduate. I started in
       data analysis, kept getting handed the next adjacent problem, and learned to build because
       the alternative was doing the same manual job forever. Every rule on this page was paid for.</p>
   </div>
@@ -100,6 +101,7 @@
   </div>
 </div>
 
-<script src="js/work.js?v=4"></script>
+<script src="js/main.js?v=22"></script>
+<script src="js/work.js?v=6"></script>
 </body>
 </html>

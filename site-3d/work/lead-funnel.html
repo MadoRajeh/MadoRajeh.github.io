@@ -9,7 +9,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../css/style.css?v=55">
-<link rel="stylesheet" href="../css/work.css?v=4">
+<link rel="stylesheet" href="../css/work.css?v=6">
+<noscript><style>.reveal{opacity:1 !important;transform:none !important;}</style></noscript>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='34' cy='52' r='22' fill='%236E632E'/><circle cx='68' cy='36' r='14' fill='%23DBD1ED'/><circle cx='74' cy='70' r='10' fill='%23EDE8D0'/></svg>">
 </head>
 <body class="doc">
@@ -36,23 +37,23 @@
 
 <section class="doc-sec">
   <div class="wrap">
-    <span class="sec-label">The problem</span>
-    <h2 class="sec-title">Counts don't tell you where things fall apart</h2>
-    <p class="page-head-lede">A table of totals says how many leads arrived and how many enrolled. It cannot show you that a particular source produces plenty of leads that never get contacted, or that one site's pile of untouched names has been growing quietly for a month. The shape of the loss is the useful part, and a table hides it.</p>
+    <span class="sec-label reveal">The problem</span>
+    <h2 class="sec-title reveal">Counts don't tell you where things fall apart</h2>
+    <p class="page-head-lede reveal">A table of totals says how many leads arrived and how many enrolled. It cannot show you that a particular source produces plenty of leads that never get contacted, or that one site's pile of untouched names has been growing quietly for a month. The shape of the loss is the useful part, and a table hides it.</p>
   </div>
 </section>
 
 <section class="doc-sec alt">
   <div class="wrap">
-    <span class="sec-label">What goes in, what comes out</span>
-    <h2 class="sec-title">The data, end to end</h2>
-    <div class="io-wrap">
+    <span class="sec-label reveal">What goes in, what comes out</span>
+    <h2 class="sec-title reveal">The data, end to end</h2>
+    <div class="io-wrap reveal">
       <table class="io-table">
         <thead><tr><th>Source</th><th>What comes in</th><th>What it becomes</th></tr></thead>
         <tbody><tr><td>The lead sheet</td><td>Every lead, its source and its status</td><td>The flow model</td></tr><tr><td>A date range</td><td>Any window, any location</td><td>A report scoped to the question</td></tr><tr><td>Status rules</td><td>What counts as contacted, lost, enrolled</td><td>Consistent categories</td></tr><tr><td>Untouched leads</td><td>The ones with no status at all</td><td>A named list per site</td></tr></tbody>
       </table>
     </div>
-    <div class="pipeline">
+    <div class="pipeline reveal">
       <div class="pipe-step"><div class="pipe-icon" aria-hidden="true">▣</div><b>Read the live sheet</b><span>No export, no copy-paste</span></div>
       <div class="pipe-arrow" aria-hidden="true">&rarr;</div>
       <div class="pipe-step"><div class="pipe-icon" aria-hidden="true">⟲</div><b>Build the flow</b><span>Source → handling → outcome</span></div>
@@ -66,40 +67,40 @@
 
 <section class="doc-sec">
   <div class="wrap">
-    <span class="sec-label">The engineering</span>
-    <h2 class="sec-title">The decisions that actually mattered</h2>
-    <div class="steps"><div class="step"><h4>Make the diagram reconcile or don't draw it</h4><p>Every column of the flow has to sum to the same total, and that total has to match the table underneath. The generator derives node sizes from the flow matrix rather than taking both as separate inputs — so the two cannot drift apart. An early version did take both, and the drift showed up as ribbons spilling past the bottom of a node.</p></div><div class="step"><h4>Attach the names, not just the count</h4><p>"241 leads have no status" is a statistic nobody can act on. The same figure broken into a named list per location is a morning's work for each front desk. The report ends with the names for exactly that reason.</p></div><div class="step"><h4>Rank cost per lead against the target, in colour</h4><p>The table has the numbers; the ranked bars have the message. Green under target, red over, with the target line drawn in — so the location that needs attention is visible without anyone reading a column of currency figures.</p></div><div class="step"><h4>Generated from the source, never assembled</h4><p>The report is produced from the live data on demand. There is no version where somebody updates a chart by hand, which means there is no version where somebody forgets to.</p></div></div>
+    <span class="sec-label reveal">The engineering</span>
+    <h2 class="sec-title reveal">The decisions that actually mattered</h2>
+    <div class="steps"><div class="step reveal"><h4>Make the diagram reconcile or don't draw it</h4><p>Every column of the flow has to sum to the same total, and that total has to match the table underneath. The generator derives node sizes from the flow matrix rather than taking both as separate inputs — so the two cannot drift apart. An early version did take both, and the drift showed up as ribbons spilling past the bottom of a node.</p></div><div class="step reveal"><h4>Attach the names, not just the count</h4><p>"241 leads have no status" is a statistic nobody can act on. The same figure broken into a named list per location is a morning's work for each front desk. The report ends with the names for exactly that reason.</p></div><div class="step reveal"><h4>Rank cost per lead against the target, in colour</h4><p>The table has the numbers; the ranked bars have the message. Green under target, red over, with the target line drawn in — so the location that needs attention is visible without anyone reading a column of currency figures.</p></div><div class="step reveal"><h4>Generated from the source, never assembled</h4><p>The report is produced from the live data on demand. There is no version where somebody updates a chart by hand, which means there is no version where somebody forgets to.</p></div></div>
   </div>
 </section>
 
 <section class="doc-sec alt">
   <div class="wrap">
-    <span class="sec-label">The deliverable</span>
-    <h2 class="sec-title">Lead funnel report</h2>
-    <p class="page-head-lede">Four pages: the flow diagram, a per-location table, cost-per-lead ranking with an eight-week trend, and the names still sitting untouched.</p>
+    <span class="sec-label reveal">The deliverable</span>
+    <h2 class="sec-title reveal">Lead funnel report</h2>
+    <p class="page-head-lede reveal">Four pages: the flow diagram, a per-location table, cost-per-lead ranking with an eight-week trend, and the names still sitting untouched.</p>
     <div class="doc-row">
-      <div class="doc-card"><button type="button" class="doc-shot" data-img="../img/docs/funnel-p1.png" data-caption="Lead funnel report &middot; page 1 of 4"><img src="../img/docs/funnel-p1.png" alt="Lead funnel report, page 1" loading="lazy"></button></div>
-      <div class="doc-card"><button type="button" class="doc-shot" data-img="../img/docs/funnel-p2.png" data-caption="Lead funnel report &middot; page 2 of 4"><img src="../img/docs/funnel-p2.png" alt="Lead funnel report, page 2" loading="lazy"></button></div>
-      <div class="doc-card"><button type="button" class="doc-shot" data-img="../img/docs/funnel-p3.png" data-caption="Lead funnel report &middot; page 3 of 4"><img src="../img/docs/funnel-p3.png" alt="Lead funnel report, page 3" loading="lazy"></button></div>
-      <div class="doc-card"><button type="button" class="doc-shot" data-img="../img/docs/funnel-p4.png" data-caption="Lead funnel report &middot; page 4 of 4"><img src="../img/docs/funnel-p4.png" alt="Lead funnel report, page 4" loading="lazy"></button></div>
+      <div class="doc-card reveal"><button type="button" class="doc-shot" data-img="../img/docs/funnel-p1.png" data-caption="Lead funnel report &middot; page 1 of 4"><img src="../img/docs/funnel-p1.png" alt="Lead funnel report, page 1" loading="lazy"></button></div>
+      <div class="doc-card reveal"><button type="button" class="doc-shot" data-img="../img/docs/funnel-p2.png" data-caption="Lead funnel report &middot; page 2 of 4"><img src="../img/docs/funnel-p2.png" alt="Lead funnel report, page 2" loading="lazy"></button></div>
+      <div class="doc-card reveal"><button type="button" class="doc-shot" data-img="../img/docs/funnel-p3.png" data-caption="Lead funnel report &middot; page 3 of 4"><img src="../img/docs/funnel-p3.png" alt="Lead funnel report, page 3" loading="lazy"></button></div>
+      <div class="doc-card reveal"><button type="button" class="doc-shot" data-img="../img/docs/funnel-p4.png" data-caption="Lead funnel report &middot; page 4 of 4"><img src="../img/docs/funnel-p4.png" alt="Lead funnel report, page 4" loading="lazy"></button></div>
     </div>
     <p style="margin-top:20px;">
       <a class="btn btn-ghost" href="../docs/sample-lead-funnel-report.pdf" target="_blank" rel="noopener">Open the full PDF &rarr;</a>
     </p>
-    <p class="doc-note">This is a rebuilt sample, not a client file. Same structure and same
+    <p class="doc-note reveal">This is a rebuilt sample, not a client file. Same structure and same
       layout as the real thing; every name and number in it is invented.</p>
   </div>
 </section>
 
 <section class="doc-sec">
   <div class="wrap">
-    <span class="sec-label">Where it landed</span>
-    <h2 class="sec-title">The outcome</h2>
-    <div class="result-band">
+    <span class="sec-label reveal">Where it landed</span>
+    <h2 class="sec-title reveal">The outcome</h2>
+    <div class="result-band reveal">
       <div class="stats-grid"><div class="stat"><b>4</b><span>pages, generated on demand</span></div><div class="stat"><b>15</b><span>locations in one view</span></div><div class="stat"><b>Named</b><span>not just counted</span></div><div class="stat"><b>0</b><span>manual chart edits</span></div></div>
     </div>
-    <p class="doc-note" style="margin-top:24px;"><strong>Being straight about it:</strong> The diagram is only as honest as the statuses behind it. That is precisely why the training guides exist — the reporting and the data-entry standard were built as one job, because a beautiful chart of bad data is worse than no chart.</p>
-    <div class="pager">
+    <p class="doc-note reveal" style="margin-top:24px;"><strong>Being straight about it:</strong> The diagram is only as honest as the statuses behind it. That is precisely why the training guides exist — the reporting and the data-entry standard were built as one job, because a beautiful chart of bad data is worse than no chart.</p>
+    <div class="pager reveal">
       <a href="../work/youtube-report.html">&larr; Weekly YouTube report automation</a>
       <a href="../work.html">All work</a>
       <a href="../work/kpi-dashboard.html">Live KPI dashboard &rarr;</a>
@@ -133,6 +134,7 @@
   </div>
 </div>
 
-<script src="../js/work.js?v=4"></script>
+<script src="../js/main.js?v=22"></script>
+<script src="../js/work.js?v=6"></script>
 </body>
 </html>

@@ -9,7 +9,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../css/style.css?v=55">
-<link rel="stylesheet" href="../css/work.css?v=4">
+<link rel="stylesheet" href="../css/work.css?v=6">
+<noscript><style>.reveal{opacity:1 !important;transform:none !important;}</style></noscript>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='34' cy='52' r='22' fill='%236E632E'/><circle cx='68' cy='36' r='14' fill='%23DBD1ED'/><circle cx='74' cy='70' r='10' fill='%23EDE8D0'/></svg>">
 </head>
 <body class="doc">
@@ -36,23 +37,23 @@
 
 <section class="doc-sec">
   <div class="wrap">
-    <span class="sec-label">The problem</span>
-    <h2 class="sec-title">Chasing payments is a job nobody schedules</h2>
-    <p class="page-head-lede">The owner knows who owes what. What they don't have is a system that remembers to ask, asks the same way every time, and gives the customer a straight answer to "okay, how do I actually pay you?". So it gets done late, unevenly, or not at all — and the awkwardness of asking gets in the way of the asking.</p>
+    <span class="sec-label reveal">The problem</span>
+    <h2 class="sec-title reveal">Chasing payments is a job nobody schedules</h2>
+    <p class="page-head-lede reveal">The owner knows who owes what. What they don't have is a system that remembers to ask, asks the same way every time, and gives the customer a straight answer to "okay, how do I actually pay you?". So it gets done late, unevenly, or not at all — and the awkwardness of asking gets in the way of the asking.</p>
   </div>
 </section>
 
 <section class="doc-sec alt">
   <div class="wrap">
-    <span class="sec-label">What goes in, what comes out</span>
-    <h2 class="sec-title">The data, end to end</h2>
-    <div class="io-wrap">
+    <span class="sec-label reveal">What goes in, what comes out</span>
+    <h2 class="sec-title reveal">The data, end to end</h2>
+    <div class="io-wrap reveal">
       <table class="io-table">
         <thead><tr><th>Source</th><th>What comes in</th><th>What it becomes</th></tr></thead>
         <tbody><tr><td>Customers</td><td>Name, email, what they owe, how often</td><td>A schedule the system owns</td></tr><tr><td>Payment details</td><td>The owner's own bank details and QR images</td><td>A hosted pay page per invoice</td></tr><tr><td>Time passing</td><td>A scheduled job, several times a day</td><td>Reminder emails, on the dot</td></tr><tr><td>Payments received</td><td>The owner marks it paid</td><td>Chasing stops immediately</td></tr></tbody>
       </table>
     </div>
-    <div class="pipeline">
+    <div class="pipeline reveal">
       <div class="pipe-step"><div class="pipe-icon" aria-hidden="true">◈</div><b>Owner sets up</b><span>Customers, amounts, schedule, own QR codes</span></div>
       <div class="pipe-arrow" aria-hidden="true">&rarr;</div>
       <div class="pipe-step"><div class="pipe-icon" aria-hidden="true">⟲</div><b>Scheduler wakes</b><span>Finds what is due and what is overdue</span></div>
@@ -66,9 +67,9 @@
 
 <section class="doc-sec">
   <div class="wrap">
-    <span class="sec-label">The engineering</span>
-    <h2 class="sec-title">The decisions that actually mattered</h2>
-    <div class="steps"><div class="step"><h4>It is deliberately not a payment processor</h4><p>Money moves straight from the customer to the business. PayList holds no funds and touches no card details. That decision removes an entire category of licensing, compliance and liability, and it is why a one-person business can actually use it.</p></div><div class="step"><h4>Sending twice is worse than sending late</h4><p>Every reminder writes to a send log before it goes out, keyed on the invoice and the reminder stage. If the scheduler runs twice, or a deploy restarts it mid-run, the second attempt finds the log entry and does nothing. Nagging a customer twice for the same peso costs more trust than being an hour late.</p></div><div class="step"><h4>Every tenant is walled off in the database itself</h4><p>Separation is enforced by row-level security in Postgres, not by remembering to add a WHERE clause in application code. A query that forgets the tenant returns nothing rather than someone else's customer list.</p></div><div class="step"><h4>The customer never makes an account</h4><p>The pay page is a plain link with a signed token. No login, no app, no password reset for a person who just wants to see a QR code and send ₱2,400.</p></div><div class="step"><h4>Free tiers all the way down</h4><p>Every service in the stack has a real free tier, so the product can run at zero cost until it earns. A tool that costs money before it makes money never gets launched.</p></div></div>
+    <span class="sec-label reveal">The engineering</span>
+    <h2 class="sec-title reveal">The decisions that actually mattered</h2>
+    <div class="steps"><div class="step reveal"><h4>It is deliberately not a payment processor</h4><p>Money moves straight from the customer to the business. PayList holds no funds and touches no card details. That decision removes an entire category of licensing, compliance and liability, and it is why a one-person business can actually use it.</p></div><div class="step reveal"><h4>Sending twice is worse than sending late</h4><p>Every reminder writes to a send log before it goes out, keyed on the invoice and the reminder stage. If the scheduler runs twice, or a deploy restarts it mid-run, the second attempt finds the log entry and does nothing. Nagging a customer twice for the same peso costs more trust than being an hour late.</p></div><div class="step reveal"><h4>Every tenant is walled off in the database itself</h4><p>Separation is enforced by row-level security in Postgres, not by remembering to add a WHERE clause in application code. A query that forgets the tenant returns nothing rather than someone else's customer list.</p></div><div class="step reveal"><h4>The customer never makes an account</h4><p>The pay page is a plain link with a signed token. No login, no app, no password reset for a person who just wants to see a QR code and send ₱2,400.</p></div><div class="step reveal"><h4>Free tiers all the way down</h4><p>Every service in the stack has a real free tier, so the product can run at zero cost until it earns. A tool that costs money before it makes money never gets launched.</p></div></div>
   </div>
 </section>
 
@@ -76,13 +77,13 @@
 
 <section class="doc-sec alt">
   <div class="wrap">
-    <span class="sec-label">Where it landed</span>
-    <h2 class="sec-title">The outcome</h2>
-    <div class="result-band">
+    <span class="sec-label reveal">Where it landed</span>
+    <h2 class="sec-title reveal">The outcome</h2>
+    <div class="result-band reveal">
       <div class="stats-grid"><div class="stat"><b>Live</b><span>in production today</span></div><div class="stat"><b>66</b><span>unit tests</span></div><div class="stat"><b>0</b><span>funds held or touched</span></div><div class="stat"><b>₱0</b><span>to run at low volume</span></div></div>
     </div>
-    <p class="doc-note" style="margin-top:24px;"><strong>Being straight about it:</strong> PayList records and chases. It does not process payments, reconcile bank feeds, or confirm that money arrived — the owner marks an invoice paid. That is a real limit, and it is the trade that keeps the product simple enough to ship and legal enough to sell without a payments licence.</p>
-    <div class="pager">
+    <p class="doc-note reveal" style="margin-top:24px;"><strong>Being straight about it:</strong> PayList records and chases. It does not process payments, reconcile bank feeds, or confirm that money arrived — the owner marks an invoice paid. That is a real limit, and it is the trade that keeps the product simple enough to ship and legal enough to sell without a payments licence.</p>
+    <div class="pager reveal">
       <a href="../work/marketing-plan.html">&larr; 12-month marketing plan</a>
       <a href="../work.html">All work</a>
       <a href="../work/bus-track-ph.html">BUS TRACK PH &rarr;</a>
@@ -116,6 +117,7 @@
   </div>
 </div>
 
-<script src="../js/work.js?v=4"></script>
+<script src="../js/main.js?v=22"></script>
+<script src="../js/work.js?v=6"></script>
 </body>
 </html>

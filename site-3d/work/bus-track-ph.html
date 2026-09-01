@@ -9,7 +9,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../css/style.css?v=55">
-<link rel="stylesheet" href="../css/work.css?v=4">
+<link rel="stylesheet" href="../css/work.css?v=6">
+<noscript><style>.reveal{opacity:1 !important;transform:none !important;}</style></noscript>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='34' cy='52' r='22' fill='%236E632E'/><circle cx='68' cy='36' r='14' fill='%23DBD1ED'/><circle cx='74' cy='70' r='10' fill='%23EDE8D0'/></svg>">
 </head>
 <body class="doc">
@@ -36,23 +37,23 @@
 
 <section class="doc-sec">
   <div class="wrap">
-    <span class="sec-label">The problem</span>
-    <h2 class="sec-title">Waiting for a bus with no idea if one is coming</h2>
-    <p class="page-head-lede">On provincial routes the timetable is a suggestion. Passengers stand at the roadside with no way of knowing whether the bus left, is an hour away, or already went. Every existing answer to this starts with fitting tracker units to a fleet — which is exactly the cost a six-bus operator will never sign off.</p>
+    <span class="sec-label reveal">The problem</span>
+    <h2 class="sec-title reveal">Waiting for a bus with no idea if one is coming</h2>
+    <p class="page-head-lede reveal">On provincial routes the timetable is a suggestion. Passengers stand at the roadside with no way of knowing whether the bus left, is an hour away, or already went. Every existing answer to this starts with fitting tracker units to a fleet — which is exactly the cost a six-bus operator will never sign off.</p>
   </div>
 </section>
 
 <section class="doc-sec alt">
   <div class="wrap">
-    <span class="sec-label">What goes in, what comes out</span>
-    <h2 class="sec-title">The data, end to end</h2>
-    <div class="io-wrap">
+    <span class="sec-label reveal">What goes in, what comes out</span>
+    <h2 class="sec-title reveal">The data, end to end</h2>
+    <div class="io-wrap reveal">
       <table class="io-table">
         <thead><tr><th>Source</th><th>What comes in</th><th>What it becomes</th></tr></thead>
         <tbody><tr><td>Driver's phone</td><td>Position, every few seconds, over mobile data</td><td>A moving marker</td></tr><tr><td>Operator setup</td><td>Routes, stops, which bus is on which route</td><td>A public map per operator</td></tr><tr><td>Passenger</td><td>Opens a link — no app, no account</td><td>Where the bus is, right now</td></tr></tbody>
       </table>
     </div>
-    <div class="pipeline">
+    <div class="pipeline reveal">
       <div class="pipe-step"><div class="pipe-icon" aria-hidden="true">◈</div><b>Operator subscribes</b><span>Adds routes, stops and buses</span></div>
       <div class="pipe-arrow" aria-hidden="true">&rarr;</div>
       <div class="pipe-step"><div class="pipe-icon" aria-hidden="true">⟲</div><b>Driver's phone posts</b><span>The cab phone is the tracker</span></div>
@@ -66,9 +67,9 @@
 
 <section class="doc-sec">
   <div class="wrap">
-    <span class="sec-label">The engineering</span>
-    <h2 class="sec-title">The decisions that actually mattered</h2>
-    <div class="steps"><div class="step"><h4>The phone in the cab is the tracker</h4><p>No hardware to buy, fit, maintain or lose. The driver already carries a phone, and it already has GPS and mobile data. This is the single decision the whole product depends on — it takes the setup cost for an operator from tens of thousands of pesos to zero.</p></div><div class="step"><h4>A stale position is worse than no position</h4><p>A marker frozen where the signal dropped tells the passenger a confident lie. Positions carry a timestamp and go visibly stale, then disappear, rather than sitting there looking live.</p></div><div class="step"><h4>The passenger side has no account, ever</h4><p>Public map, plain link, no install. Anything that asks a person at a roadside to sign up before telling them where the bus is has already failed.</p></div><div class="step"><h4>Built for six buses as carefully as for sixty</h4><p>Multi-tenant from the first commit, but the onboarding path assumes a small operator with no IT person. If the smallest operator can't set it up alone in an afternoon, it doesn't matter that it scales.</p></div></div>
+    <span class="sec-label reveal">The engineering</span>
+    <h2 class="sec-title reveal">The decisions that actually mattered</h2>
+    <div class="steps"><div class="step reveal"><h4>The phone in the cab is the tracker</h4><p>No hardware to buy, fit, maintain or lose. The driver already carries a phone, and it already has GPS and mobile data. This is the single decision the whole product depends on — it takes the setup cost for an operator from tens of thousands of pesos to zero.</p></div><div class="step reveal"><h4>A stale position is worse than no position</h4><p>A marker frozen where the signal dropped tells the passenger a confident lie. Positions carry a timestamp and go visibly stale, then disappear, rather than sitting there looking live.</p></div><div class="step reveal"><h4>The passenger side has no account, ever</h4><p>Public map, plain link, no install. Anything that asks a person at a roadside to sign up before telling them where the bus is has already failed.</p></div><div class="step reveal"><h4>Built for six buses as carefully as for sixty</h4><p>Multi-tenant from the first commit, but the onboarding path assumes a small operator with no IT person. If the smallest operator can't set it up alone in an afternoon, it doesn't matter that it scales.</p></div></div>
   </div>
 </section>
 
@@ -76,13 +77,13 @@
 
 <section class="doc-sec alt">
   <div class="wrap">
-    <span class="sec-label">Where it landed</span>
-    <h2 class="sec-title">The outcome</h2>
-    <div class="result-band">
+    <span class="sec-label reveal">Where it landed</span>
+    <h2 class="sec-title reveal">The outcome</h2>
+    <div class="result-band reveal">
       <div class="stats-grid"><div class="stat"><b>110</b><span>automated tests</span></div><div class="stat"><b>25</b><span>end-to-end live checks</span></div><div class="stat"><b>0</b><span>hardware units required</span></div><div class="stat"><b>No app</b><span>for passengers</span></div></div>
     </div>
-    <p class="doc-note" style="margin-top:24px;"><strong>Being straight about it:</strong> Verified end to end in testing, and not yet running a real fleet on real roads. The next honest step is one operator, one route, and a week of watching what mobile coverage actually does to it — not another feature.</p>
-    <div class="pager">
+    <p class="doc-note reveal" style="margin-top:24px;"><strong>Being straight about it:</strong> Verified end to end in testing, and not yet running a real fleet on real roads. The next honest step is one operator, one route, and a week of watching what mobile coverage actually does to it — not another feature.</p>
+    <div class="pager reveal">
       <a href="../work/paylist.html">&larr; PayList</a>
       <a href="../work.html">All work</a>
       <a href="../work/slack-attendance.html">Slack Attendance &rarr;</a>
@@ -116,6 +117,7 @@
   </div>
 </div>
 
-<script src="../js/work.js?v=4"></script>
+<script src="../js/main.js?v=22"></script>
+<script src="../js/work.js?v=6"></script>
 </body>
 </html>

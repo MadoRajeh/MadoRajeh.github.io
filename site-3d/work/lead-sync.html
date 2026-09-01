@@ -9,7 +9,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../css/style.css?v=55">
-<link rel="stylesheet" href="../css/work.css?v=4">
+<link rel="stylesheet" href="../css/work.css?v=6">
+<noscript><style>.reveal{opacity:1 !important;transform:none !important;}</style></noscript>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='34' cy='52' r='22' fill='%236E632E'/><circle cx='68' cy='36' r='14' fill='%23DBD1ED'/><circle cx='74' cy='70' r='10' fill='%23EDE8D0'/></svg>">
 </head>
 <body class="doc">
@@ -36,23 +37,23 @@
 
 <section class="doc-sec">
   <div class="wrap">
-    <span class="sec-label">The problem</span>
-    <h2 class="sec-title">A person was the integration</h2>
-    <p class="page-head-lede">Every week somebody logged into the CRM, exported a file, opened it, cleaned it, pasted it into the reporting sheet and fixed whatever broke. Every report downstream was only as fresh as the last time a human remembered. Worse, the CRM's own exports quietly omitted a category of leads, so the numbers everyone trusted had a hole in them.</p>
+    <span class="sec-label reveal">The problem</span>
+    <h2 class="sec-title reveal">A person was the integration</h2>
+    <p class="page-head-lede reveal">Every week somebody logged into the CRM, exported a file, opened it, cleaned it, pasted it into the reporting sheet and fixed whatever broke. Every report downstream was only as fresh as the last time a human remembered. Worse, the CRM's own exports quietly omitted a category of leads, so the numbers everyone trusted had a hole in them.</p>
   </div>
 </section>
 
 <section class="doc-sec alt">
   <div class="wrap">
-    <span class="sec-label">What goes in, what comes out</span>
-    <h2 class="sec-title">The data, end to end</h2>
-    <div class="io-wrap">
+    <span class="sec-label reveal">What goes in, what comes out</span>
+    <h2 class="sec-title reveal">The data, end to end</h2>
+    <div class="io-wrap reveal">
       <table class="io-table">
         <thead><tr><th>Source</th><th>What comes in</th><th>What it becomes</th></tr></thead>
         <tbody><tr><td>CRM API</td><td>Every lead, on a schedule</td><td>A live mirror of the source</td></tr><tr><td>Deleted records</td><td>Rows that vanish upstream</td><td>Removed here too, safely</td></tr><tr><td>Schema changes</td><td>Renamed or added fields</td><td>Detected, not silently dropped</td></tr><tr><td>The reporting sheet</td><td>Always current</td><td>Dashboards and reports downstream</td></tr></tbody>
       </table>
     </div>
-    <div class="pipeline">
+    <div class="pipeline reveal">
       <div class="pipe-step"><div class="pipe-icon" aria-hidden="true">⟲</div><b>Scheduled pull</b><span>Every lead from the API, not an export</span></div>
       <div class="pipe-arrow" aria-hidden="true">&rarr;</div>
       <div class="pipe-step"><div class="pipe-icon" aria-hidden="true">▣</div><b>Reconcile</b><span>Added, changed, deleted — all three</span></div>
@@ -66,9 +67,9 @@
 
 <section class="doc-sec">
   <div class="wrap">
-    <span class="sec-label">The engineering</span>
-    <h2 class="sec-title">The decisions that actually mattered</h2>
-    <div class="steps"><div class="step"><h4>Read the vendor's documentation before probing the API</h4><p>I initially swept the API for endpoints and built against what answered. The docs listed endpoints the sweep never found — including the ones holding the records the exports were missing. The lesson stuck: probing tells you what responds, documentation tells you what exists.</p></div><div class="step"><h4>Strict mirror, not append-only</h4><p>Early versions only ever added rows, so anything deleted upstream lived on forever and inflated every count. The sync now reconciles all three cases — new, changed and gone — and the sheet is a true mirror rather than an archive of everything that was ever true.</p></div><div class="step"><h4>A guard so a bad pull can't wipe the sheet</h4><p>If the API returns empty or wildly short, that is far more likely to be an outage than an evacuated CRM. The sync refuses the write and leaves yesterday's good data in place. Stale data you can spot beats an empty sheet you can't recover.</p></div><div class="step"><h4>Versioned rollback points, kept deliberately</h4><p>Eight numbered snapshots of the script sit alongside it, each named for what changed next. When a change misbehaves, recovery is a file swap rather than an evening of archaeology.</p></div><div class="step"><h4>It repairs itself instead of raising a ticket</h4><p>Transient failures retry with backoff. Recoverable problems get fixed in place. Only something genuinely novel surfaces to a human. Automation that needs babysitting has just moved the work, not removed it.</p></div></div>
+    <span class="sec-label reveal">The engineering</span>
+    <h2 class="sec-title reveal">The decisions that actually mattered</h2>
+    <div class="steps"><div class="step reveal"><h4>Read the vendor's documentation before probing the API</h4><p>I initially swept the API for endpoints and built against what answered. The docs listed endpoints the sweep never found — including the ones holding the records the exports were missing. The lesson stuck: probing tells you what responds, documentation tells you what exists.</p></div><div class="step reveal"><h4>Strict mirror, not append-only</h4><p>Early versions only ever added rows, so anything deleted upstream lived on forever and inflated every count. The sync now reconciles all three cases — new, changed and gone — and the sheet is a true mirror rather than an archive of everything that was ever true.</p></div><div class="step reveal"><h4>A guard so a bad pull can't wipe the sheet</h4><p>If the API returns empty or wildly short, that is far more likely to be an outage than an evacuated CRM. The sync refuses the write and leaves yesterday's good data in place. Stale data you can spot beats an empty sheet you can't recover.</p></div><div class="step reveal"><h4>Versioned rollback points, kept deliberately</h4><p>Eight numbered snapshots of the script sit alongside it, each named for what changed next. When a change misbehaves, recovery is a file swap rather than an evening of archaeology.</p></div><div class="step reveal"><h4>It repairs itself instead of raising a ticket</h4><p>Transient failures retry with backoff. Recoverable problems get fixed in place. Only something genuinely novel surfaces to a human. Automation that needs babysitting has just moved the work, not removed it.</p></div></div>
   </div>
 </section>
 
@@ -76,13 +77,13 @@
 
 <section class="doc-sec alt">
   <div class="wrap">
-    <span class="sec-label">Where it landed</span>
-    <h2 class="sec-title">The outcome</h2>
-    <div class="result-band">
+    <span class="sec-label reveal">Where it landed</span>
+    <h2 class="sec-title reveal">The outcome</h2>
+    <div class="result-band reveal">
       <div class="stats-grid"><div class="stat"><b>5+ hrs</b><span>reclaimed every week</span></div><div class="stat"><b>Hourly</b><span>then down to near-live</span></div><div class="stat"><b>8</b><span>rollback points kept</span></div><div class="stat"><b>0</b><span>manual exports remaining</span></div></div>
     </div>
-    <p class="doc-note" style="margin-top:24px;"><strong>Being straight about it:</strong> This is the least impressive-looking thing here and the one that mattered most. It has no interface. Its entire success condition is that nobody thinks about it.</p>
-    <div class="pager">
+    <p class="doc-note reveal" style="margin-top:24px;"><strong>Being straight about it:</strong> This is the least impressive-looking thing here and the one that mattered most. It has no interface. Its entire success condition is that nobody thinks about it.</p>
+    <div class="pager reveal">
       <a href="../work/slack-attendance.html">&larr; Slack Attendance</a>
       <a href="../work.html">All work</a>
       <a href="../work/qyxera-hr.html">Slack clock-in and payroll tracker &rarr;</a>
@@ -116,6 +117,7 @@
   </div>
 </div>
 
-<script src="../js/work.js?v=4"></script>
+<script src="../js/main.js?v=22"></script>
+<script src="../js/work.js?v=6"></script>
 </body>
 </html>

@@ -18,12 +18,22 @@
     var countEl = document.getElementById('filter-count');
     var total = cards.length;
 
-    function apply(kind) {
+    /* `force` reveals whatever the filter just made visible.
+       Cards carry .reveal, and main.js's IntersectionObserver only adds .in
+       when a card crosses into view. A card sitting behind `hidden` never
+       intersects, so after a filter change it would come back at opacity 0 —
+       a grid of blank cards. On a filter CLICK we therefore mark the visible
+       ones revealed outright. The very first call passes force=false so the
+       page still animates in on load like every other page on the site. */
+    function apply(kind, force) {
       var shown = 0;
       cards.forEach(function (card) {
         var match = kind === 'all' || card.getAttribute('data-kind') === kind;
         card.hidden = !match;
-        if (match) shown++;
+        if (match) {
+          shown++;
+          if (force) card.classList.add('in');
+        }
       });
       buttons.forEach(function (b) {
         b.setAttribute('aria-pressed', b.getAttribute('data-filter') === kind ? 'true' : 'false');
@@ -37,10 +47,10 @@
 
     buttons.forEach(function (b) {
       b.addEventListener('click', function () {
-        apply(b.getAttribute('data-filter'));
+        apply(b.getAttribute('data-filter'), true);
       });
     });
-    apply('all');
+    apply('all', false);
   }
 
   /* ---------------- document lightbox ---------------- */
