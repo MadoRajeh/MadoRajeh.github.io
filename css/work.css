@@ -169,16 +169,33 @@ body.doc .full-stats {
    Row B is row A REVERSED, running the opposite way at the SAME duration.
    Equal durations are load-bearing: they keep the two rows phase-locked, so a
    badge leaving the top row's left edge re-enters along the bottom row. */
-.tools-rows { margin-top: 26px; }
+.tools-rows {
+  margin-top: 26px;
+  /* Full bleed: escape .wrap's max-width and run the full width of the screen.
+     The margins are what pull it back out; width:100vw alone would just overflow
+     to the right. */
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+}
+/* 100vw counts the scrollbar, so without this the full-bleed row overhangs by
+   the scrollbar's width and the whole page gains a horizontal scrollbar.
+   `clip` rather than `hidden`: hidden would make these sections scroll
+   containers and break position:sticky inside them. */
+.doc-sec, .story-sec, .page-head { overflow-x: clip; }
 .tools-row {
   overflow: hidden; display: flex;
   padding-top: 8px;           /* clearance: the accent dot pokes above the badge */
   /* fade both edges so badges enter and leave instead of being chopped off */
-  -webkit-mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
-          mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+  /* A fixed fade distance, not a percentage. At 6% of the viewport the fade was
+     a wide wash on a monitor and almost invisible on a phone. */
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 clamp(24px, 6vw, 90px),
+                                      #000 calc(100% - clamp(24px, 6vw, 90px)), transparent);
+          mask-image: linear-gradient(to right, transparent, #000 clamp(24px, 6vw, 90px),
+                                      #000 calc(100% - clamp(24px, 6vw, 90px)), transparent);
 }
 .tools-row + .tools-row { margin-top: 12px; }
-.tools-track { display: flex; flex: 0 0 auto; gap: 14px; padding: 0 7px; width: max-content; }
+.tools-track { display: flex; flex: 0 0 auto; gap: clamp(9px, 1vw, 18px); padding: 0 7px; width: max-content; }
 .tools-row-a .tools-track { animation: tools-left  72s linear infinite; }
 .tools-row-b .tools-track { animation: tools-right 72s linear infinite; }
 .tools-row:hover .tools-track,
@@ -193,8 +210,13 @@ body.doc .full-stats {
   box-shadow: 0 2px 8px rgba(0,0,0,.06);
 }
 .tool-badge.no-logo { padding-left: 20px; }
-.tool-badge img { width: 34px; height: 34px; object-fit: contain; border-radius: 9px; background: #fff; padding: 4px; box-sizing: border-box; }
-.tool-name { font-weight: 600; font-size: 14px; color: var(--ink); white-space: nowrap; }
+.tool-badge img {
+  /* Fluid rather than a single step at 640px, so it scales smoothly from a
+     phone up to a wide monitor. */
+  width: clamp(24px, 2.1vw, 38px); height: clamp(24px, 2.1vw, 38px);
+  object-fit: contain; border-radius: 9px; background: #fff; padding: 4px; box-sizing: border-box;
+}
+.tool-name { font-weight: 600; font-size: clamp(12px, 0.95vw, 15px); color: var(--ink); white-space: nowrap; }
 .tool-dot {
   position: absolute; top: -3px; right: -3px; width: 11px; height: 11px;
   border-radius: 50%; border: 2px solid var(--paper-soft);
@@ -1285,3 +1307,73 @@ body.deck .slide.exiting-push [data-fx] { animation: none !important; opacity: 1
 .final-site-link { margin: 18px 0 4px; }
 .final-site-link .btn { font-size: 14px; padding: 10px 20px; }
 @media (max-height: 700px) { .final-site-link { margin: 12px 0 2px; } }
+
+
+/* =====================================================================
+   PHONE TAP TARGETS
+   =====================================================================
+   Measured on a 390px phone: nav CTA 29px tall, breadcrumbs 15px, the
+   prev/next pager 24px, footer links 19px. The comfortable minimum is ~44px,
+   so all of them were fiddly to hit.
+
+   Expanded with a transparent ::after rather than padding: padding would
+   reflow the nav bar and push the breadcrumb line around. The pseudo-element
+   grows only the hit area and leaves the layout exactly where it was.
+   ===================================================================== */
+@media (max-width: 760px) {
+  .nav-logo, .badge-legacy,
+  .crumb a, .pager a,
+  .doc-footer p a, .doc-sec p > a[href^="mailto:"], .doc-sec p > a[href*="calendly"] {
+    position: relative;
+  }
+  .nav-logo::after, .badge-legacy::after,
+  .crumb a::after, .pager a::after,
+  .doc-footer p a::after,
+  .doc-sec p > a[href^="mailto:"]::after, .doc-sec p > a[href*="calendly"]::after {
+    content: "";
+    position: absolute;
+    /* enough to clear 44px from a 15px line, and a little horizontal slack */
+    inset: -14px -8px;
+  }
+  /* The footer's two links share one line, so any horizontal expansion makes
+     their hit areas touch and the wrong one takes the tap. Vertical only. */
+  .doc-footer p a::after { inset: -12px 0; }
+
+  /* Breadcrumb and pager links sit close together; without this their expanded
+     areas would overlap and the wrong one would take the tap. */
+  .crumb { display: flex; flex-wrap: wrap; gap: 4px 14px; align-items: center; }
+  /* 30px, not 18: each link's hit area grows 14px up AND down, so anything
+     under 28px of gap leaves neighbouring targets overlapping. */
+  .pager { display: flex; flex-direction: column; gap: 30px; }
+  .badge-legacy { padding: 9px 14px; }
+
+  /* The slide dots are 7px of visible dot with 12px between them. Tapping a 7px
+     target on a phone is a lottery. The hit area fills the full pitch
+     vertically (7 + 12 = 19px) and stretches sideways, where there is nothing
+     to collide with. Going taller than the pitch would make neighbouring dots
+     overlap and select the wrong slide. */
+  /* Measured pitch is 15px (7px dot + 8px gap), so a hit area taller than that
+     makes neighbouring dots overlap and select the wrong slide. Open the gap
+     first, then the hit area has somewhere to go. */
+  .slide-dots { gap: 20px; }
+  .slide-dots .dot { position: relative; }
+  .slide-dots .dot::after { content: ""; position: absolute; inset: -9px -13px; }
+
+  /* Hero secondary action: 21px of text. It is a <button>, not an <a>. */
+  .hero-choice .scroll-cue { position: relative; }
+  .hero-choice .scroll-cue::after { content: ""; position: absolute; inset: -12px -8px; }
+
+  /* Catch-all for the remaining inline text links in footers and intros, which
+     vary in markup across the hand-built pages. VERTICAL ONLY: several of these
+     sit side by side on one line, and widening them sideways would make
+     neighbouring hit areas overlap so the wrong link takes the tap. */
+  footer .wrap a, .sec-intro a, .social-hint a { position: relative; }
+  footer .wrap a::after, .sec-intro a::after, .social-hint a::after {
+    content: ""; position: absolute; inset: -12px 0;
+  }
+
+  /* Project filter chips were 31px. These are real buttons with a visible box,
+     so padding is the right fix here - there is no layout to protect the way
+     there is in the nav bar, and a bigger chip reads better on a phone anyway. */
+  .filter-btn { min-height: 40px; padding-top: 9px; padding-bottom: 9px; }
+}

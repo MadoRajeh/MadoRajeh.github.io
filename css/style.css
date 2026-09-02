@@ -544,10 +544,13 @@ section { padding: 100px 0; }
    on becoming current. Outside a slide (the long-form About section) it must
    render normally visible by default — the .reveal class handles fading it
    in on scroll instead, see the reveal-on-scroll rules further down. */
-.slide .about-photo { opacity: 0; transform: perspective(1200px) rotateY(18deg) translateX(-30px); transition: opacity .9s ease, transform .9s cubic-bezier(.2,.8,.2,1); }
-.slide.current .about-photo { opacity: 1; transform: perspective(1200px) rotateY(0) translateX(0); }
-.slide .about-text { opacity: 0; transform: translateY(24px); transition: opacity .9s ease .15s, transform .9s cubic-bezier(.2,.8,.2,1) .15s; }
-.slide.current .about-text { opacity: 1; transform: none; }
+/* These two are motion.js groups now (data-fx), so the motion system owns their
+   opacity and transform. They used to ALSO carry a bespoke .9s transition here:
+   the keyframes would play, then this transition state took over as they
+   finished, and the block visibly moved a second time. Worst on phone, where the
+   grid stacks and the stray move travels further. Left visible by default so a
+   JS failure shows the content rather than hiding it. */
+.slide .about-photo, .slide .about-text { opacity: 1; transform: none; }
 .about-photo img { width: 100%; height: auto; display: block; }
 .about-text p { margin-bottom: 16px; font-size: 16px; }
 @media (max-width: 760px) { .about-grid { grid-template-columns: 1fr; } .about-photo { max-width: 280px; } }
