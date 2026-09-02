@@ -322,14 +322,28 @@ body:not(.locking) .hero-unlock { opacity: 1; transform: none; filter: blur(0); 
 .hero-sub { max-width: 46ch; font-size: 17px; margin: 22px 0 30px; }
 .hero-ctas { display: flex; gap: 14px; flex-wrap: wrap; }
 .btn {
-  display: inline-block; font-family: var(--body); font-weight: 600; font-size: 15px;
-  padding: 13px 26px; border-radius: 999px; text-decoration: none; border: none; cursor: pointer;
+  /* inline-FLEX with a min-height, not inline-block: it makes the height
+     explicit rather than emergent from line-height + padding + border, which is
+     what had buttons at 43px on a phone, 48px on a deck slide and 56px on an
+     iPad. Padding and font-size can still change per breakpoint now without the
+     height following them around. */
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 48px;
+  font-family: var(--body); font-weight: 600; font-size: 15px;
+  /* 9px, worked back from the target: 25.5 line-height + 9 + 9 + 2 + 2 border
+     = 47.5, so the natural height meets min-height instead of overshooting it. */
+  padding: 9px 26px; border-radius: 999px; text-decoration: none; cursor: pointer;
+  /* A TRANSPARENT 2px border, not `none`. .btn-ghost adds a 2px border, and on an
+     auto-height inline-block that border adds to the box: ghost buttons measured
+     43px against the primary's 39px, so a row of mixed buttons was visibly
+     uneven. Reserving the space here makes every variant the same height. */
+  border: 2px solid transparent;
   transition: transform .2s ease, box-shadow .2s ease;
 }
 .btn-primary { background: var(--primary); color: #fff; box-shadow: 0 8px 24px rgba(110,99,46,.3); }
 .btn-primary:hover { background: var(--primary-dark); transform: translateY(-2px); box-shadow: 0 12px 30px rgba(110,99,46,.4); }
 .btn-ghost {
-  background: transparent; color: var(--primary); border: 2px solid var(--primary);
+  background: transparent; color: var(--primary); border-color: var(--primary);
 }
 .btn-ghost:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
 /* On the Olive nav bar / Olive contact CTA a solid Olive button would vanish —

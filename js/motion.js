@@ -100,11 +100,43 @@
     return 'rise';
   }
 
+  /* True when a grid or flex root is laid out as a single column, either because
+     a media query collapsed it or because it never had more than one track.
+     Falls back to comparing the children's left edges for layouts that are not
+     grids, so a stacked flex column is caught too. */
+  function singleColumn(root) {
+    try {
+      var cs = getComputedStyle(root);
+      if (cs.display === 'grid' || cs.display === 'inline-grid') {
+        var tracks = (cs.gridTemplateColumns || '').trim();
+        if (!tracks || tracks === 'none') return false;
+        return tracks.split(/\s+/).length === 1;
+      }
+      var kids = [].slice.call(root.children).filter(function (c) {
+        var r = c.getBoundingClientRect();
+        return r.width > 2 && r.height > 2;
+      });
+      if (kids.length < 2) return true;
+      // stacked if every child starts at essentially the same x
+      var first = kids[0].getBoundingClientRect().left;
+      for (var i = 1; i < kids.length; i++) {
+        if (Math.abs(kids[i].getBoundingClientRect().left - first) > 12) return false;
+      }
+      return true;
+    } catch (e) { return false; }
+  }
+
   function collectGroups(slide) {
     var root = slide.querySelector('.wrap') || slide.querySelector('.hero-grid');
     if (!root) return [];
     var multi = false;
     try { multi = root.matches(MULTI_COL); } catch (e) {}
+
+    // A multi-column layout that has COLLAPSED to one column is not multi-column
+    // any more. Splitting it still produced two groups with different effects,
+    // delays and travel distances - fine side by side, disjointed once stacked.
+    if (multi && singleColumn(root)) multi = false;
+
     if (multi) {
       return [].slice.call(root.children).filter(function (c) {
         if (c.tagName === 'SCRIPT' || c.tagName === 'STYLE' || c.hidden) return false;

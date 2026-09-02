@@ -1377,3 +1377,46 @@ body.deck .slide.exiting-push [data-fx] { animation: none !important; opacity: 1
      there is in the nav bar, and a bigger chip reads better on a phone anyway. */
   .filter-btn { min-height: 40px; padding-top: 9px; padding-bottom: 9px; }
 }
+
+
+/* =====================================================================
+   BUTTON ROWS
+   =====================================================================
+   Groups of two or three buttons used to be inline-block links inside a plain
+   <p>, spaced with an inline margin-left. That reads fine in a row on a wide
+   screen and falls apart on a phone: the buttons wrap onto separate lines with
+   NO vertical gap (measured touching, bottom 1213 / top 1213) and the leftover
+   left margin indents every one after the first so they do not line up either.
+
+   Flex with a real gap fixes the spacing at every width. Below 560px they go
+   full width and stack, which is both easier to hit and tidier than three
+   different-width pills ragged down the screen.
+   ===================================================================== */
+.btn-row, .ctas {
+  display: flex; flex-wrap: wrap; align-items: center;
+  gap: 12px;
+}
+.btn-row .btn, .ctas .btn { margin-left: 0; }
+
+@media (max-width: 560px) {
+  .btn-row, .ctas {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+  /* Equal width and centred once stacked, so the group reads as one block
+     rather than three pills of different lengths. */
+  .btn-row .btn, .ctas .btn { width: 100%; text-align: center; }
+}
+
+/* Tablets keep the row but need a slightly tighter gap to fit three across. */
+@media (min-width: 561px) and (max-width: 900px) {
+  .btn-row, .ctas { gap: 10px; }
+  .btn-row .btn, .ctas .btn { padding-left: 20px; padding-right: 20px; }
+}
+
+/* Phone keeps a slightly smaller pill but stays well above the 44px comfortable
+   tap size, so the three sizes read as the same button rather than three. */
+@media (max-width: 760px) {
+  .btn { min-height: 46px; padding: 8px 20px; }
+}
